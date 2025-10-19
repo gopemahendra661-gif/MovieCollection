@@ -3,84 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debug Test</title>
+    <title>Movie Collection - Working</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body { 
+            font-family: Arial; 
+            padding: 20px; 
+            background: #1a1a1a; 
+            color: white; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+        }
+        .btn { 
+            background: #e50914; 
+            color: white; 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            margin: 10px; 
+            font-size: 16px;
+        }
+        .movie { 
+            background: #2a2a2a; 
+            padding: 15px; 
+            margin: 15px 0; 
+            border-radius: 10px;
+            border: 1px solid #444;
+        }
+        input, textarea { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            background: #333; 
+            color: white; 
+            border: 1px solid #555; 
+            border-radius: 5px;
+        }
+        .form-container {
+            background: #2a2a2a;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Supabase Connection Test</h1>
-    
-    <div>
-        <button onclick="testConnection()">Test Supabase Connection</button>
-        <button onclick="testTables()">Test Tables</button>
-        <button onclick="addTestMovie()">Add Test Movie</button>
+    <div class="container">
+        <h1 style="text-align: center; color: #e50914;">🎬 Movie Collection</h1>
+        <div style="text-align: center;">
+            <button class="btn" onclick="showForm()">➕ Add Movie</button>
+            <button class="btn" onclick="loadMovies()">🔄 Load Movies</button>
+        </div>
+        
+        <div id="form" class="form-container">
+            <h3 style="text-align: center;">Add New Movie</h3>
+            <input type="text" id="title" placeholder="Movie Title">
+            <input type="text" id="category" placeholder="Category">
+            <textarea id="iframe" placeholder="Iframe Code (YouTube: Share → Embed → Copy)" rows="3"></textarea>
+            <textarea id="desc" placeholder="Description" rows="2"></textarea>
+            <div style="text-align: center;">
+                <button class="btn" onclick="addMovie()">💾 Save Movie</button>
+            </div>
+        </div>
+        
+        <div id="movies"></div>
     </div>
 
-    <div id="result" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
-
     <script>
-        // Your Supabase Credentials
-        const SUPABASE_URL = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo'; // 🔥 यहाँ API key डालें
+        // Supabase Configuration
+        const supabaseUrl = 'https://vpyhzixjlwlvflmrmywr.supabase.co';
+        const supabaseKey = 'eyJhh6c101JIUzI1NiIsInR5cCI6TkpXW';
+        
+        // Initialize Supabase
+        let supabase;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+            console.log('✅ Supabase initialized successfully');
+            loadMovies();
+        });
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        function showForm() {
+            document.getElementById('form').style.display = 'block';
+        }
 
-        async function testConnection() {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = 'Testing connection...';
-            
+        async function loadMovies() {
             try {
-                // Simple test query
-                const { data, error } = await supabase.from('movies').select('count');
+                document.getElementById('movies').innerHTML = '<p style="text-align: center;">Loading movies...</p>';
                 
-                if (error) {
-                    resultDiv.innerHTML = `❌ ERROR: ${error.message}`;
-                } else {
-                    resultDiv.innerHTML = '✅ Connection Successful! Supabase is working.';
+                const { data, error } = await supabase
+                    .from('movies')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                if (data.length === 0) {
+                    document.getElementById('movies').innerHTML = `
+                        <div style="text-align: center; padding: 40px;">
+                            <p>🎬 No movies found</p>
+                            <p>Click "Add Movie" to add your first movie!</p>
+                        </div>
+                    `;
+                    return;
                 }
+                
+                document.getElementById('movies').innerHTML = data.map(movie => `
+                    <div class="movie">
+                        <h3>${movie.title}</h3>
+                        <p><strong>Category:</strong> 
+                            <span style="background: #e50914; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
+                                ${movie.category}
+                            </span>
+                        </p>
+                        <p>${movie.description || 'No description available'}</p>
+                        <div style="margin: 15px 0;">
+                            ${movie.iframe_code}
+                        </div>
+                        <button class="btn" onclick="deleteMovie(${movie.id})" style="background: #dc3545;">
+                            🗑️ Delete
+                        </button>
+                    </div>
+                `).join('');
             } catch (error) {
-                resultDiv.innerHTML = `❌ Connection Failed: ${error.message}`;
+                document.getElementById('movies').innerHTML = `
+                    <div style="text-align: center; color: #e50914;">
+                        <p>Error loading movies: ${error.message}</p>
+                        <button class="btn" onclick="loadMovies()">Try Again</button>
+                    </div>
+                `;
             }
         }
 
-        async function testTables() {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = 'Checking tables...';
-            
+        async function addMovie() {
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const iframe = document.getElementById('iframe').value;
+            const desc = document.getElementById('desc').value;
+
+            if (!title || !category || !iframe) {
+                alert('Please fill all fields');
+                return;
+            }
+
             try {
-                // Check if movies table exists
-                const { data, error } = await supabase.from('movies').select('*').limit(1);
+                const { data, error } = await supabase
+                    .from('movies')
+                    .insert([
+                        { 
+                            title: title, 
+                            category: category, 
+                            iframe_code: iframe, 
+                            description: desc 
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                alert('✅ Movie added successfully to database!');
+                document.getElementById('form').style.display = 'none';
                 
-                if (error) {
-                    resultDiv.innerHTML = `❌ Movies table error: ${error.message}`;
-                } else {
-                    resultDiv.innerHTML = '✅ Movies table exists and is accessible.';
-                }
+                // Clear form
+                document.getElementById('title').value = '';
+                document.getElementById('category').value = '';
+                document.getElementById('iframe').value = '';
+                document.getElementById('desc').value = '';
+                
+                loadMovies();
             } catch (error) {
-                resultDiv.innerHTML = `❌ Table check failed: ${error.message}`;
+                alert('❌ Error: ' + error.message);
             }
         }
 
-        async function addTestMovie() {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = 'Adding test movie...';
+        async function deleteMovie(id) {
+            if (!confirm('Are you sure you want to delete this movie from database?')) return;
             
             try {
-                const { data, error } = await supabase.from('movies').insert([
-                    {
-                        title: 'Test Movie',
-                        category: 'Action',
-                        iframe_code: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/TcMBFSGVi1c" frameborder="0" allowfullscreen></iframe>',
-                        description: 'This is a test movie'
-                    }
-                ]);
+                const { error } = await supabase
+                    .from('movies')
+                    .delete()
+                    .eq('id', id);
 
-                if (error) {
-                    resultDiv.innerHTML = `❌ Insert failed: ${error.message}`;
-                } else {
-                    resultDiv.innerHTML = '✅ Test movie added successfully!';
-                }
+                if (error) throw error;
+
+                alert('✅ Movie deleted successfully!');
+                loadMovies();
             } catch (error) {
-                resultDiv.innerHTML = `❌ Insert failed: ${error.message}`;
+                alert('❌ Error: ' + error.message);
             }
         }
     </script>
