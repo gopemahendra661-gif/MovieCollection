@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Collection - GitHub Version</title>
+    <title>Movie Collection - Mobile Responsive</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -20,13 +20,14 @@
             --text: #ffffff;
             --text-secondary: #b3b3b3;
             --card-bg: #1a1a1a;
-            --modal-bg: rgba(0, 0, 0, 0.85);
+            --modal-bg: rgba(0, 0, 0, 0.95);
         }
 
         body {
             background-color: var(--secondary);
             color: var(--text);
             line-height: 1.6;
+            padding-bottom: 80px; /* Space for mobile buttons */
         }
 
         .container {
@@ -63,8 +64,8 @@
         }
 
         .btn {
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 20px;
+            border-radius: 8px;
             border: none;
             font-size: 1rem;
             cursor: pointer;
@@ -72,6 +73,7 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s;
+            font-weight: 600;
         }
 
         .btn-primary {
@@ -86,67 +88,11 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
         }
 
-        .categories-section {
-            margin-bottom: 30px;
-        }
-
-        .categories-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .category-card {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s;
-        }
-
-        .category-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .category-info h3 {
-            margin-bottom: 5px;
-            color: var(--text);
-        }
-
-        .category-info p {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-        }
-
-        .category-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .icon-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .icon-btn:hover {
-            color: var(--primary);
+        .btn:active {
+            transform: translateY(0);
         }
 
         .movies-section {
@@ -173,7 +119,7 @@
 
         .movie-card {
             background-color: var(--card-bg);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s;
@@ -213,8 +159,8 @@
             display: inline-block;
             background-color: var(--primary);
             color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
+            padding: 4px 10px;
+            border-radius: 6px;
             font-size: 0.8rem;
             margin-bottom: 10px;
         }
@@ -234,6 +180,27 @@
             justify-content: space-between;
         }
 
+        /* Mobile Fixed Button */
+        .mobile-add-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.5);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Improved Modal for Mobile */
         .modal {
             display: none;
             position: fixed;
@@ -245,26 +212,35 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            padding: 20px;
+            overflow-y: auto;
         }
 
         .modal-content {
             background-color: var(--card-bg);
-            border-radius: 10px;
-            width: 90%;
-            max-width: 600px;
-            padding: 30px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            padding: 20px;
+            border-bottom: 1px solid #333;
+            position: sticky;
+            top: 0;
+            background: var(--card-bg);
+            z-index: 1;
         }
 
         .modal-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--text);
         }
 
@@ -274,6 +250,20 @@
             color: var(--text-secondary);
             font-size: 1.5rem;
             cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-btn:hover {
+            background: #333;
+        }
+
+        .modal-body {
+            padding: 20px;
         }
 
         .form-group {
@@ -284,16 +274,23 @@
             display: block;
             margin-bottom: 8px;
             color: var(--text);
+            font-weight: 500;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px;
-            border-radius: 5px;
+            padding: 14px;
+            border-radius: 8px;
             border: 1px solid #444;
             background-color: #2a2a2a;
             color: var(--text);
             font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         textarea.form-control {
@@ -303,9 +300,19 @@
 
         .form-actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            position: sticky;
+            bottom: 0;
+            background: var(--card-bg);
+            padding: 20px;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+            justify-content: center;
         }
 
         .empty-state {
@@ -324,48 +331,27 @@
         .iframe-help {
             background-color: #2a2a2a;
             border-left: 4px solid var(--primary);
-            padding: 10px 15px;
+            padding: 12px 15px;
             margin-top: 10px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--text-secondary);
+            border-radius: 0 8px 8px 0;
         }
 
         .iframe-help ul {
             margin-left: 20px;
-            margin-top: 5px;
+            margin-top: 8px;
         }
 
-        .developer-section {
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 20px;
-            margin-top: 40px;
-            border-left: 4px solid var(--primary);
+        .iframe-help li {
+            margin-bottom: 5px;
         }
 
-        .developer-section h3 {
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-
-        .code-block {
-            background-color: #2a2a2a;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-            font-family: monospace;
-            white-space: pre-wrap;
-            color: #4CAF50;
-            overflow-x: auto;
-        }
-
+        /* Mobile Specific Styles */
         @media (max-width: 768px) {
             .movies-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
-            
-            .categories-grid {
-                grid-template-columns: 1fr;
+                gap: 20px;
             }
             
             header {
@@ -378,21 +364,92 @@
                 width: 100%;
                 justify-content: space-between;
             }
+
+            .desktop-add-btn {
+                display: none;
+            }
+
+            .mobile-add-btn {
+                display: flex;
+            }
+
+            .modal {
+                padding: 10px;
+                align-items: flex-end;
+            }
+
+            .modal-content {
+                max-height: 85vh;
+                border-radius: 16px 16px 0 0;
+            }
+
+            .modal-header {
+                padding: 15px;
+            }
+
+            .modal-body {
+                padding: 15px;
+            }
+
+            .form-actions {
+                padding: 15px;
+                gap: 10px;
+            }
+
+            .btn {
+                padding: 14px 16px;
+                font-size: 0.95rem;
+            }
         }
 
         @media (max-width: 480px) {
             .container {
-                padding: 10px;
+                padding: 15px;
             }
             
+            .movies-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .logo i {
+                font-size: 1.8rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
             .modal-content {
-                padding: 20px;
+                max-height: 80vh;
             }
-            
-            .btn {
-                padding: 8px 15px;
-                font-size: 0.9rem;
+
+            .mobile-add-btn {
+                width: 55px;
+                height: 55px;
+                bottom: 15px;
+                right: 15px;
             }
+        }
+
+        /* Animation for modal */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-content {
+            animation: slideUp 0.3s ease-out;
         }
     </style>
 </head>
@@ -404,8 +461,8 @@
                 <span>Movie Collection</span>
             </div>
             <div class="action-buttons">
-                <button class="btn btn-primary" id="addMovieBtn">
-                    <i class="fas fa-video"></i> Add Movie
+                <button class="btn btn-primary desktop-add-btn" id="addMovieBtn">
+                    <i class="fas fa-plus"></i> Add Movie
                 </button>
             </div>
         </header>
@@ -418,77 +475,67 @@
                 <!-- Movies will be loaded from hardcoded data -->
             </div>
         </section>
-
-        <section class="developer-section">
-            <h3><i class="fas fa-code"></i> Developer Instructions</h3>
-            <p>To add new movies permanently, edit the <strong>hardcodedMovies</strong> array in the JavaScript code:</p>
-            <div class="code-block">
-// Add your movies here (this will be saved in GitHub)
-const hardcodedMovies = [
-    {
-        id: 1,
-        title: "Movie Title",
-        category: "Action",
-        iframeCode: '&lt;iframe src="YOUR_VIDEO_URL"&gt;&lt;/iframe&gt;',
-        description: "Movie description"
-    },
-    // Add more movies here...
-];
-            </div>
-            <p>After adding movies, upload this HTML file to GitHub Pages. The movies will be permanently visible to all visitors.</p>
-        </section>
     </div>
+
+    <!-- Mobile Floating Button -->
+    <button class="mobile-add-btn" id="mobileAddBtn">
+        <i class="fas fa-plus"></i>
+    </button>
 
     <!-- Add Movie Modal -->
     <div class="modal" id="movieModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Add New Movie (Temporary)</h3>
+                <h3 class="modal-title">Add New Movie</h3>
                 <button class="close-btn" id="closeMovieModal">&times;</button>
             </div>
-            <form id="movieForm">
-                <div class="form-group">
-                    <label for="movieTitle">Movie Title</label>
-                    <input type="text" id="movieTitle" class="form-control" placeholder="Enter movie title" required>
-                </div>
-                <div class="form-group">
-                    <label for="movieCategory">Category</label>
-                    <select id="movieCategory" class="form-control" required>
-                        <option value="Action">Action</option>
-                        <option value="Comedy">Comedy</option>
-                        <option value="Drama">Drama</option>
-                        <option value="Sci-Fi">Sci-Fi</option>
-                        <option value="Horror">Horror</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="movieIframe">Video Iframe Code</label>
-                    <textarea id="movieIframe" class="form-control" placeholder='Paste your video iframe code here (e.g., &lt;iframe src="..."&gt;&lt;/iframe&gt;)' required></textarea>
-                    <div class="iframe-help">
-                        <p><strong>How to get iframe code:</strong></p>
-                        <ul>
-                            <li>YouTube: Click Share → Embed → Copy the iframe code</li>
-                            <li>Vimeo: Click Share → Embed → Copy the iframe code</li>
-                            <li>Other platforms: Look for the "Embed" or "Share" option</li>
-                        </ul>
+            <div class="modal-body">
+                <form id="movieForm">
+                    <div class="form-group">
+                        <label for="movieTitle">Movie Title</label>
+                        <input type="text" id="movieTitle" class="form-control" placeholder="Enter movie title" required>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="movieDescription">Description (Optional)</label>
-                    <textarea id="movieDescription" class="form-control" placeholder="Enter movie description"></textarea>
-                </div>
-                <div class="form-actions">
-                    <button type="button" class="btn btn-secondary" id="cancelMovieBtn">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Add Movie</button>
-                </div>
-            </form>
+                    <div class="form-group">
+                        <label for="movieCategory">Category</label>
+                        <select id="movieCategory" class="form-control" required>
+                            <option value="Action">Action</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Drama">Drama</option>
+                            <option value="Sci-Fi">Sci-Fi</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Thriller">Thriller</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="movieIframe">Video Iframe Code</label>
+                        <textarea id="movieIframe" class="form-control" placeholder='Paste your video iframe code here (e.g., &lt;iframe src="..."&gt;&lt;/iframe&gt;)' required></textarea>
+                        <div class="iframe-help">
+                            <p><strong>How to get iframe code:</strong></p>
+                            <ul>
+                                <li>YouTube: Share → Embed → Copy iframe code</li>
+                                <li>Vimeo: Share → Embed → Copy iframe code</li>
+                                <li>Other: Look for "Embed" or "Share" option</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="movieDescription">Description (Optional)</label>
+                        <textarea id="movieDescription" class="form-control" placeholder="Enter movie description"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelMovieBtn">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="publishMovieBtn">
+                    <i class="fas fa-cloud-upload-alt"></i> Publish Movie
+                </button>
+            </div>
         </div>
     </div>
 
     <script>
-        // =============================================
-        // HARDCODED MOVIES - EDIT THIS SECTION
-        // =============================================
+        // Hardcoded Movies
         const hardcodedMovies = [
             {
                 id: 1,
@@ -503,55 +550,36 @@ const hardcodedMovies = [
                 category: "Sci-Fi",
                 iframeCode: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/YoHD9XEInc0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
                 description: "A mind-bending thriller about dream sharing"
-            },
-            {
-                id: 3,
-                title: "The Dark Knight Trailer",
-                category: "Action",
-                iframeCode: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/EXeTwQWrcwY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "Batman faces his greatest challenge: The Joker"
-            },
-            {
-                id: 4,
-                title: "Interstellar Official Trailer",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/zSWdZVtXT7E" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "A team of explorers travel through a wormhole in space"
             }
         ];
-        // =============================================
-        // END OF HARDCODED MOVIES SECTION
-        // =============================================
 
         document.addEventListener('DOMContentLoaded', function() {
             // DOM Elements
             const addMovieBtn = document.getElementById('addMovieBtn');
+            const mobileAddBtn = document.getElementById('mobileAddBtn');
             const movieModal = document.getElementById('movieModal');
             const closeMovieModal = document.getElementById('closeMovieModal');
             const cancelMovieBtn = document.getElementById('cancelMovieBtn');
+            const publishMovieBtn = document.getElementById('publishMovieBtn');
             const movieForm = document.getElementById('movieForm');
             const moviesContainer = document.getElementById('moviesContainer');
             
-            // Temporary movies storage (for testing)
+            // Temporary movies storage
             let temporaryMovies = [];
             
             // Initialize the app
             displayMovies();
             
-            // Event Listeners
-            addMovieBtn.addEventListener('click', () => {
-                movieModal.style.display = 'flex';
-            });
+            // Event Listeners for opening modal
+            addMovieBtn.addEventListener('click', openModal);
+            mobileAddBtn.addEventListener('click', openModal);
             
-            closeMovieModal.addEventListener('click', () => {
-                movieModal.style.display = 'none';
-            });
+            // Event Listeners for closing modal
+            closeMovieModal.addEventListener('click', closeModal);
+            cancelMovieBtn.addEventListener('click', closeModal);
             
-            cancelMovieBtn.addEventListener('click', () => {
-                movieModal.style.display = 'none';
-            });
-            
-            movieForm.addEventListener('submit', function(e) {
+            // Publish button event
+            publishMovieBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const title = document.getElementById('movieTitle').value.trim();
                 const category = document.getElementById('movieCategory').value;
@@ -563,7 +591,6 @@ const hardcodedMovies = [
                     return;
                 }
                 
-                // Validate iframe code
                 if (!iframeCode.includes('<iframe') || !iframeCode.includes('src=')) {
                     alert('Please provide a valid iframe code. It should contain an iframe tag with a src attribute.');
                     return;
@@ -571,17 +598,27 @@ const hardcodedMovies = [
                 
                 addTemporaryMovie(title, category, iframeCode, description);
                 movieForm.reset();
-                movieModal.style.display = 'none';
+                closeModal();
             });
             
             // Close modal when clicking outside
-            window.addEventListener('click', function(e) {
+            movieModal.addEventListener('click', function(e) {
                 if (e.target === movieModal) {
-                    movieModal.style.display = 'none';
+                    closeModal();
                 }
             });
             
             // Functions
+            function openModal() {
+                movieModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+            
+            function closeModal() {
+                movieModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+            
             function addTemporaryMovie(title, category, iframeCode, description = '') {
                 const movie = {
                     id: Date.now(),
@@ -595,7 +632,7 @@ const hardcodedMovies = [
                 temporaryMovies.push(movie);
                 displayMovies();
                 
-                alert('Note: This movie is temporarily added. To make it permanent, add it to the hardcodedMovies array in the code.');
+                alert('Movie added successfully! Note: This is temporary. To make it permanent, add to the hardcodedMovies array.');
             }
             
             function deleteMovie(id) {
@@ -603,7 +640,6 @@ const hardcodedMovies = [
                     return;
                 }
                 
-                // Check if it's a temporary movie
                 const movieIndex = temporaryMovies.findIndex(movie => movie.id === id);
                 if (movieIndex !== -1) {
                     temporaryMovies.splice(movieIndex, 1);
@@ -613,7 +649,6 @@ const hardcodedMovies = [
             }
             
             function displayMovies() {
-                // Combine hardcoded and temporary movies
                 const allMovies = [...hardcodedMovies, ...temporaryMovies];
                 
                 if (allMovies.length === 0) {
@@ -640,8 +675,8 @@ const hardcodedMovies = [
                             <span class="movie-category">${movie.category}</span>
                             <p class="movie-description">${movie.description || 'No description provided.'}</p>
                             <div class="movie-actions">
-                                ${movie.isTemporary ? `<button class="icon-btn delete-movie" data-id="${movie.id}">
-                                    <i class="fas fa-trash"></i>
+                                ${movie.isTemporary ? `<button class="btn btn-secondary delete-movie" data-id="${movie.id}" style="padding: 6px 12px; font-size: 0.8rem;">
+                                    <i class="fas fa-trash"></i> Delete
                                 </button>` : '<small style="color: #4CAF50;">Permanent</small>'}
                             </div>
                         </div>
