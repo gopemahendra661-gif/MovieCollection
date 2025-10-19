@@ -3,70 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Collection - New Project</title>
+    <title>MovieHub - Your Movie Collection</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body { 
-            font-family: Arial; 
-            padding: 20px; 
-            background: #1a1a1a; 
-            color: white; 
-        }
-        .container { 
-            max-width: 800px; 
-            margin: 0 auto; 
-        }
-        .btn { 
-            background: #e50914; 
-            color: white; 
-            padding: 12px 20px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            margin: 10px; 
-            font-size: 16px;
-        }
-        .movie { 
-            background: #2a2a2a; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             padding: 15px; 
-            margin: 15px 0; 
-            border-radius: 10px;
-            border: 1px solid #444;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: white;
+            min-height: 100vh;
         }
-        input, textarea { 
+        
+        .container { 
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        
+        .tagline {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .btn { 
+            background: linear-gradient(45deg, #e50914, #ff4757);
+            color: white; 
+            padding: 10px 16px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            margin: 5px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(229, 9, 20, 0.3);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #333, #555);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(45deg, #dc3545, #ff6b6b);
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #20c997);
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin: 2px;
+        }
+        
+        .movie { 
+            background: rgba(42, 42, 42, 0.8);
+            padding: 15px; 
+            margin: 12px 0; 
+            border-radius: 12px;
+            border: 1px solid #333;
+            backdrop-filter: blur(10px);
+        }
+        
+        .movie-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .movie-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            flex: 1;
+            margin-right: 10px;
+        }
+        
+        .movie-category {
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .movie-description {
+            color: #ccc;
+            font-size: 14px;
+            line-height: 1.4;
+            margin: 10px 0;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            margin: 10px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+        
+        .movie-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #333;
+        }
+        
+        .user-badge {
+            background: #333;
+            color: #ccc;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+        
+        input, textarea, select { 
             width: 100%; 
             padding: 12px; 
             margin: 8px 0; 
-            background: #333; 
+            background: #222; 
             color: white; 
-            border: 1px solid #555; 
-            border-radius: 5px;
+            border: 1px solid #444; 
+            border-radius: 8px;
+            font-size: 14px;
         }
+        
         .form-container {
-            background: #2a2a2a;
+            background: rgba(42, 42, 42, 0.9);
             padding: 20px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin: 20px 0;
             display: none;
+            backdrop-filter: blur(10px);
+        }
+        
+        .form-header {
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .url-help {
+            font-size: 12px;
+            color: #888;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            margin: 15px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #333;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: #333;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background: #e50914;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .movie-header {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .movie-title {
+                margin-right: 0;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .button-group .btn {
+                margin: 3px 0;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 style="text-align: center; color: #e50914;">🎬 Movie Collection - NEW PROJECT</h1>
-        <div style="text-align: center;">
+        <div class="header">
+            <div class="logo">🎬 MovieHub</div>
+            <div class="tagline">Your Personal Movie Collection - All Platforms Supported</div>
+        </div>
+        
+        <div class="button-group">
             <button class="btn" onclick="showForm()">➕ Add Movie</button>
-            <button class="btn" onclick="loadMovies()">🔄 Load Movies</button>
+            <button class="btn btn-secondary" onclick="loadMovies()">🔄 Refresh</button>
         </div>
         
         <div id="form" class="form-container">
-            <h3 style="text-align: center;">Add New Movie</h3>
-            <input type="text" id="title" placeholder="Movie Title">
-            <input type="text" id="category" placeholder="Category">
-            <textarea id="iframe" placeholder="Iframe Code (YouTube: Share → Embed → Copy)" rows="3"></textarea>
+            <div class="form-header">Add New Movie</div>
+            <input type="text" id="title" placeholder="Movie Title *" required>
+            <input type="text" id="category" placeholder="Category *" required>
+            
+            <div class="tab-buttons">
+                <button type="button" class="tab-btn active" onclick="switchTab('urlTab')">🌐 Video URL</button>
+                <button type="button" class="tab-btn" onclick="switchTab('iframeTab')">📺 Embed Code</button>
+            </div>
+            
+            <div id="urlTab" class="tab-content active">
+                <input type="text" id="videoUrl" placeholder="Paste Video URL *">
+                <div class="url-help">
+                    Supported: YouTube, Vimeo, Dailymotion, Facebook, etc.<br>
+                    Example: https://www.youtube.com/watch?v=VIDEO_ID
+                </div>
+            </div>
+            
+            <div id="iframeTab" class="tab-content">
+                <textarea id="iframeCode" placeholder="Paste Embed Iframe Code *" rows="3"></textarea>
+                <div class="url-help">
+                    Paste full iframe code from any video platform<br>
+                    Example: &lt;iframe src="..."&gt;&lt;/iframe&gt;
+                </div>
+            </div>
+            
             <textarea id="desc" placeholder="Description" rows="2"></textarea>
-            <div style="text-align: center;">
-                <button class="btn" onclick="addMovie()">💾 Save Movie</button>
+            
+            <div class="button-group">
+                <button class="btn btn-success" onclick="addMovie()">💾 Save Movie</button>
+                <button class="btn btn-secondary" onclick="hideForm()">❌ Cancel</button>
             </div>
         </div>
         
@@ -75,25 +322,143 @@
 
     <script>
         // 🔥 YAHAN APNA SUPABASE URL AUR API KEY DALEN
-        const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co'; // APNA ACTUAL URL YAHAN DALEN
-        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo'; // APNA ACTUAL API KEY YAHAN DALEN
+        const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
+        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo';
         
-        // Initialize Supabase
         let supabase;
-        
+        let currentUser = 'user_' + Math.random().toString(36).substr(2, 9);
+
         document.addEventListener('DOMContentLoaded', function() {
             supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            console.log('✅ NEW PROJECT: Supabase initialized');
+            console.log('✅ MovieHub initialized');
             loadMovies();
         });
 
         function showForm() {
             document.getElementById('form').style.display = 'block';
+            // Reset form
+            switchTab('urlTab');
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('iframeCode').value = '';
+        }
+
+        function hideForm() {
+            document.getElementById('form').style.display = 'none';
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // YouTube URL से video ID extract करना
+        function getYouTubeVideoId(url) {
+            const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        // Vimeo URL से video ID extract करना
+        function getVimeoVideoId(url) {
+            const regex = /(?:vimeo\.com\/|player\.vimeo\.com\/video\/)([0-9]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        // Dailymotion URL से video ID extract करना
+        function getDailymotionVideoId(url) {
+            const regex = /(?:dailymotion\.com\/video\/|dai\.ly\/)([a-zA-Z0-9]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        // Facebook URL से video ID extract करना
+        function getFacebookVideoId(url) {
+            const regex = /(?:facebook\.com\/.*\/videos\/|fb\.watch\/)([0-9]+)/;
+            const match = url.match(regex);
+            return match ? match[1] : null;
+        }
+
+        // URL से automatically iframe generate करना
+        function generateIframeFromUrl(url) {
+            if (!url) return null;
+
+            // YouTube
+            const youtubeId = getYouTubeVideoId(url);
+            if (youtubeId) {
+                return `<iframe 
+                    width="100%" 
+                    height="315" 
+                    src="https://www.youtube.com/embed/${youtubeId}" 
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>`;
+            }
+
+            // Vimeo
+            const vimeoId = getVimeoVideoId(url);
+            if (vimeoId) {
+                return `<iframe 
+                    src="https://player.vimeo.com/video/${vimeoId}" 
+                    width="100%" 
+                    height="360" 
+                    frameborder="0" 
+                    allow="autoplay; fullscreen; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>`;
+            }
+
+            // Dailymotion
+            const dailymotionId = getDailymotionVideoId(url);
+            if (dailymotionId) {
+                return `<iframe 
+                    frameborder="0" 
+                    width="100%" 
+                    height="360" 
+                    src="https://www.dailymotion.com/embed/video/${dailymotionId}" 
+                    allowfullscreen>
+                </iframe>`;
+            }
+
+            // Facebook (limited support)
+            const facebookId = getFacebookVideoId(url);
+            if (facebookId) {
+                return `<iframe 
+                    src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}" 
+                    width="100%" 
+                    height="360" 
+                    style="border:none;overflow:hidden" 
+                    scrolling="no" 
+                    frameborder="0" 
+                    allowfullscreen="true" 
+                    allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" 
+                    allowFullScreen="true">
+                </iframe>`;
+            }
+
+            // Agar koi supported platform nahi hai, to custom iframe
+            return `<iframe 
+                src="${url}" 
+                width="100%" 
+                height="360" 
+                frameborder="0" 
+                allowfullscreen>
+            </iframe>`;
         }
 
         async function loadMovies() {
             try {
-                document.getElementById('movies').innerHTML = '<p style="text-align: center;">Loading movies from NEW PROJECT...</p>';
+                document.getElementById('movies').innerHTML = '<div class="loading">Loading movies...</div>';
                 
                 const { data, error } = await supabase
                     .from('movies')
@@ -104,8 +469,9 @@
                 
                 if (data.length === 0) {
                     document.getElementById('movies').innerHTML = `
-                        <div style="text-align: center; padding: 40px;">
-                            <p>🎬 No movies found in NEW PROJECT</p>
+                        <div class="empty-state">
+                            <div>🎬</div>
+                            <p>No movies found</p>
                             <p>Click "Add Movie" to add your first movie!</p>
                         </div>
                     `;
@@ -114,19 +480,29 @@
                 
                 document.getElementById('movies').innerHTML = data.map(movie => `
                     <div class="movie">
-                        <h3>${movie.title}</h3>
-                        <p><strong>Category:</strong> 
-                            <span style="background: #e50914; color: white; padding: 3px 10px; border-radius: 15px; font-size: 12px;">
-                                ${movie.category}
-                            </span>
-                        </p>
-                        <p>${movie.description || 'No description available'}</p>
-                        <div style="margin: 15px 0;">
+                        <div class="movie-header">
+                            <div class="movie-title">${movie.title}</div>
+                            <div class="movie-category">${movie.category}</div>
+                        </div>
+                        
+                        <div class="movie-description">${movie.description || 'No description available'}</div>
+                        
+                        <div class="video-container">
                             ${movie.iframe_code}
                         </div>
-                        <button class="btn" onclick="deleteMovie(${movie.id})" style="background: #dc3545;">
-                            🗑️ Delete
-                        </button>
+                        
+                        <div class="movie-actions">
+                            <div class="user-badge">
+                                👤 ${movie.user_id || 'Unknown'}
+                            </div>
+                            <div>
+                                ${movie.user_id === currentUser ? `
+                                    <button class="btn btn-danger btn-small" onclick="deleteMovie(${movie.id})">
+                                        🗑️ Delete
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
                     </div>
                 `).join('');
             } catch (error) {
@@ -142,11 +518,33 @@
         async function addMovie() {
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;
-            const iframe = document.getElementById('iframe').value;
             const desc = document.getElementById('desc').value;
 
-            if (!title || !category || !iframe) {
-                alert('Please fill all fields');
+            let iframeCode = '';
+
+            // Check which tab is active
+            const urlTabActive = document.getElementById('urlTab').classList.contains('active');
+            
+            if (urlTabActive) {
+                // URL tab active
+                const videoUrl = document.getElementById('videoUrl').value;
+                if (!videoUrl) {
+                    alert('Please enter a video URL');
+                    return;
+                }
+                iframeCode = generateIframeFromUrl(videoUrl);
+            } else {
+                // Iframe tab active
+                const iframeInput = document.getElementById('iframeCode').value;
+                if (!iframeInput) {
+                    alert('Please enter embed iframe code');
+                    return;
+                }
+                iframeCode = iframeInput;
+            }
+
+            if (!title || !category || !iframeCode) {
+                alert('Please fill all required fields');
                 return;
             }
 
@@ -157,20 +555,22 @@
                         { 
                             title: title, 
                             category: category, 
-                            iframe_code: iframe, 
-                            description: desc 
+                            iframe_code: iframeCode, 
+                            description: desc,
+                            user_id: currentUser
                         }
                     ]);
 
                 if (error) throw error;
 
-                alert('✅ Movie added successfully to NEW PROJECT!');
-                document.getElementById('form').style.display = 'none';
+                alert('✅ Movie added successfully!');
+                hideForm();
                 
                 // Clear form
                 document.getElementById('title').value = '';
                 document.getElementById('category').value = '';
-                document.getElementById('iframe').value = '';
+                document.getElementById('videoUrl').value = '';
+                document.getElementById('iframeCode').value = '';
                 document.getElementById('desc').value = '';
                 
                 loadMovies();
