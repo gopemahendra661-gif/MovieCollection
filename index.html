@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Collection Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #e50914;
+            --secondary: #141414;
+            --accent: #2a2a2a;
+            --text: #ffffff;
+            --text-secondary: #b3b3b3;
+            --card-bg: #1a1a1a;
+            --modal-bg: rgba(0, 0, 0, 0.85);
+        }
+
+        body {
+            background-color: var(--secondary);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .logo i {
+            font-size: 2.2rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .categories-section {
+            margin-bottom: 30px;
+        }
+
+        .categories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .category-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-info h3 {
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .category-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .icon-btn:hover {
+            color: var(--primary);
+        }
+
+        .movies-section {
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .movie-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .movie-poster {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            overflow: hidden;
+        }
+
+        .movie-poster iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .movie-info {
+            padding: 15px;
+        }
+
+        .movie-title {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .movie-category {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+
+        .movie-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .movie-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--text);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #2a2a2a;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        @media (max-width: 768px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .action-buttons {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .btn {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-film"></i>
+                <span>Movie Collection</span>
+            </div>
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="addCategoryBtn">
+                    <i class="fas fa-plus"></i> Add Category
+                </button>
+                <button class="btn btn-secondary" id="addMovieBtn">
+                    <i class="fas fa-video"></i> Add Movie
+                </button>
+            </div>
+        </header>
+
+        <section class="categories-section">
+            <div class="categories-header">
+                <h2 class="section-title">Categories</h2>
+            </div>
+            <div class="categories-grid" id="categoriesContainer">
+                <!-- Categories will be added here dynamically -->
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <h3>No Categories Yet</h3>
+                    <p>Add your first category to get started</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="movies-section">
+            <div class="section-header">
+                <h2 class="section-title">All Movies</h2>
+            </div>
+            <div class="movies-grid" id="moviesContainer">
+                <!-- Movies will be added here dynamically -->
+                <div class="empty-state">
+                    <i class="fas fa-film"></i>
+                    <h3>No Movies Added</h3>
+                    <p>Add your first movie to start building your collection</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Add Category Modal -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Category</h3>
+                <button class="close-btn" id="closeCategoryModal">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <div class="form-group">
+                    <label for="categoryName">Category Name</label>
+                    <input type="text" id="categoryName" class="form-control" placeholder="Enter category name" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoryDescription">Description (Optional)</label>
+                    <textarea id="categoryDescription" class="form-control" placeholder="Enter category description"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelCategoryBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Movie Modal -->
+    <div class="modal" id="movieModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Movie</h3>
+                <button class="close-btn" id="closeMovieModal">&times;</button>
+            </div>
+            <form id="movieForm">
+                <div class="form-group">
+                    <label for="movieTitle">Movie Title</label>
+                    <input type="text" id="movieTitle" class="form-control" placeholder="Enter movie title" required>
+                </div>
+                <div class="form-group">
+                    <label for="movieCategory">Category</label>
+                    <select id="movieCategory" class="form-control" required>
+                        <option value="">Select a category</option>
+                        <!-- Categories will be populated here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="movieIframe">Video Iframe Code</label>
+                    <textarea id="movieIframe" class="form-control" placeholder="Paste your video iframe code here..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="movieDescription">Description (Optional)</label>
+                    <textarea id="movieDescription" class="form-control" placeholder="Enter movie description"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelMovieBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Movie</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const addCategoryBtn = document.getElementById('addCategoryBtn');
+            const addMovieBtn = document.getElementById('addMovieBtn');
+            const categoryModal = document.getElementById('categoryModal');
+            const movieModal = document.getElementById('movieModal');
+            const closeCategoryModal = document.getElementById('closeCategoryModal');
+            const closeMovieModal = document.getElementById('closeMovieModal');
+            const cancelCategoryBtn = document.getElementById('cancelCategoryBtn');
+            const cancelMovieBtn = document.getElementById('cancelMovieBtn');
+            const categoryForm = document.getElementById('categoryForm');
+            const movieForm = document.getElementById('movieForm');
+            const categoriesContainer = document.getElementById('categoriesContainer');
+            const moviesContainer = document.getElementById('moviesContainer');
+            const movieCategorySelect = document.getElementById('movieCategory');
+            
+            // Load data from localStorage
+            let categories = JSON.parse(localStorage.getItem('categories')) || [];
+            let movies = JSON.parse(localStorage.getItem('movies')) || [];
+            
+            // Initialize the app
+            displayCategories();
+            displayMovies();
+            populateCategorySelect();
+            
+            // Event Listeners
+            addCategoryBtn.addEventListener('click', () => {
+                categoryModal.style.display = 'flex';
+            });
+            
+            addMovieBtn.addEventListener('click', () => {
+                if (categories.length === 0) {
+                    alert('Please create a category first before adding movies.');
+                    return;
+                }
+                movieModal.style.display = 'flex';
+            });
+            
+            closeCategoryModal.addEventListener('click', () => {
+                categoryModal.style.display = 'none';
+            });
+            
+            closeMovieModal.addEventListener('click', () => {
+                movieModal.style.display = 'none';
+            });
+            
+            cancelCategoryBtn.addEventListener('click', () => {
+                categoryModal.style.display = 'none';
+            });
+            
+            cancelMovieBtn.addEventListener('click', () => {
+                movieModal.style.display = 'none';
+            });
+            
+            categoryForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const name = document.getElementById('categoryName').value.trim();
+                const description = document.getElementById('categoryDescription').value.trim();
+                
+                if (!name) {
+                    alert('Please enter a category name');
+                    return;
+                }
+                
+                addCategory(name, description);
+                categoryForm.reset();
+                categoryModal.style.display = 'none';
+            });
+            
+            movieForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const title = document.getElementById('movieTitle').value.trim();
+                const category = document.getElementById('movieCategory').value;
+                const iframeCode = document.getElementById('movieIframe').value.trim();
+                const description = document.getElementById('movieDescription').value.trim();
+                
+                if (!title || !category || !iframeCode) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                addMovie(title, category, iframeCode, description);
+                movieForm.reset();
+                movieModal.style.display = 'none';
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', function(e) {
+                if (e.target === categoryModal) {
+                    categoryModal.style.display = 'none';
+                }
+                if (e.target === movieModal) {
+                    movieModal.style.display = 'none';
+                }
+            });
+            
+            // Functions
+            function addCategory(name, description = '') {
+                const category = {
+                    id: Date.now(),
+                    name,
+                    description,
+                    movieCount: 0
+                };
+                
+                categories.push(category);
+                localStorage.setItem('categories', JSON.stringify(categories));
+                displayCategories();
+                populateCategorySelect();
+            }
+            
+            function addMovie(title, categoryId, iframeCode, description = '') {
+                const movie = {
+                    id: Date.now(),
+                    title,
+                    categoryId: parseInt(categoryId),
+                    iframeCode,
+                    description
+                };
+                
+                // Update movie count in category
+                const categoryIndex = categories.findIndex(cat => cat.id === parseInt(categoryId));
+                if (categoryIndex !== -1) {
+                    categories[categoryIndex].movieCount++;
+                    localStorage.setItem('categories', JSON.stringify(categories));
+                    displayCategories();
+                }
+                
+                movies.push(movie);
+                localStorage.setItem('movies', JSON.stringify(movies));
+                displayMovies();
+            }
+            
+            function deleteCategory(id) {
+                if (!confirm('Are you sure you want to delete this category? All movies in this category will also be deleted.')) {
+                    return;
+                }
+                
+                // Remove category
+                categories = categories.filter(cat => cat.id !== id);
+                localStorage.setItem('categories', JSON.stringify(categories));
+                
+                // Remove movies in this category
+                movies = movies.filter(movie => movie.categoryId !== id);
+                localStorage.setItem('movies', JSON.stringify(movies));
+                
+                displayCategories();
+                displayMovies();
+                populateCategorySelect();
+            }
+            
+            function deleteMovie(id) {
+                if (!confirm('Are you sure you want to delete this movie?')) {
+                    return;
+                }
+                
+                // Find movie to get its category
+                const movieIndex = movies.findIndex(movie => movie.id === id);
+                if (movieIndex !== -1) {
+                    const categoryId = movies[movieIndex].categoryId;
+                    
+                    // Update movie count in category
+                    const categoryIndex = categories.findIndex(cat => cat.id === categoryId);
+                    if (categoryIndex !== -1) {
+                        categories[categoryIndex].movieCount--;
+                        localStorage.setItem('categories', JSON.stringify(categories));
+                        displayCategories();
+                    }
+                }
+                
+                // Remove movie
+                movies = movies.filter(movie => movie.id !== id);
+                localStorage.setItem('movies', JSON.stringify(movies));
+                displayMovies();
+            }
+            
+            function displayCategories() {
+                if (categories.length === 0) {
+                    categoriesContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <h3>No Categories Yet</h3>
+                            <p>Add your first category to get started</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                categoriesContainer.innerHTML = '';
+                categories.forEach(category => {
+                    const categoryCard = document.createElement('div');
+                    categoryCard.className = 'category-card';
+                    categoryCard.innerHTML = `
+                        <div class="category-info">
+                            <h3>${category.name}</h3>
+                            <p>${category.description || 'No description'}</p>
+                            <p><small>${category.movieCount} movies</small></p>
+                        </div>
+                        <div class="category-actions">
+                            <button class="icon-btn delete-category" data-id="${category.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    categoriesContainer.appendChild(categoryCard);
+                });
+                
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.delete-category').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const categoryId = parseInt(this.getAttribute('data-id'));
+                        deleteCategory(categoryId);
+                    });
+                });
+            }
+            
+            function displayMovies() {
+                if (movies.length === 0) {
+                    moviesContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-film"></i>
+                            <h3>No Movies Added</h3>
+                            <p>Add your first movie to start building your collection</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                moviesContainer.innerHTML = '';
+                movies.forEach(movie => {
+                    const category = categories.find(cat => cat.id === movie.categoryId);
+                    const movieCard = document.createElement('div');
+                    movieCard.className = 'movie-card';
+                    movieCard.innerHTML = `
+                        <div class="movie-poster">
+                            ${movie.iframeCode}
+                        </div>
+                        <div class="movie-info">
+                            <h3 class="movie-title">${movie.title}</h3>
+                            <span class="movie-category">${category ? category.name : 'Uncategorized'}</span>
+                            <p class="movie-description">${movie.description || 'No description provided.'}</p>
+                            <div class="movie-actions">
+                                <button class="icon-btn delete-movie" data-id="${movie.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    moviesContainer.appendChild(movieCard);
+                });
+                
+                // Add event listeners to delete buttons
+                document.querySelectorAll('.delete-movie').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const movieId = parseInt(this.getAttribute('data-id'));
+                        deleteMovie(movieId);
+                    });
+                });
+            }
+            
+            function populateCategorySelect() {
+                movieCategorySelect.innerHTML = '<option value="">Select a category</option>';
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    movieCategorySelect.appendChild(option);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
