@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Collection - Mobile Responsive</title>
+    <title>Movie Collection - Supabase</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -20,59 +21,42 @@
             --text: #ffffff;
             --text-secondary: #b3b3b3;
             --card-bg: #1a1a1a;
-            --modal-bg: rgba(0, 0, 0, 0.95);
         }
 
         body {
             background-color: var(--secondary);
             color: var(--text);
             line-height: 1.6;
-            padding-bottom: 80px; /* Space for mobile buttons */
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
             padding: 20px;
         }
 
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
         header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            text-align: center;
             padding: 20px 0;
-            border-bottom: 1px solid #333;
             margin-bottom: 30px;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.8rem;
-            font-weight: bold;
+            font-size: 2.5rem;
             color: var(--primary);
-        }
-
-        .logo i {
-            font-size: 2.2rem;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
+            margin-bottom: 10px;
         }
 
         .btn {
-            padding: 12px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
             border: none;
             font-size: 1rem;
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            transition: all 0.3s;
+            margin: 10px;
             font-weight: 600;
         }
 
@@ -86,35 +70,11 @@
             color: white;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        .movies-section {
-            margin-bottom: 40px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            color: var(--text);
-        }
-
         .movies-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .movie-card {
@@ -122,17 +82,12 @@
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s;
-        }
-
-        .movie-card:hover {
-            transform: translateY(-8px);
         }
 
         .movie-poster {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%;
             overflow: hidden;
         }
 
@@ -150,7 +105,7 @@
         }
 
         .movie-title {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-bottom: 8px;
             color: var(--text);
         }
@@ -169,38 +124,8 @@
             color: var(--text-secondary);
             font-size: 0.9rem;
             margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
         }
 
-        .movie-actions {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        /* Mobile Fixed Button */
-        .mobile-add-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 100;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.5);
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Improved Modal for Mobile */
         .modal {
             display: none;
             position: fixed;
@@ -208,12 +133,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--modal-bg);
+            background-color: rgba(0, 0, 0, 0.95);
             z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            overflow-y: auto;
         }
 
         .modal-content {
@@ -221,49 +145,7 @@
             border-radius: 12px;
             width: 100%;
             max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #333;
-            position: sticky;
-            top: 0;
-            background: var(--card-bg);
-            z-index: 1;
-        }
-
-        .modal-title {
-            font-size: 1.3rem;
-            color: var(--text);
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-        }
-
-        .close-btn:hover {
-            background: #333;
-        }
-
-        .modal-body {
-            padding: 20px;
+            padding: 30px;
         }
 
         .form-group {
@@ -274,27 +156,20 @@
             display: block;
             margin-bottom: 8px;
             color: var(--text);
-            font-weight: 500;
         }
 
         .form-control {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid #444;
             background-color: #2a2a2a;
             color: var(--text);
             font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary);
         }
 
         textarea.form-control {
-            min-height: 120px;
+            min-height: 100px;
             resize: vertical;
         }
 
@@ -302,154 +177,21 @@
             display: flex;
             gap: 12px;
             margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid #333;
-            position: sticky;
-            bottom: 0;
-            background: var(--card-bg);
-            padding: 20px;
         }
 
-        .form-actions .btn {
-            flex: 1;
-            justify-content: center;
-        }
-
-        .empty-state {
+        .loading {
             text-align: center;
-            padding: 40px 20px;
+            padding: 40px;
             color: var(--text-secondary);
-            grid-column: 1 / -1;
         }
 
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            color: #444;
-        }
-
-        .iframe-help {
-            background-color: #2a2a2a;
-            border-left: 4px solid var(--primary);
-            padding: 12px 15px;
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            border-radius: 0 8px 8px 0;
-        }
-
-        .iframe-help ul {
-            margin-left: 20px;
-            margin-top: 8px;
-        }
-
-        .iframe-help li {
-            margin-bottom: 5px;
-        }
-
-        /* Mobile Specific Styles */
-        @media (max-width: 768px) {
-            .movies-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
-            }
-            
-            header {
-                flex-direction: column;
-                gap: 15px;
-                align-items: flex-start;
-            }
-            
-            .action-buttons {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .desktop-add-btn {
-                display: none;
-            }
-
-            .mobile-add-btn {
-                display: flex;
-            }
-
-            .modal {
-                padding: 10px;
-                align-items: flex-end;
-            }
-
-            .modal-content {
-                max-height: 85vh;
-                border-radius: 16px 16px 0 0;
-            }
-
-            .modal-header {
-                padding: 15px;
-            }
-
-            .modal-body {
-                padding: 15px;
-            }
-
-            .form-actions {
-                padding: 15px;
-                gap: 10px;
-            }
-
-            .btn {
-                padding: 14px 16px;
-                font-size: 0.95rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .movies-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .logo {
-                font-size: 1.5rem;
-            }
-
-            .logo i {
-                font-size: 1.8rem;
-            }
-
-            .section-title {
-                font-size: 1.3rem;
-            }
-
-            .modal-content {
-                max-height: 80vh;
-            }
-
-            .mobile-add-btn {
-                width: 55px;
-                height: 55px;
-                bottom: 15px;
-                right: 15px;
-            }
-        }
-
-        /* Animation for modal */
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-content {
-            animation: slideUp 0.3s ease-out;
+        .success-message {
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            text-align: center;
         }
     </style>
 </head>
@@ -458,301 +200,214 @@
         <header>
             <div class="logo">
                 <i class="fas fa-film"></i>
-                <span>Movie Collection</span>
             </div>
-            <div class="action-buttons">
-                <button class="btn btn-primary desktop-add-btn" id="addMovieBtn">
-                    <i class="fas fa-plus"></i> Add Movie
-                </button>
-            </div>
+            <h1>Movie Collection</h1>
+            <p>Add and manage your favorite movies</p>
+            <button class="btn btn-primary" id="addMovieBtn">
+                <i class="fas fa-plus"></i> Add Movie
+            </button>
+            <button class="btn btn-secondary" id="refreshBtn">
+                <i class="fas fa-sync-alt"></i> Refresh
+            </button>
         </header>
 
-        <section class="movies-section">
-            <div class="section-header">
-                <h2 class="section-title">Featured Movies</h2>
-            </div>
-            <div class="movies-grid" id="moviesContainer">
-                <!-- Movies will be loaded from hardcoded data -->
-            </div>
-        </section>
-    </div>
-
-    <!-- Mobile Floating Button -->
-    <button class="mobile-add-btn" id="mobileAddBtn">
-        <i class="fas fa-plus"></i>
-    </button>
-
-    <!-- Add Movie Modal -->
-    <div class="modal" id="movieModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add New Movie</h3>
-                <button class="close-btn" id="closeMovieModal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="movieForm">
-                    <div class="form-group">
-                        <label for="movieTitle">Movie Title</label>
-                        <input type="text" id="movieTitle" class="form-control" placeholder="Enter movie title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="movieCategory">Category</label>
-                        <select id="movieCategory" class="form-control" required>
-                            <option value="Action">Action</option>
-                            <option value="Comedy">Comedy</option>
-                            <option value="Drama">Drama</option>
-                            <option value="Sci-Fi">Sci-Fi</option>
-                            <option value="Horror">Horror</option>
-                            <option value="Romance">Romance</option>
-                            <option value="Thriller">Thriller</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="movieIframe">Video Iframe Code</label>
-                        <textarea id="movieIframe" class="form-control" placeholder='Paste your video iframe code here (e.g., &lt;iframe src="..."&gt;&lt;/iframe&gt;)' required></textarea>
-                        <div class="iframe-help">
-                            <p><strong>How to get iframe code:</strong></p>
-                            <ul>
-                                <li>YouTube: Share → Embed → Copy iframe code</li>
-                                <li>Vimeo: Share → Embed → Copy iframe code</li>
-                                <li>Other: Look for "Embed" or "Share" option</li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="movieDescription">Description (Optional)</label>
-                        <textarea id="movieDescription" class="form-control" placeholder="Enter movie description"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" id="cancelMovieBtn">Cancel</button>
-                <button type="submit" class="btn btn-primary" id="publishMovieBtn">
-                    <i class="fas fa-cloud-upload-alt"></i> Publish Movie
-                </button>
+        <div id="message"></div>
+        <div id="moviesContainer">
+            <div class="loading">
+                <p>Loading movies from database...</p>
             </div>
         </div>
     </div>
 
+    <!-- Add Movie Modal -->
+    <div class="modal" id="movieModal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; text-align: center;">Add New Movie</h3>
+            <form id="movieForm">
+                <div class="form-group">
+                    <label>Movie Title *</label>
+                    <input type="text" id="movieTitle" class="form-control" placeholder="Enter movie title" required>
+                </div>
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="movieCategory" class="form-control" required>
+                        <option value="">Select Category</option>
+                        <option value="Action">Action</option>
+                        <option value="Comedy">Comedy</option>
+                        <option value="Drama">Drama</option>
+                        <option value="Sci-Fi">Sci-Fi</option>
+                        <option value="Horror">Horror</option>
+                        <option value="Romance">Romance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Video Iframe Code *</label>
+                    <textarea id="movieIframe" class="form-control" placeholder='Paste iframe code here (e.g., &lt;iframe src="https://www.youtube.com/embed/VIDEO_ID"&gt;&lt;/iframe&gt;)' required></textarea>
+                    <small style="color: #888; font-size: 0.8rem;">YouTube: Share → Embed → Copy iframe code</small>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="movieDescription" class="form-control" placeholder="Enter movie description"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save to Database
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Hardcoded Movies
-        const hardcodedMovies = [
-{
-                id: 1,
-                title: "Inception Official Trailer",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://xhamster.desi/videos/beautiful-peruvian-woman-ends-up-in-intense-sex-with-her-colombian-personal-trainer-xh2rXIT?utm_source=ext_shared&utm_medium=referral&utm_campaign=link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "A mind-bending thriller about dream sharing"
-},
-            
-            {
-                id: 2,
-                title: "Avengers: Endgame Trailer",
-                category: "Action",
-                iframeCode: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/TcMBFSGVi1c" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "The epic conclusion to the Infinity Saga"
-            },
-            {
-                id: 3,
-                title: "Inception Official Trailer",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/YoHD9XEInc0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "A mind-bending thriller about dream sharing"
-            },
+        // 🔥 YOUR SUPABASE CREDENTIALS - API से anon key लगाना है
+        const SUPABASE_URL = 'https://vpyhzixjlwlvflmrmywr.supabase.co';
+        const SUPABASE_KEY = 'YOUR_ANON_PUBLIC_KEY_HERE'; // API section से यह key लें
 
-            {
-                id: 4,
-                title: "Beautiful sex",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://xhamster.desi/videos/hot-hindi-web-series-xhRHrAg?utm_source=ext_shared&utm_medium=referral&utm_campaign=link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "18+ Full Video In Hindi"
-            },
+        // Supabase client initialize
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-            {
-                id: 5,
-                title: "Rasmalai",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://xhamster.desi/videos/rasmalai-2020-xhSgZRQ?utm_source=ext_shared&utm_medium=referral&utm_campaign=link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "18+ Full Video In Hindi"
-            },
+        // DOM Elements
+        const moviesContainer = document.getElementById('moviesContainer');
+        const addMovieBtn = document.getElementById('addMovieBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+        const movieModal = document.getElementById('movieModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const movieForm = document.getElementById('movieForm');
+        const messageDiv = document.getElementById('message');
 
-{
-                id: 6,
-                title: "hot hindi sex video",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://xhamster.desi/videos/kamalika-chanda-sex-scene-part-2-xhIBWiX?utm_source=ext_shared&utm_medium=referral&utm_campaign=link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "18+ Full Video In Hindi"
-            },
-
-{
-                id: 7,
-                title: "kamalika chanda sex video",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://xhamster.desi/videos/naughty-doctor-amazing-xxx-sex-with-patient-hindi-web-series-xhGExCw?utm_source=ext_shared&utm_medium=referral&utm_campaign=link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "18+ Full Video In Hindi"
-            },
-
-{
-                id: 8,
-                title: "Naughty doctor",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://xhamster.desi/videos/college-girl-fucks-her-stepbrother-before-family-dinner-we-almost-got-caught-naty-delgado-xhwnGIr?utm_source=ext_shared&utm_medium=referral&utm_campaign=link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "18+ Full Video In Hindi"
-            },
-
-{
-                id: 9,
-                title: "College girl sex ",
-                category: "Sci-Fi",
-                iframeCode: '<iframe width="100%" height="100%" src="https://xhamster.desi/videos/indian-actress-karishma-sharma-fucking-scene-xhmqQnK?utm_source=ext_shared&utm_medium=referral&utm_campaign=link" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
-                description: "18+ Full Video In Hindi"
-            },
-
-
-                
-        ];
-
+        // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const addMovieBtn = document.getElementById('addMovieBtn');
-            const mobileAddBtn = document.getElementById('mobileAddBtn');
-            const movieModal = document.getElementById('movieModal');
-            const closeMovieModal = document.getElementById('closeMovieModal');
-            const cancelMovieBtn = document.getElementById('cancelMovieBtn');
-            const publishMovieBtn = document.getElementById('publishMovieBtn');
-            const movieForm = document.getElementById('movieForm');
-            const moviesContainer = document.getElementById('moviesContainer');
-            
-            // Temporary movies storage
-            let temporaryMovies = [];
-            
-            // Initialize the app
-            displayMovies();
-            
-            // Event Listeners for opening modal
-            addMovieBtn.addEventListener('click', openModal);
-            mobileAddBtn.addEventListener('click', openModal);
-            
-            // Event Listeners for closing modal
-            closeMovieModal.addEventListener('click', closeModal);
-            cancelMovieBtn.addEventListener('click', closeModal);
-            
-            // Publish button event
-            publishMovieBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const title = document.getElementById('movieTitle').value.trim();
-                const category = document.getElementById('movieCategory').value;
-                const iframeCode = document.getElementById('movieIframe').value.trim();
-                const description = document.getElementById('movieDescription').value.trim();
-                
-                if (!title || !category || !iframeCode) {
-                    alert('Please fill in all required fields');
-                    return;
-                }
-                
-                if (!iframeCode.includes('<iframe') || !iframeCode.includes('src=')) {
-                    alert('Please provide a valid iframe code. It should contain an iframe tag with a src attribute.');
-                    return;
-                }
-                
-                addTemporaryMovie(title, category, iframeCode, description);
-                movieForm.reset();
-                closeModal();
-            });
+            loadMovies();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            addMovieBtn.addEventListener('click', () => movieModal.style.display = 'flex');
+            refreshBtn.addEventListener('click', loadMovies);
+            cancelBtn.addEventListener('click', () => movieModal.style.display = 'none');
+            movieForm.addEventListener('submit', handleAddMovie);
             
             // Close modal when clicking outside
-            movieModal.addEventListener('click', function(e) {
-                if (e.target === movieModal) {
-                    closeModal();
-                }
+            window.addEventListener('click', (e) => {
+                if (e.target === movieModal) movieModal.style.display = 'none';
             });
-            
-            // Functions
-            function openModal() {
-                movieModal.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
+        }
+
+        // Show message
+        function showMessage(text, type = 'success') {
+            messageDiv.innerHTML = `<div class="success-message">${text}</div>`;
+            setTimeout(() => messageDiv.innerHTML = '', 3000);
+        }
+
+        // Load movies from database
+        async function loadMovies() {
+            try {
+                moviesContainer.innerHTML = '<div class="loading"><p>Loading movies...</p></div>';
+                
+                const { data: movies, error } = await supabase
+                    .from('movies')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                displayMovies(movies);
+            } catch (error) {
+                console.error('Error:', error);
+                moviesContainer.innerHTML = `<div class="loading"><p>Error: ${error.message}</p></div>`;
             }
-            
-            function closeModal() {
-                movieModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
+        }
+
+        // Display movies
+        function displayMovies(movies) {
+            if (!movies || movies.length === 0) {
+                moviesContainer.innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-film" style="font-size: 3rem; margin-bottom: 15px;"></i>
+                        <h3>No Movies Found</h3>
+                        <p>Add your first movie to get started</p>
+                    </div>
+                `;
+                return;
             }
-            
-            function addTemporaryMovie(title, category, iframeCode, description = '') {
-                const movie = {
-                    id: Date.now(),
-                    title,
-                    category,
-                    iframeCode,
-                    description,
-                    isTemporary: true
-                };
-                
-                temporaryMovies.push(movie);
-                displayMovies();
-                
-                alert('Movie added successfully! Note: This is temporary. To make it permanent, add to the hardcodedMovies array.');
-            }
-            
-            function deleteMovie(id) {
-                if (!confirm('Are you sure you want to delete this movie?')) {
-                    return;
-                }
-                
-                const movieIndex = temporaryMovies.findIndex(movie => movie.id === id);
-                if (movieIndex !== -1) {
-                    temporaryMovies.splice(movieIndex, 1);
-                }
-                
-                displayMovies();
-            }
-            
-            function displayMovies() {
-                const allMovies = [...hardcodedMovies, ...temporaryMovies];
-                
-                if (allMovies.length === 0) {
-                    moviesContainer.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-film"></i>
-                            <h3>No Movies Added</h3>
-                            <p>Add your first movie to start building your collection</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                moviesContainer.innerHTML = '';
-                allMovies.forEach(movie => {
-                    const movieCard = document.createElement('div');
-                    movieCard.className = 'movie-card';
-                    movieCard.innerHTML = `
-                        <div class="movie-poster">
-                            ${movie.iframeCode}
-                        </div>
-                        <div class="movie-info">
-                            <h3 class="movie-title">${movie.title} ${movie.isTemporary ? '<small style="color: #ff9800;">(Temporary)</small>' : ''}</h3>
-                            <span class="movie-category">${movie.category}</span>
-                            <p class="movie-description">${movie.description || 'No description provided.'}</p>
-                            <div class="movie-actions">
-                                ${movie.isTemporary ? `<button class="btn btn-secondary delete-movie" data-id="${movie.id}" style="padding: 6px 12px; font-size: 0.8rem;">
+
+            moviesContainer.innerHTML = `
+                <div class="movies-grid">
+                    ${movies.map(movie => `
+                        <div class="movie-card">
+                            <div class="movie-poster">
+                                ${movie.iframe_code}
+                            </div>
+                            <div class="movie-info">
+                                <h3 class="movie-title">${movie.title}</h3>
+                                <span class="movie-category">${movie.category}</span>
+                                <p class="movie-description">${movie.description || 'No description available'}</p>
+                                <button class="btn btn-secondary" onclick="deleteMovie(${movie.id})">
                                     <i class="fas fa-trash"></i> Delete
-                                </button>` : '<small style="color: #4CAF50;">Permanent</small>'}
+                                </button>
                             </div>
                         </div>
-                    `;
-                    
-                    moviesContainer.appendChild(movieCard);
-                });
-                
-                // Add event listeners to delete buttons
-                document.querySelectorAll('.delete-movie').forEach(button => {
-                    button.addEventListener('click', function() {
-                        const movieId = parseInt(this.getAttribute('data-id'));
-                        deleteMovie(movieId);
-                    });
-                });
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Add new movie
+        async function handleAddMovie(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('movieTitle').value.trim();
+            const category = document.getElementById('movieCategory').value;
+            const iframeCode = document.getElementById('movieIframe').value.trim();
+            const description = document.getElementById('movieDescription').value.trim();
+
+            if (!title || !category || !iframeCode) {
+                alert('Please fill all required fields');
+                return;
             }
-        });
+
+            try {
+                const { data, error } = await supabase
+                    .from('movies')
+                    .insert([
+                        {
+                            title: title,
+                            category: category,
+                            iframe_code: iframeCode,
+                            description: description
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                showMessage('Movie added successfully to database!');
+                movieModal.style.display = 'none';
+                movieForm.reset();
+                loadMovies();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
+
+        // Delete movie
+        async function deleteMovie(movieId) {
+            if (!confirm('Delete this movie from database?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('movies')
+                    .delete()
+                    .eq('id', movieId);
+
+                if (error) throw error;
+
+                showMessage('Movie deleted successfully!');
+                loadMovies();
+            } catch (error) {
+                alert('Error: ' + error.message);
+            }
+        }
     </script>
 </body>
 </html>
