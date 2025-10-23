@@ -586,6 +586,24 @@
             font-size: 11px;
             margin-left: 10px;
         }
+
+        /* NEW: Download button style */
+        .btn-download {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-download:hover {
+            background: linear-gradient(45deg, #34ce57, #24e0a3);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -655,7 +673,7 @@
             </div>
         </div>
         
-        <!-- YOUR EXACT ORIGINAL ADD VIDEO FORM -->
+        <!-- YOUR EXACT ORIGINAL ADD VIDEO FORM + NEW DOWNLOAD URL FIELD -->
         <div id="form" class="form-container">
             <div class="form-header">Add New Video</div>
             <input type="text" id="title" placeholder="Video Title *" required>
@@ -676,6 +694,13 @@
                 <option value="Educational">Educational</option>
                 <option value="Entertainment">Entertainment</option>
             </select>
+            
+            <!-- NEW: Download URL Field -->
+            <input type="text" id="downloadUrl" placeholder="📥 Download URL (Optional)">
+            <div class="url-help">
+                Direct download link for this video<br>
+                Example: https://example.com/videos/movie.mp4
+            </div>
             
             <div class="tab-buttons">
                 <button type="button" class="tab-btn active" onclick="switchTab('urlTab')">🌐 Video URL</button>
@@ -720,7 +745,7 @@
         const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo';
         
         let supabase;
-        let currentUser = null; // Changed for security
+        let currentUser = null;
         let currentCategory = 'all';
         let currentSearch = '';
 
@@ -730,7 +755,7 @@
             'Romance', 'Thriller', 'Animation', 'Adult'
         ];
 
-        // 🛡️ SECURITY FUNCTIONS - NEW BUT NON-VISUAL
+        // 🛡️ SECURITY FUNCTIONS
         function sanitizeIframeCode(iframeCode) {
             if (!iframeCode) return '';
             
@@ -767,7 +792,7 @@
             return true;
         }
 
-        // 🔐 AUTH FUNCTIONS - NEW BUT NON-VISUAL
+        // 🔐 AUTH FUNCTIONS
         function showAuthForm() {
             document.getElementById('authForm').style.display = 'block';
         }
@@ -862,9 +887,44 @@
             }
         }
 
-        // 🔄 MODIFIED ADD MOVIE WITH SECURITY
+        // 📥 NEW DOWNLOAD FUNCTION
+        function downloadVideo(downloadUrl, title) {
+            if (!downloadUrl) {
+                alert('❌ Download link not available');
+                return;
+            }
+            
+            // Validate URL
+            if (!downloadUrl.startsWith('http')) {
+                alert('❌ Invalid download URL');
+                return;
+            }
+            
+            // Create download link
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            
+            // Try to set download attribute for direct download
+            try {
+                const filename = title.replace(/[^a-z0-9]/gi, '_') + '.mp4';
+                link.download = filename;
+            } catch (e) {
+                console.log('Download attribute not supported, opening in new tab');
+            }
+            
+            // Trigger download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Show success message
+            alert(`📥 Download started for: ${title}`);
+        }
+
+        // 🔄 MODIFIED ADD MOVIE WITH DOWNLOAD URL
         async function addMovie() {
-            // 🛡️ SECURITY CHECK
             if (!currentUser) {
                 alert('🔐 Please login to add videos');
                 showAuthForm();
@@ -874,6 +934,7 @@
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;
             const desc = document.getElementById('desc').value;
+            const downloadUrl = document.getElementById('downloadUrl').value; // NEW
 
             let iframeCode = '';
 
@@ -893,13 +954,11 @@
                     return;
                 }
                 
-                // 🛡️ SECURITY CHECK
                 if (!validateIframeCode(iframeInput)) {
                     alert('❌ Dangerous code detected! Please use only safe iframe code.');
                     return;
                 }
                 
-                // 🛡️ SECURITY CHECK
                 iframeCode = sanitizeIframeCode(iframeInput);
             }
 
@@ -922,6 +981,7 @@
                             category: category, 
                             iframe_code: iframeCode, 
                             description: desc,
+                            download_url: downloadUrl, // NEW: Download URL added
                             user_id: currentUser.email
                         }
                     ]);
@@ -930,11 +990,13 @@
                 alert('✅ Video added successfully!');
                 hideForm();
                 
+                // Clear form fields
                 document.getElementById('title').value = '';
                 document.getElementById('category').value = '';
                 document.getElementById('videoUrl').value = '';
                 document.getElementById('iframeCode').value = '';
                 document.getElementById('desc').value = '';
+                document.getElementById('downloadUrl').value = ''; // NEW: Clear download URL
                 
                 loadCategories();
                 loadMovies();
@@ -952,9 +1014,13 @@
             }
             document.getElementById('form').style.display = 'block';
             switchTab('urlTab');
+            // Clear all form fields
+            document.getElementById('title').value = '';
+            document.getElementById('category').value = '';
             document.getElementById('videoUrl').value = '';
             document.getElementById('iframeCode').value = '';
-            document.getElementById('category').value = '';
+            document.getElementById('desc').value = '';
+            document.getElementById('downloadUrl').value = ''; // NEW: Clear download URL
         }
 
         // MODIFIED DELETE MOVIE
@@ -984,7 +1050,7 @@
         // UPDATED INITIALIZATION
         document.addEventListener('DOMContentLoaded', function() {
             supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            console.log('✅ VideoHub Pro with Security initialized');
+            console.log('✅ VideoHub Pro with Download System initialized');
             
             checkAuthState().then(() => {
                 loadCategories();
@@ -1386,6 +1452,14 @@
                                 <button class="fullscreen-btn" onclick="toggleFullscreen(this)">
                                     ⛶ Full Screen
                                 </button>
+                                
+                                <!-- NEW: Download Button (Only shows if download_url exists) -->
+                                ${movie.download_url ? `
+                                    <button class="btn-download" onclick="downloadVideo('${movie.download_url}', '${movie.title}')">
+                                        📥 Download
+                                    </button>
+                                ` : ''}
+                                
                                 ${movie.user_id === currentUser?.email ? `
                                     <button class="btn btn-danger btn-small" onclick="deleteMovie(${movie.id})">
                                         🗑️ Delete
@@ -1502,4 +1576,4 @@
     <!-- YOUR EXACT ORIGINAL AD CODE -->
     <script type='text/javascript' src='//pl27892704.effectivegatecpm.com/d0/f8/e5/d0f8e53bef81fe3a7f6847b10e20f047.js'></script>
 </body>
-				</html>
+	</html>
