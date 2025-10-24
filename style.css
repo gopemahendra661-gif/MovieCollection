@@ -1,10 +1,105 @@
-/* ... (पहले वाला सारा CSS कोड रहेगा) ... */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    touch-action: manipulation;
+}
+
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    padding: 15px; 
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+    color: white;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.container { 
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 20px 0;
+    border-bottom: 1px solid #333;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #e50914, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+}
+
+.tagline {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
 
 /* NEW: Header Actions */
 .header-actions {
     margin: 15px 0;
 }
 
+.btn { 
+    background: linear-gradient(45deg, #e50914, #ff4757);
+    color: white; 
+    padding: 12px 18px; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    margin: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(229, 9, 20, 0.3);
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(45deg, #333, #555);
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, #dc3545, #ff6b6b);
+}
+
+.btn-success {
+    background: linear-gradient(45deg, #28a745, #20c997);
+}
+
+.btn-info {
+    background: linear-gradient(45deg, #17a2b8, #20c997);
+}
+
+.btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+    margin: 2px;
+    min-height: 36px;
+}
+
+/* NEW: APK Share Button */
 .btn-apk {
     background: linear-gradient(45deg, #FF6B35, #FF8E53) !important;
     color: white !important;
@@ -19,22 +114,313 @@
     box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6) !important;
 }
 
+.movie { 
+    background: rgba(42, 42, 42, 0.8);
+    padding: 15px; 
+    margin: 12px 0; 
+    border-radius: 12px;
+    border: 1px solid #333;
+    backdrop-filter: blur(10px);
+}
+
+.movie-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.movie-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    flex: 1;
+    margin-right: 10px;
+}
+
+.movie-category {
+    background: linear-gradient(45deg, #e50914, #ff6b6b);
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.movie-description {
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.4;
+    margin: 10px 0;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+    margin: 10px 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+.instagram-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 10px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.facebook-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 10px auto;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.movie-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #333;
+}
+
+.user-badge {
+    background: #333;
+    color: #ccc;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+}
+
+input, textarea, select { 
+    width: 100%; 
+    padding: 12px; 
+    margin: 8px 0; 
+    background: #222; 
+    color: white; 
+    border: 1px solid #444; 
+    border-radius: 8px;
+    font-size: 16px;
+    min-height: 44px;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23ffffff' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+    padding-right: 40px;
+}
+
+.form-container {
+    background: rgba(42, 42, 42, 0.9);
+    padding: 20px;
+    border-radius: 12px;
+    margin: 20px 0;
+    display: none;
+    backdrop-filter: blur(10px);
+}
+
+.form-header {
+    text-align: center;
+    margin-bottom: 20px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+}
+
+.url-help {
+    font-size: 12px;
+    color: #888;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+.tab-buttons {
+    display: flex;
+    margin: 15px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #333;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 12px;
+    background: #333;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-height: 44px;
+}
+
+.tab-btn.active {
+    background: #e50914;
+    color: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.platform-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    z-index: 10;
+}
+
+/* Fullscreen Button Styles */
+.fullscreen-btn {
+    background: linear-gradient(45deg, #666, #888);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 8px;
+    transition: all 0.3s ease;
+}
+
+.fullscreen-btn:hover {
+    background: linear-gradient(45deg, #777, #999);
+}
+
 /* NEW: Video Share Button */
 .btn-share {
-    background: linear-gradient(45deg, #17a2b8, #20c997) !important;
-    color: white !important;
-    padding: 8px 12px !important;
-    border: none !important;
-    border-radius: 6px !important;
-    cursor: pointer !important;
-    font-size: 12px !important;
-    margin-left: 8px !important;
-    transition: all 0.3s ease !important;
+    background: linear-gradient(45deg, #17a2b8, #20c997);
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 8px;
+    transition: all 0.3s ease;
 }
 
 .btn-share:hover {
-    background: linear-gradient(45deg, #138496, #1ea185) !important;
-    transform: translateY(-1px) !important;
+    background: linear-gradient(45deg, #138496, #1ea185);
+    transform: translateY(-1px);
+}
+
+/* NEW: Download button style */
+.btn-download {
+    background: linear-gradient(45deg, #28a745, #20c997);
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-download:hover {
+    background: linear-gradient(45deg, #34ce57, #24e0a3);
+    transform: translateY(-1px);
+}
+
+/* Categories Section */
+.categories-section {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.categories-title {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 10px;
+}
+
+.categories-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.category-btn {
+    background: #333;
+    color: #ccc;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.3s ease;
+    min-height: 36px;
+}
+
+.category-btn.active {
+    background: #e50914;
+    color: white;
+}
+
+.category-btn:hover {
+    background: #444;
+}
+
+/* Search Section */
+.search-section {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.search-box {
+    max-width: 400px;
+    margin: 0 auto;
 }
 
 /* NEW: Banner Ad Container */
@@ -77,8 +463,205 @@
     gap: 8px;
 }
 
-/* Mobile Responsive for new buttons */
+/* Professional Comments Section - YouTube Style */
+.comments-section {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+}
+
+.comments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.comments-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+}
+
+.comments-count {
+    background: #444;
+    color: #ccc;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.comment-input {
+    flex: 1;
+    padding: 12px;
+    background: #222;
+    border: 1px solid #444;
+    border-radius: 20px;
+    color: white;
+    font-size: 14px;
+    min-height: 44px;
+    resize: none;
+}
+
+.comment-btn {
+    background: #e50914;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    min-height: 44px;
+    font-weight: 500;
+}
+
+.comments-toggle {
+    background: transparent;
+    color: #e50914;
+    border: none;
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.comments-preview {
+    margin-bottom: 15px;
+}
+
+.preview-comment {
+    background: #333;
+    padding: 12px;
+    border-radius: 10px;
+    border-left: 3px solid #e50914;
+}
+
+.preview-user {
+    font-weight: bold;
+    color: #e50914;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.preview-text {
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.comments-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.comments-list.expanded {
+    max-height: 400px;
+}
+
+.comment-item {
+    background: #333;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border-left: 3px solid #444;
+    animation: fadeIn 0.3s ease;
+}
+
+.comment-user {
+    font-weight: bold;
+    color: #e50914;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.comment-text {
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.comment-time {
+    font-size: 11px;
+    color: #888;
+    text-align: right;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Simple auth badge */
+.auth-badge {
+    background: #333;
+    color: #ccc;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    margin-left: 10px;
+}
+
+/* Mobile Optimizations */
 @media (max-width: 768px) {
+    body {
+        padding: 10px;
+        touch-action: pan-y pinch-zoom;
+    }
+    
+    .movie-header {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .movie-title {
+        margin-right: 0;
+    }
+    
+    .button-group {
+        flex-direction: column;
+    }
+    
+    .button-group .btn {
+        margin: 3px 0;
+    }
+    
+    .categories-container {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding: 10px 0;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .comment-form {
+        flex-direction: column;
+    }
+    
+    .instagram-container,
+    .facebook-container {
+        max-width: 100%;
+    }
+    
+    input, textarea, select {
+        font-size: 16px;
+    }
+    
+    .comments-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    /* NEW: Mobile responsive for new buttons */
     .video-actions-row {
         flex-direction: column;
         gap: 10px;
@@ -93,3 +676,15 @@
         text-align: center;
     }
 }
+
+/* Prevent zoom on input focus */
+@media screen and (max-width: 768px) {
+    input, textarea, select {
+        font-size: 16px !important;
+    }
+}
+
+/* Disable double tap to zoom */
+* {
+    -webkit-tap-highlight-color: transparent;
+    }
