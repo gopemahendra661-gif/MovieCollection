@@ -1,4 +1,4 @@
-// 🔥 SUPABASE CREDENTIALS - CORRECTED
+// 🔥 SUPABASE CREDENTIALS
 const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
 const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo';
 
@@ -54,7 +54,25 @@ function validateIframeCode(iframeCode) {
     return true;
 }
 
-// 🆕 NEW: APK SHARE FUNCTION
+// 🆕 BANNER AD FUNCTION WITH YOUR AD CODE
+function generateBannerAd() {
+    return `
+        <div class="banner-ad">
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '31cbda467027fb971edb916014177999',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/31cbda467027fb971edb916014177999/invoke.js"></script>
+        </div>
+    `;
+}
+
+// 🆕 APK SHARE FUNCTION
 function shareAPK() {
     const shareText = APK_SHARE_TEXT + APK_DOWNLOAD_URL;
     
@@ -93,7 +111,7 @@ function fallbackShareAPK() {
     }
 }
 
-// 🆕 NEW: VIDEO SHARE FUNCTION
+// 🆕 VIDEO SHARE FUNCTION
 function shareVideo(movieTitle, movieId) {
     const videoUrl = window.location.href.split('?')[0] + '?video=' + movieId;
     const shareText = `🎬 Check out this video: "${movieTitle}" on VideoHub Pro - ${videoUrl}`;
@@ -126,25 +144,6 @@ function fallbackShareVideo(shareText) {
     } else {
         prompt('Copy this video link to share:', shareText);
     }
-}
-
-// 🆕 NEW: BANNER AD FUNCTION
-// 🆕 SIMPLE BANNER AD FUNCTION
-function generateBannerAd() {
-    return `
-        <div class="banner-ad">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
-                    'format' : 'iframe',
-                    'height' : 50,
-                    'width' : 320,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
-        </div>
-    `;
 }
 
 // 📥 DOWNLOAD FUNCTION
@@ -696,7 +695,7 @@ function showAllMovies() {
     loadMovies();
 }
 
-// 🎬 MAIN MOVIES LOAD FUNCTION
+// 🎬 MAIN MOVIES LOAD FUNCTION WITH ADS
 async function loadMovies() {
     const moviesContainer = document.getElementById('movies');
     moviesContainer.innerHTML = '<div class="loading">🔄 Loading videos...</div>';
@@ -810,6 +809,7 @@ async function loadMovies() {
         });
 
         moviesContainer.innerHTML = moviesHTML;
+        
     } catch (error) {
         console.error('Error loading movies:', error);
         moviesContainer.innerHTML = `
@@ -826,7 +826,7 @@ async function loadMovies() {
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Supabase
     supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-    console.log('✅ VideoHub Pro with Download & Share System initialized');
+    console.log('✅ VideoHub Pro with Ads & Share System initialized');
     
     // Check auth state and load data
     checkAuthState().then(() => {
@@ -855,7 +855,7 @@ document.addEventListener('DOMContentLoaded', function() {
     hideAuthForm();
 });
 
-// 📝 COMMENTS FUNCTIONS (Optional - if you want to keep comments)
+// 📝 COMMENTS FUNCTIONS
 async function loadComments(movieId) {
     try {
         const { data, error } = await supabase
@@ -936,4 +936,5 @@ function toggleComments(button, movieId) {
         button.innerHTML = `Hide Comments <span class="toggle-icon">▼</span>`;
         loadComments(movieId);
     }
-                }
+}
+
