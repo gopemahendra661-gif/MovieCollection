@@ -129,24 +129,20 @@ function fallbackShareVideo(shareText) {
 }
 
 // 🆕 NEW: BANNER AD FUNCTION
+// 🆕 SIMPLE BANNER AD FUNCTION
 function generateBannerAd() {
     return `
         <div class="banner-ad">
-            <div class="banner-ad-placeholder">
-            
-                <div style="font-size: 12px; color: #888; margin-top: 5px;">
-                    <script type="text/javascript">
-	atOptions = {
-		'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
-                </div>
-            </div>
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
+                    'format' : 'iframe',
+                    'height' : 50,
+                    'width' : 320,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
         </div>
     `;
 }
