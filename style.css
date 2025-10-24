@@ -1,0 +1,95 @@
+/* ... (पहले वाला सारा CSS कोड रहेगा) ... */
+
+/* NEW: Header Actions */
+.header-actions {
+    margin: 15px 0;
+}
+
+.btn-apk {
+    background: linear-gradient(45deg, #FF6B35, #FF8E53) !important;
+    color: white !important;
+    padding: 12px 20px !important;
+    border-radius: 25px !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4) !important;
+}
+
+.btn-apk:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6) !important;
+}
+
+/* NEW: Video Share Button */
+.btn-share {
+    background: linear-gradient(45deg, #17a2b8, #20c997) !important;
+    color: white !important;
+    padding: 8px 12px !important;
+    border: none !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    font-size: 12px !important;
+    margin-left: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-share:hover {
+    background: linear-gradient(45deg, #138496, #1ea185) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* NEW: Banner Ad Container */
+.banner-ad {
+    width: 100%;
+    margin: 15px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid #333;
+    text-align: center;
+}
+
+.banner-ad-placeholder {
+    background: linear-gradient(45deg, #333, #555);
+    color: #ccc;
+    padding: 20px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* NEW: Video Actions Row */
+.video-actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 10px 0;
+    border-top: 1px solid #333;
+    border-bottom: 1px solid #333;
+}
+
+.video-actions-left {
+    display: flex;
+    gap: 8px;
+}
+
+.video-actions-right {
+    display: flex;
+    gap: 8px;
+}
+
+/* Mobile Responsive for new buttons */
+@media (max-width: 768px) {
+    .video-actions-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .video-actions-left, .video-actions-right {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .header-actions {
+        text-align: center;
+    }
+}
