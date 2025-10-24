@@ -437,13 +437,7 @@ select {
     align-items: center;
     justify-content: center;
 }
-.banner-ad-placeholder {
-    background: linear-gradient(45deg, #333, #555);
-    color: #ccc;
-    padding: 20px;
-    border-radius: 6px;
-    font-size: 14px;
-}
+
 
 /* NEW: Video Actions Row */
 .video-actions-row {
@@ -691,3 +685,4 @@ select {
 * {
     -webkit-tap-highlight-color: transparent;
     }
+
