@@ -27,7 +27,7 @@ function sanitizeIframeCode(iframeCode) {
         .replace(/javascript:/gi, '')
         .replace(/data:text\/html/gi, '')
         .replace(/vbscript:/gi, '');
-    
+
     return sanitized;
 }
 
@@ -54,22 +54,81 @@ function validateIframeCode(iframeCode) {
     return true;
 }
 
-// 🆕 BANNER AD FUNCTION WITH YOUR AD CODE
-function generateBannerAd() {
+// 🆕 WORKING BANNER AD FUNCTION
+function generateBannerAd(adPosition = '') {
+    const adId = 'ad-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+    
     return `
-        <div class="banner-ad">
-            <script type="text/javascript">
-                atOptions = {
-                    'key' : '31cbda467027fb971edb916014177999',
-                    'format' : 'iframe',
-                    'height' : 50,
-                    'width' : 320,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.highperformanceformat.com/31cbda467027fb971edb916014177999/invoke.js"></script>
+        <div class="banner-ad" id="${adId}">
+            <div style="width: 100%; text-align: center; margin: 10px 0;">
+                <script type="text/javascript">
+                    (function() {
+                        try {
+                            atOptions = {
+                                'key' : '31cbda467027fb971edb916014177999',
+                                'format' : 'iframe',
+                                'height' : 50,
+                                'width' : 320,
+                                'params' : {}
+                            };
+                            
+                            var script = document.createElement('script');
+                            script.type = 'text/javascript';
+                            script.src = '//www.highperformanceformat.com/31cbda467027fb971edb916014177999/invoke.js';
+                            document.getElementById('${adId}').appendChild(script);
+                        } catch(e) {
+                            console.log('Ad loading error:', e);
+                        }
+                    })();
+                </script>
+                <noscript>
+                    <div style="width:320px;height:50px;background:#333;color:white;display:flex;align-items:center;justify-content:center;margin:0 auto;border-radius:4px;">
+                        📢 Advertisement
+                    </div>
+                </noscript>
+            </div>
         </div>
     `;
+}
+
+// 🆕 SIMPLE BANNER AD FALLBACK
+function generateSimpleAd() {
+    return `
+        <div class="banner-ad">
+            <div style="width: 320px; height: 50px; margin: 0 auto; background: linear-gradient(45deg, #1a1a1a, #333); border: 1px solid #444; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-weight: bold;">
+                🎥 📢 ADVERTISEMENT
+            </div>
+        </div>
+    `;
+}
+
+// 🆕 LOAD ADS MANUALLY
+function loadAdsManually() {
+    setTimeout(() => {
+        const bannerAds = document.querySelectorAll('.banner-ad');
+        bannerAds.forEach((banner, index) => {
+            if (!banner.querySelector('iframe') && !banner.querySelector('script[src*="highperformanceformat"]')) {
+                // Reload ad script
+                const adScript = document.createElement('script');
+                adScript.type = 'text/javascript';
+                adScript.innerHTML = `
+                    atOptions = {
+                        'key' : '31cbda467027fb971edb916014177999',
+                        'format' : 'iframe',
+                        'height' : 50,
+                        'width' : 320,
+                        'params' : {}
+                    };
+                `;
+                banner.appendChild(adScript);
+                
+                const invokeScript = document.createElement('script');
+                invokeScript.type = 'text/javascript';
+                invokeScript.src = '//www.highperformanceformat.com/31cbda467027fb971edb916014177999/invoke.js';
+                banner.appendChild(invokeScript);
+            }
+        });
+    }, 1000);
 }
 
 // 🆕 APK SHARE FUNCTION
@@ -695,7 +754,7 @@ function showAllMovies() {
     loadMovies();
 }
 
-// 🎬 MAIN MOVIES LOAD FUNCTION WITH ADS
+// 🎬 MAIN MOVIES LOAD FUNCTION WITH WORKING ADS
 async function loadMovies() {
     const moviesContainer = document.getElementById('movies');
     moviesContainer.innerHTML = '<div class="loading">🔄 Loading videos...</div>';
@@ -750,7 +809,7 @@ async function loadMovies() {
             
             // Add banner ad after every 2 videos
             if (index > 0 && index % 2 === 0) {
-                moviesHTML += generateBannerAd();
+                moviesHTML += generateSimpleAd();
             }
             
             // Download button HTML
@@ -804,11 +863,16 @@ async function loadMovies() {
                 </div>
                 
                 <!-- Add banner ad after each video -->
-                ${generateBannerAd()}
+                ${generateSimpleAd()}
             `;
         });
 
         moviesContainer.innerHTML = moviesHTML;
+        
+        // Load ads after content is rendered
+        setTimeout(() => {
+            loadAdsManually();
+        }, 1500);
         
     } catch (error) {
         console.error('Error loading movies:', error);
@@ -826,7 +890,7 @@ async function loadMovies() {
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Supabase
     supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-    console.log('✅ VideoHub Pro with Ads & Share System initialized');
+    console.log('✅ VideoHub Pro with Working Ads System initialized');
     
     // Check auth state and load data
     checkAuthState().then(() => {
@@ -937,4 +1001,3 @@ function toggleComments(button, movieId) {
         loadComments(movieId);
     }
 }
-
