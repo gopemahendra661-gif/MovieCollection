@@ -8,7 +8,7 @@ let currentCategory = 'all';
 let currentSearch = '';
 
 // APK SHARE DETAILS - यहाँ अपना APK लिंक डालें
-const APK_DOWNLOAD_URL = "https://drive.google.com/file/d/1GZQKl57Fa3M3Jm4bv1P8DpDMzQsUzMfJ/view?usp=drivesdk";
+const APK_DOWNLOAD_URL = "https://your-domain.com/app/videohub-pro.apk";
 const APK_SHARE_TEXT = "🎬 VideoHub Pro App Download - Watch videos from all platforms! Download now: ";
 
 // CATEGORIES
@@ -16,6 +16,20 @@ const fixedCategories = [
     'Action', 'Comedy', 'Drama', 'Sci-fi', 'Horror', 
     'Romance', 'Thriller', 'Animation', 'Adult'
 ];
+
+// AD CODES
+const AD_CODES = {
+    banner1: {
+        key: '730ffc4cd0cbe4501c1e43303ba673f7',
+        height: 50,
+        width: 320
+    },
+    banner2: {
+        key: '1cb4836d1181cec93eeaf530d5fae232',
+        height: 250,
+        width: 300
+    }
+};
 
 // 🛡️ SECURITY FUNCTIONS
 function sanitizeIframeCode(iframeCode) {
@@ -55,47 +69,46 @@ function validateIframeCode(iframeCode) {
 }
 
 // 🆕 WORKING BANNER AD FUNCTION
-function generateBannerAd(adPosition = '') {
-    const adId = 'ad-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+function generateBannerAd(adType = 'banner1') {
+    const adConfig = AD_CODES[adType];
+    const adId = 'ad-' + adType + '-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
     
     return `
-        <div class="banner-ad" id="${adId}">
-            <div style="width: 100%; text-align: center; margin: 10px 0;">
+        <div class="ad-container" id="${adId}">
+            <div style="width: 100%; text-align: center; margin: 15px 0;">
                 <script type="text/javascript">
                     (function() {
                         try {
                             atOptions = {
-                                'key' : '31cbda467027fb971edb916014177999',
+                                'key' : '${adConfig.key}',
                                 'format' : 'iframe',
-                                'height' : 50,
-                                'width' : 320,
+                                'height' : ${adConfig.height},
+                                'width' : ${adConfig.width},
                                 'params' : {}
                             };
                             
                             var script = document.createElement('script');
                             script.type = 'text/javascript';
-                            script.src = '//www.highperformanceformat.com/31cbda467027fb971edb916014177999/invoke.js';
+                            script.src = '//www.highperformanceformat.com/${adConfig.key}/invoke.js';
                             document.getElementById('${adId}').appendChild(script);
                         } catch(e) {
                             console.log('Ad loading error:', e);
+                            // Fallback ad display
+                            document.getElementById('${adId}').innerHTML = '<div style="width:${adConfig.width}px;height:${adConfig.height}px;background:linear-gradient(45deg,#1a1a1a,#333);border:1px solid #444;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#888;font-size:12px;margin:0 auto;"><span>📢 ADVERTISEMENT</span></div>';
                         }
                     })();
                 </script>
-                <noscript>
-                    <div style="width:320px;height:50px;background:#333;color:white;display:flex;align-items:center;justify-content:center;margin:0 auto;border-radius:4px;">
-                        📢 Advertisement
-                    </div>
-                </noscript>
             </div>
         </div>
     `;
 }
 
 // 🆕 SIMPLE BANNER AD FALLBACK
-function generateSimpleAd() {
+function generateSimpleAd(adType = 'banner1') {
+    const adConfig = AD_CODES[adType];
     return `
-        <div class="banner-ad">
-            <div style="width: 320px; height: 50px; margin: 0 auto; background: linear-gradient(45deg, #1a1a1a, #333); border: 1px solid #444; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-weight: bold;">
+        <div class="ad-container">
+            <div style="width: ${adConfig.width}px; height: ${adConfig.height}px; margin: 0 auto; background: linear-gradient(45deg, #1a1a1a, #333); border: 1px solid #444; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; font-weight: bold;">
                 🎥 📢 ADVERTISEMENT
             </div>
         </div>
@@ -105,27 +118,32 @@ function generateSimpleAd() {
 // 🆕 LOAD ADS MANUALLY
 function loadAdsManually() {
     setTimeout(() => {
-        const bannerAds = document.querySelectorAll('.banner-ad');
-        bannerAds.forEach((banner, index) => {
-            if (!banner.querySelector('iframe') && !banner.querySelector('script[src*="highperformanceformat"]')) {
+        const adContainers = document.querySelectorAll('.ad-container');
+        adContainers.forEach((container, index) => {
+            if (!container.querySelector('iframe') && !container.querySelector('script[src*="highperformanceformat"]')) {
+                // Determine which ad to load based on container size or position
+                const containerHeight = container.offsetHeight;
+                const adType = containerHeight > 100 ? 'banner2' : 'banner1';
+                const adConfig = AD_CODES[adType];
+                
                 // Reload ad script
                 const adScript = document.createElement('script');
                 adScript.type = 'text/javascript';
                 adScript.innerHTML = `
                     atOptions = {
-                        'key' : '31cbda467027fb971edb916014177999',
+                        'key' : '${adConfig.key}',
                         'format' : 'iframe',
-                        'height' : 50,
-                        'width' : 320,
+                        'height' : ${adConfig.height},
+                        'width' : ${adConfig.width},
                         'params' : {}
                     };
                 `;
-                banner.appendChild(adScript);
+                container.appendChild(adScript);
                 
                 const invokeScript = document.createElement('script');
                 invokeScript.type = 'text/javascript';
-                invokeScript.src = '//www.highperformanceformat.com/31cbda467027fb971edb916014177999/invoke.js';
-                banner.appendChild(invokeScript);
+                invokeScript.src = '//www.highperformanceformat.com/' + adConfig.key + '/invoke.js';
+                container.appendChild(invokeScript);
             }
         });
     }, 1000);
@@ -807,9 +825,10 @@ async function loadMovies() {
             const iframeCode = fixIframePermissions(movie.iframe_code);
             const isCurrentUser = currentUser && movie.user_id === currentUser.email;
             
-            // Add banner ad after every 2 videos
+            // Add banner ad after every 2 videos (alternate between ad types)
             if (index > 0 && index % 2 === 0) {
-                moviesHTML += generateSimpleAd();
+                const adType = index % 4 === 0 ? 'banner2' : 'banner1';
+                moviesHTML += generateBannerAd(adType);
             }
             
             // Download button HTML
@@ -863,7 +882,7 @@ async function loadMovies() {
                 </div>
                 
                 <!-- Add banner ad after each video -->
-                ${generateSimpleAd()}
+                ${generateBannerAd('banner1')}
             `;
         });
 
@@ -890,7 +909,7 @@ async function loadMovies() {
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Supabase
     supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-    console.log('✅ VideoHub Pro with Working Ads System initialized');
+    console.log('✅ VideoHub Pro with Adstera Ads initialized');
     
     // Check auth state and load data
     checkAuthState().then(() => {
