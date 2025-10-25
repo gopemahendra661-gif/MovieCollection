@@ -8,7 +8,7 @@ let currentCategory = 'all';
 let currentSearch = '';
 
 // APK SHARE DETAILS - यहाँ अपना APK लिंक डालें
-const APK_DOWNLOAD_URL = "https://your-domain.com/app/videohub-pro.apk";
+const APK_DOWNLOAD_URL = "https://drive.google.com/file/d/1GZQKl57Fa3M3Jm4bv1P8DpDMzQsUzMfJ/view?usp=drivesdk";
 const APK_SHARE_TEXT = "🎬 VideoHub Pro App Download - Watch videos from all platforms! Download now: ";
 
 // CATEGORIES
