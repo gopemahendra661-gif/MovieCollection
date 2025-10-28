@@ -185,6 +185,30 @@
             font-weight: 500;
         }
 
+        /* Edit Button on Movie Cards */
+        .edit-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 5;
+        }
+
+        .movie-card:hover .edit-btn {
+            opacity: 1;
+        }
+
         /* Top 5 Section */
         .top5-section {
             position: relative;
@@ -263,6 +287,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .modal-description {
@@ -302,6 +327,23 @@
 
         .btn-secondary:hover {
             background: rgba(255,255,255,0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #34ce57;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .btn-warning:hover {
+            background: #ffca2c;
         }
 
         .btn-large {
@@ -347,6 +389,39 @@
             border-radius: 4px;
             font-size: 16px;
             min-height: 44px;
+        }
+
+        /* Tab Styles for Video Input */
+        .tab-buttons {
+            display: flex;
+            margin: 10px 0;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #333;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: #333;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+
+        .tab-btn.active {
+            background: #e50914;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* Thumbnail Upload */
@@ -474,6 +549,14 @@
                 width: 95%;
                 padding: 15px;
             }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -546,16 +629,16 @@
         <div class="movies-row" id="popularMovies">
             <!-- Popular movies will be loaded here -->
         </div>
-		<script type="text/javascript">
-	atOptions = {
-		'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
     </div>
 
     <div class="section">
@@ -571,30 +654,31 @@
         <div id="moviesGrid" class="movies-grid">
             <!-- All movies will be loaded here -->
         </div>
-		<script type="text/javascript">
-	atOptions = {
-		'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
     </div>
 
     <!-- Add Video Form -->
     <div id="form" class="form-container">
-		<script type="text/javascript">
-	atOptions = {
-		'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
-		'format' : 'iframe',
-		'height' : 50,
-		'width' : 320,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
+        
         <div class="form-header">Add New Video</div>
         <input type="text" id="title" placeholder="Video Title *" required>
         
@@ -625,9 +709,30 @@
             <img id="thumbnailPreview" class="thumbnail-preview" alt="Thumbnail preview">
         </div>
         
-        <input type="text" id="videoUrl" placeholder="Paste Video URL *">
+        <!-- Download URL -->
+        <input type="text" id="downloadUrl" placeholder="📥 Download URL (Optional)">
         <div style="color: #888; font-size: 12px; margin-bottom: 10px;">
-            Supported: YouTube, Instagram, Facebook, Vimeo, Dailymotion
+            Direct download link for this video (e.g., https://example.com/video.mp4)
+        </div>
+        
+        <!-- Video Input Tabs -->
+        <div class="tab-buttons">
+            <button type="button" class="tab-btn active" onclick="switchTab('urlTab')">🌐 Video URL</button>
+            <button type="button" class="tab-btn" onclick="switchTab('iframeTab')">📺 Embed Code</button>
+        </div>
+        
+        <div id="urlTab" class="tab-content active">
+            <input type="text" id="videoUrl" placeholder="Paste Video URL *">
+            <div style="color: #888; font-size: 12px; margin-bottom: 10px;">
+                Supported: YouTube, Instagram, Facebook, Vimeo, Dailymotion
+            </div>
+        </div>
+        
+        <div id="iframeTab" class="tab-content">
+            <textarea id="iframeCode" placeholder="Paste Embed Iframe Code *" rows="3"></textarea>
+            <div style="color: #888; font-size: 12px; margin-bottom: 10px;">
+                Paste full iframe code from any video platform
+            </div>
         </div>
         
         <textarea id="desc" placeholder="Description" rows="3"></textarea>
@@ -638,22 +743,90 @@
         </div>
     </div>
 
+    <!-- Edit Video Form -->
+    <div id="editForm" class="form-container">
+        <div class="form-header">Edit Video</div>
+        <input type="hidden" id="editMovieId">
+        <input type="text" id="editTitle" placeholder="Video Title *" required>
+        
+        <select id="editCategory" required>
+            <option value="">Select Category *</option>
+            <option value="Action">Action</option>
+            <option value="Comedy">Comedy</option>
+            <option value="Drama">Drama</option>
+            <option value="Sci-fi">Sci-fi</option>
+            <option value="Horror">Horror</option>
+            <option value="Romance">Romance</option>
+            <option value="Thriller">Thriller</option>
+            <option value="Animation">Animation</option>
+            <option value="Documentary">Documentary</option>
+            <option value="Music">Music</option>
+            <option value="Sports">Sports</option>
+            <option value="Educational">Educational</option>
+            <option value="Entertainment">Entertainment</option>
+        </select>
+        
+        <!-- Thumbnail Upload Section -->
+        <div class="thumbnail-upload" id="editThumbnailUpload">
+            <div>📷 Click to upload new thumbnail</div>
+            <div style="font-size: 12px; color: #888; margin-top: 5px;">
+                Recommended: 16:9 aspect ratio, max 2MB
+            </div>
+            <input type="file" id="editThumbnailInput" accept="image/*" style="display: none;">
+            <img id="editThumbnailPreview" class="thumbnail-preview" alt="Thumbnail preview">
+        </div>
+        
+        <!-- Download URL -->
+        <input type="text" id="editDownloadUrl" placeholder="📥 Download URL (Optional)">
+        <div style="color: #888; font-size: 12px; margin-bottom: 10px;">
+            Direct download link for this video (e.g., https://example.com/video.mp4)
+        </div>
+        
+        <!-- Video Input Tabs -->
+        <div class="tab-buttons">
+            <button type="button" class="tab-btn active" onclick="switchEditTab('editUrlTab')">🌐 Video URL</button>
+            <button type="button" class="tab-btn" onclick="switchEditTab('editIframeTab')">📺 Embed Code</button>
+        </div>
+        
+        <div id="editUrlTab" class="tab-content active">
+            <input type="text" id="editVideoUrl" placeholder="Paste Video URL *">
+            <div style="color: #888; font-size: 12px; margin-bottom: 10px;">
+                Supported: YouTube, Instagram, Facebook, Vimeo, Dailymotion
+            </div>
+        </div>
+        
+        <div id="editIframeTab" class="tab-content">
+            <textarea id="editIframeCode" placeholder="Paste Embed Iframe Code *" rows="3"></textarea>
+            <div style="color: #888; font-size: 12px; margin-bottom: 10px;">
+                Paste full iframe code from any video platform
+            </div>
+        </div>
+        
+        <textarea id="editDesc" placeholder="Description" rows="3"></textarea>
+        
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button class="btn btn-success" onclick="updateMovie()" style="flex: 1;">Update Video</button>
+            <button class="btn btn-warning" onclick="deleteMovie()" style="flex: 1;">Delete Video</button>
+            <button class="btn btn-secondary" onclick="hideEditForm()" style="flex: 1;">Cancel</button>
+        </div>
+    </div>
+
     <!-- Movie Details Modal -->
     <div id="movieModal" class="movie-modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeMovieModal()">×</button>
             <div class="modal-header" id="modalHeader">
                 <!-- Background image will be set here -->
-				      <script type="text/javascript">
-	atOptions = {
-		'key' : '1cb4836d1181cec93eeaf530d5fae232',
-		'format' : 'iframe',
-		'height' : 250,
-		'width' : 300,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/1cb4836d1181cec93eeaf530d5fae232/invoke.js"></script>
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : '1cb4836d1181cec93eeaf530d5fae232',
+                        'format' : 'iframe',
+                        'height' : 250,
+                        'width' : 300,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/1cb4836d1181cec93eeaf530d5fae232/invoke.js"></script>
             </div>
             <div class="modal-body">
                 <h2 class="modal-title" id="modalTitle">Movie Title</h2>
@@ -661,6 +834,7 @@
                     <button class="btn btn-primary" id="modalPlayBtn">▶ Play</button>
                     <button class="btn btn-secondary" id="modalDownloadBtn">📥 Download</button>
                     <button class="btn btn-secondary" id="modalShareBtn">📤 Share</button>
+                    <button class="btn btn-warning" id="modalEditBtn">✏️ Edit</button>
                 </div>
                 <p class="modal-description" id="modalDescription">Movie description will appear here.</p>
                 <div id="modalVideoContainer">
@@ -696,12 +870,14 @@
         let currentSearch = '';
         let allMovies = [];
         let selectedThumbnail = null;
+        let editSelectedThumbnail = null;
+        let currentEditingMovie = null;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Supabase
             supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            console.log('✅ Netflix-style VideoHub Pro with Thumbnails initialized');
+            console.log('✅ Netflix-style VideoHub Pro with Thumbnails & Editing initialized');
             
             // Check auth state and load data
             checkAuthState().then(() => {
@@ -709,8 +885,9 @@
                 loadMovies();
             });
             
-            // Hide form by default
+            // Hide forms by default
             hideForm();
+            hideEditForm();
             
             // Add scroll event listener for header
             window.addEventListener('scroll', function() {
@@ -724,6 +901,7 @@
             
             // Setup thumbnail upload
             setupThumbnailUpload();
+            setupEditThumbnailUpload();
         });
 
         // 🖼️ THUMBNAIL UPLOAD FUNCTIONS
@@ -762,18 +940,53 @@
             });
         }
 
-        async function uploadThumbnail() {
-            if (!selectedThumbnail) return null;
+        function setupEditThumbnailUpload() {
+            const thumbnailUpload = document.getElementById('editThumbnailUpload');
+            const thumbnailInput = document.getElementById('editThumbnailInput');
+            const thumbnailPreview = document.getElementById('editThumbnailPreview');
+            
+            thumbnailUpload.addEventListener('click', function() {
+                thumbnailInput.click();
+            });
+            
+            thumbnailInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    // Validate file type and size
+                    if (!file.type.startsWith('image/')) {
+                        alert('Please select an image file');
+                        return;
+                    }
+                    
+                    if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                        alert('Image size should be less than 2MB');
+                        return;
+                    }
+                    
+                    // Preview image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        thumbnailPreview.src = e.target.result;
+                        thumbnailPreview.style.display = 'block';
+                        editSelectedThumbnail = file;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        async function uploadThumbnail(file) {
+            if (!file) return null;
             
             try {
                 // Generate unique filename
-                const fileExt = selectedThumbnail.name.split('.').pop();
+                const fileExt = file.name.split('.').pop();
                 const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
                 
                 // Upload to Supabase Storage
                 const { data, error } = await supabase.storage
                     .from('thumbnails')
-                    .upload(fileName, selectedThumbnail);
+                    .upload(fileName, file);
                 
                 if (error) throw error;
                 
@@ -788,6 +1001,33 @@
                 alert('Failed to upload thumbnail: ' + error.message);
                 return null;
             }
+        }
+
+        // 🔄 TAB SWITCHING FUNCTIONS
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function switchEditTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                if (tab.id.startsWith('edit')) {
+                    tab.classList.remove('active');
+                }
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
         }
 
         // 🛡️ SECURITY FUNCTIONS
@@ -1021,23 +1261,43 @@
             const title = document.getElementById('title').value;
             const category = document.getElementById('category').value;
             const desc = document.getElementById('desc').value;
-            const videoUrl = document.getElementById('videoUrl').value;
+            const downloadUrl = document.getElementById('downloadUrl').value;
 
-            if (!title || !category || !videoUrl) {
-                alert('Please fill all required fields');
-                return;
+            let iframeCode = '';
+
+            const urlTabActive = document.getElementById('urlTab').classList.contains('active');
+            
+            if (urlTabActive) {
+                const videoUrl = document.getElementById('videoUrl').value;
+                if (!videoUrl) {
+                    alert('Please enter a video URL');
+                    return;
+                }
+                iframeCode = generateEmbedFromUrl(videoUrl);
+            } else {
+                const iframeInput = document.getElementById('iframeCode').value;
+                if (!iframeInput) {
+                    alert('Please enter embed iframe code');
+                    return;
+                }
+                
+                if (!validateIframeCode(iframeInput)) {
+                    alert('❌ Dangerous code detected! Please use only safe iframe code.');
+                    return;
+                }
+                
+                iframeCode = sanitizeIframeCode(iframeInput);
             }
 
-            // Generate embed code from URL
-            const iframeCode = generateEmbedFromUrl(videoUrl);
-            if (!iframeCode) {
+            if (!title || !category || !iframeCode) {
+                alert('Please fill all required fields');
                 return;
             }
 
             // Upload thumbnail if selected
             let thumbnailUrl = null;
             if (selectedThumbnail) {
-                thumbnailUrl = await uploadThumbnail();
+                thumbnailUrl = await uploadThumbnail(selectedThumbnail);
             }
 
             try {
@@ -1049,6 +1309,7 @@
                             category: category, 
                             iframe_code: iframeCode, 
                             description: desc,
+                            download_url: downloadUrl,
                             thumbnail_url: thumbnailUrl,
                             user_id: currentUser.email
                         }
@@ -1062,11 +1323,109 @@
                 document.getElementById('title').value = '';
                 document.getElementById('category').value = '';
                 document.getElementById('videoUrl').value = '';
+                document.getElementById('iframeCode').value = '';
                 document.getElementById('desc').value = '';
+                document.getElementById('downloadUrl').value = '';
                 document.getElementById('thumbnailPreview').style.display = 'none';
                 document.getElementById('thumbnailInput').value = '';
                 selectedThumbnail = null;
                 
+                loadCategories();
+                loadMovies();
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        async function updateMovie() {
+            if (!currentUser || !currentEditingMovie) {
+                alert('🔐 Please login to edit videos');
+                return;
+            }
+
+            const title = document.getElementById('editTitle').value;
+            const category = document.getElementById('editCategory').value;
+            const desc = document.getElementById('editDesc').value;
+            const downloadUrl = document.getElementById('editDownloadUrl').value;
+
+            let iframeCode = '';
+
+            const urlTabActive = document.getElementById('editUrlTab').classList.contains('active');
+            
+            if (urlTabActive) {
+                const videoUrl = document.getElementById('editVideoUrl').value;
+                if (!videoUrl) {
+                    alert('Please enter a video URL');
+                    return;
+                }
+                iframeCode = generateEmbedFromUrl(videoUrl);
+            } else {
+                const iframeInput = document.getElementById('editIframeCode').value;
+                if (!iframeInput) {
+                    alert('Please enter embed iframe code');
+                    return;
+                }
+                
+                if (!validateIframeCode(iframeInput)) {
+                    alert('❌ Dangerous code detected! Please use only safe iframe code.');
+                    return;
+                }
+                
+                iframeCode = sanitizeIframeCode(iframeInput);
+            }
+
+            if (!title || !category || !iframeCode) {
+                alert('Please fill all required fields');
+                return;
+            }
+
+            // Upload new thumbnail if selected
+            let thumbnailUrl = currentEditingMovie.thumbnail_url;
+            if (editSelectedThumbnail) {
+                thumbnailUrl = await uploadThumbnail(editSelectedThumbnail);
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('movies')
+                    .update({ 
+                        title: title, 
+                        category: category, 
+                        iframe_code: iframeCode, 
+                        description: desc,
+                        download_url: downloadUrl,
+                        thumbnail_url: thumbnailUrl
+                    })
+                    .eq('id', currentEditingMovie.id);
+
+                if (error) throw error;
+                alert('✅ Video updated successfully!');
+                hideEditForm();
+                
+                loadCategories();
+                loadMovies();
+            } catch (error) {
+                alert('❌ Error: ' + error.message);
+            }
+        }
+
+        async function deleteMovie() {
+            if (!currentUser || !currentEditingMovie) {
+                alert('🔐 Please login to delete videos');
+                return;
+            }
+            
+            if (!confirm('Are you sure you want to delete this video?')) return;
+            
+            try {
+                const { error } = await supabase
+                    .from('movies')
+                    .delete()
+                    .eq('id', currentEditingMovie.id);
+
+                if (error) throw error;
+                alert('✅ Video deleted successfully!');
+                hideEditForm();
                 loadCategories();
                 loadMovies();
             } catch (error) {
@@ -1081,11 +1440,14 @@
                 return;
             }
             document.getElementById('form').style.display = 'block';
+            switchTab('urlTab');
             // Clear all form fields
             document.getElementById('title').value = '';
             document.getElementById('category').value = '';
             document.getElementById('videoUrl').value = '';
+            document.getElementById('iframeCode').value = '';
             document.getElementById('desc').value = '';
+            document.getElementById('downloadUrl').value = '';
             document.getElementById('thumbnailPreview').style.display = 'none';
             document.getElementById('thumbnailInput').value = '';
             selectedThumbnail = null;
@@ -1095,27 +1457,52 @@
             document.getElementById('form').style.display = 'none';
         }
 
-        async function deleteMovie(id) {
-            if (!currentUser) {
-                alert('🔐 Please login to delete videos');
-                return;
+        function showEditForm(movieId) {
+            const movie = allMovies.find(m => m.id === movieId);
+            if (!movie) return;
+            
+            currentEditingMovie = movie;
+            
+            // Fill form with current data
+            document.getElementById('editMovieId').value = movie.id;
+            document.getElementById('editTitle').value = movie.title;
+            document.getElementById('editCategory').value = movie.category;
+            document.getElementById('editDesc').value = movie.description || '';
+            document.getElementById('editDownloadUrl').value = movie.download_url || '';
+            
+            // Set thumbnail preview if exists
+            if (movie.thumbnail_url) {
+                document.getElementById('editThumbnailPreview').src = movie.thumbnail_url;
+                document.getElementById('editThumbnailPreview').style.display = 'block';
+            } else {
+                document.getElementById('editThumbnailPreview').style.display = 'none';
             }
             
-            if (!confirm('Are you sure you want to delete this video?')) return;
+            // Determine which tab to show based on iframe content
+            if (movie.iframe_code.includes('youtube.com') || movie.iframe_code.includes('vimeo.com') || 
+                movie.iframe_code.includes('dailymotion.com') || movie.iframe_code.includes('instagram.com') || 
+                movie.iframe_code.includes('facebook.com')) {
+                // Extract URL from iframe for URL tab
+                const srcMatch = movie.iframe_code.match(/src="([^"]*)"/);
+                if (srcMatch && srcMatch[1]) {
+                    document.getElementById('editVideoUrl').value = srcMatch[1];
+                    switchEditTab('editUrlTab');
+                } else {
+                    document.getElementById('editIframeCode').value = movie.iframe_code;
+                    switchEditTab('editIframeTab');
+                }
+            } else {
+                document.getElementById('editIframeCode').value = movie.iframe_code;
+                switchEditTab('editIframeTab');
+            }
             
-            try {
-                const { error } = await supabase
-                    .from('movies')
-                    .delete()
-                    .eq('id', id);
+            document.getElementById('editForm').style.display = 'block';
+        }
 
-                if (error) throw error;
-                alert('✅ Video deleted successfully!');
-                loadCategories();
-                loadMovies();
-            } catch (error) {
-                alert('❌ Error: ' + error.message);
-            }
+        function hideEditForm() {
+            document.getElementById('editForm').style.display = 'none';
+            currentEditingMovie = null;
+            editSelectedThumbnail = null;
         }
 
         // 📂 CATEGORY FUNCTIONS
@@ -1224,6 +1611,8 @@
                 top5Container.innerHTML = top5Movies.map((movie, index) => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
                         <div class="top5-badge">#${index + 1}</div>
+                        ${currentUser && movie.user_id === currentUser.email ? 
+                            `<button class="edit-btn" onclick="event.stopPropagation(); showEditForm(${movie.id})">✏️</button>` : ''}
                         <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
                              alt="${movie.title}" class="movie-poster">
                         <div class="movie-info">
@@ -1237,6 +1626,8 @@
                 const popularMovies = movies.slice(0, 8);
                 popularContainer.innerHTML = popularMovies.map(movie => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
+                        ${currentUser && movie.user_id === currentUser.email ? 
+                            `<button class="edit-btn" onclick="event.stopPropagation(); showEditForm(${movie.id})">✏️</button>` : ''}
                         <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
                              alt="${movie.title}" class="movie-poster">
                         <div class="movie-info">
@@ -1250,6 +1641,8 @@
                 const recentMovies = movies.slice(5, 13);
                 recentContainer.innerHTML = recentMovies.map(movie => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
+                        ${currentUser && movie.user_id === currentUser.email ? 
+                            `<button class="edit-btn" onclick="event.stopPropagation(); showEditForm(${movie.id})">✏️</button>` : ''}
                         <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
                              alt="${movie.title}" class="movie-poster">
                         <div class="movie-info">
@@ -1265,6 +1658,8 @@
                     
                 allContainer.innerHTML = filteredMovies.map(movie => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
+                        ${currentUser && movie.user_id === currentUser.email ? 
+                            `<button class="edit-btn" onclick="event.stopPropagation(); showEditForm(${movie.id})">✏️</button>` : ''}
                         <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
                              alt="${movie.title}" class="movie-poster">
                         <div class="movie-info">
@@ -1314,6 +1709,18 @@
             document.getElementById('modalShareBtn').onclick = function() {
                 shareVideo(movie.title, movie.id);
             };
+            
+            // Show edit button only if user owns the video
+            const editBtn = document.getElementById('modalEditBtn');
+            if (currentUser && movie.user_id === currentUser.email) {
+                editBtn.style.display = 'flex';
+                editBtn.onclick = function() {
+                    closeMovieModal();
+                    showEditForm(movie.id);
+                };
+            } else {
+                editBtn.style.display = 'none';
+            }
             
             // Show modal
             document.getElementById('movieModal').style.display = 'block';
@@ -1395,6 +1802,7 @@
         window.onclick = function(event) {
             const modal = document.getElementById('movieModal');
             const form = document.getElementById('form');
+            const editForm = document.getElementById('editForm');
             
             if (event.target === modal) {
                 closeMovieModal();
@@ -1402,6 +1810,10 @@
             
             if (event.target === form) {
                 hideForm();
+            }
+            
+            if (event.target === editForm) {
+                hideEditForm();
             }
         };
     </script>
