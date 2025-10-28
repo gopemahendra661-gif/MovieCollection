@@ -185,6 +185,24 @@
             font-weight: 500;
         }
 
+        /* Top 5 Section */
+        .top5-section {
+            position: relative;
+        }
+
+        .top5-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #e50914;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 5;
+        }
+
         /* Movie Details Modal */
         .movie-modal {
             display: none;
@@ -300,6 +318,15 @@
             margin: 20px 0;
             display: none;
             backdrop-filter: blur(10px);
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1001;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .form-header {
@@ -322,6 +349,29 @@
             min-height: 44px;
         }
 
+        /* Thumbnail Upload */
+        .thumbnail-upload {
+            border: 2px dashed #555;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .thumbnail-upload:hover {
+            border-color: #e50914;
+        }
+
+        .thumbnail-preview {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
         /* Ad Container */
         .ad-container {
             width: 100%;
@@ -340,6 +390,7 @@
         /* Categories */
         .categories-section {
             margin: 20px 0;
+            padding: 0 4%;
         }
 
         .categories-container {
@@ -418,6 +469,11 @@
             .header-actions {
                 gap: 10px;
             }
+            
+            .form-container {
+                width: 95%;
+                padding: 15px;
+            }
         }
     </style>
 </head>
@@ -468,8 +524,16 @@
         <script type="text/javascript" src="//www.highperformanceformat.com/1cb4836d1181cec93eeaf530d5fae232/invoke.js"></script>
     </div>
 
+    <!-- Top 5 Recently Added Section -->
+    <div class="section top5-section">
+        <h2 class="section-title">Top 5 Recently Added</h2>
+        <div class="movies-row" id="top5Movies">
+            <!-- Top 5 movies will be loaded here -->
+        </div>
+    </div>
+
     <!-- Categories Section -->
-    <div class="section">
+    <div class="categories-section">
         <h2 class="section-title">Browse by Category</h2>
         <div class="categories-container" id="categoriesList">
             <!-- Categories will be loaded here -->
@@ -520,6 +584,16 @@
             <option value="Educational">Educational</option>
             <option value="Entertainment">Entertainment</option>
         </select>
+        
+        <!-- Thumbnail Upload Section -->
+        <div class="thumbnail-upload" id="thumbnailUpload">
+            <div>📷 Click to upload thumbnail</div>
+            <div style="font-size: 12px; color: #888; margin-top: 5px;">
+                Recommended: 16:9 aspect ratio, max 2MB
+            </div>
+            <input type="file" id="thumbnailInput" accept="image/*" style="display: none;">
+            <img id="thumbnailPreview" class="thumbnail-preview" alt="Thumbnail preview">
+        </div>
         
         <input type="text" id="videoUrl" placeholder="Paste Video URL *">
         <div style="color: #888; font-size: 12px; margin-bottom: 10px;">
@@ -581,12 +655,13 @@
         let currentCategory = 'all';
         let currentSearch = '';
         let allMovies = [];
+        let selectedThumbnail = null;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Supabase
             supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            console.log('✅ Netflix-style VideoHub Pro initialized');
+            console.log('✅ Netflix-style VideoHub Pro with Thumbnails initialized');
             
             // Check auth state and load data
             checkAuthState().then(() => {
@@ -606,7 +681,74 @@
                     header.classList.remove('scrolled');
                 }
             });
+            
+            // Setup thumbnail upload
+            setupThumbnailUpload();
         });
+
+        // 🖼️ THUMBNAIL UPLOAD FUNCTIONS
+        function setupThumbnailUpload() {
+            const thumbnailUpload = document.getElementById('thumbnailUpload');
+            const thumbnailInput = document.getElementById('thumbnailInput');
+            const thumbnailPreview = document.getElementById('thumbnailPreview');
+            
+            thumbnailUpload.addEventListener('click', function() {
+                thumbnailInput.click();
+            });
+            
+            thumbnailInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    // Validate file type and size
+                    if (!file.type.startsWith('image/')) {
+                        alert('Please select an image file');
+                        return;
+                    }
+                    
+                    if (file.size > 2 * 1024 * 1024) { // 2MB limit
+                        alert('Image size should be less than 2MB');
+                        return;
+                    }
+                    
+                    // Preview image
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        thumbnailPreview.src = e.target.result;
+                        thumbnailPreview.style.display = 'block';
+                        selectedThumbnail = file;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        async function uploadThumbnail() {
+            if (!selectedThumbnail) return null;
+            
+            try {
+                // Generate unique filename
+                const fileExt = selectedThumbnail.name.split('.').pop();
+                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+                
+                // Upload to Supabase Storage
+                const { data, error } = await supabase.storage
+                    .from('thumbnails')
+                    .upload(fileName, selectedThumbnail);
+                
+                if (error) throw error;
+                
+                // Get public URL
+                const { data: { publicUrl } } = supabase.storage
+                    .from('thumbnails')
+                    .getPublicUrl(fileName);
+                
+                return publicUrl;
+            } catch (error) {
+                console.error('Error uploading thumbnail:', error);
+                alert('Failed to upload thumbnail: ' + error.message);
+                return null;
+            }
+        }
 
         // 🛡️ SECURITY FUNCTIONS
         function sanitizeIframeCode(iframeCode) {
@@ -852,6 +994,12 @@
                 return;
             }
 
+            // Upload thumbnail if selected
+            let thumbnailUrl = null;
+            if (selectedThumbnail) {
+                thumbnailUrl = await uploadThumbnail();
+            }
+
             try {
                 const { data, error } = await supabase
                     .from('movies')
@@ -861,6 +1009,7 @@
                             category: category, 
                             iframe_code: iframeCode, 
                             description: desc,
+                            thumbnail_url: thumbnailUrl,
                             user_id: currentUser.email
                         }
                     ]);
@@ -874,6 +1023,9 @@
                 document.getElementById('category').value = '';
                 document.getElementById('videoUrl').value = '';
                 document.getElementById('desc').value = '';
+                document.getElementById('thumbnailPreview').style.display = 'none';
+                document.getElementById('thumbnailInput').value = '';
+                selectedThumbnail = null;
                 
                 loadCategories();
                 loadMovies();
@@ -894,6 +1046,9 @@
             document.getElementById('category').value = '';
             document.getElementById('videoUrl').value = '';
             document.getElementById('desc').value = '';
+            document.getElementById('thumbnailPreview').style.display = 'none';
+            document.getElementById('thumbnailInput').value = '';
+            selectedThumbnail = null;
         }
 
         function hideForm() {
@@ -987,16 +1142,18 @@
 
         // 🎬 MAIN MOVIES LOAD FUNCTION
         async function loadMovies() {
+            const top5Container = document.getElementById('top5Movies');
             const popularContainer = document.getElementById('popularMovies');
             const recentContainer = document.getElementById('recentMovies');
             const allContainer = document.getElementById('moviesGrid');
             
+            top5Container.innerHTML = '<div class="loading">🔄 Loading...</div>';
             popularContainer.innerHTML = '<div class="loading">🔄 Loading...</div>';
             recentContainer.innerHTML = '<div class="loading">🔄 Loading...</div>';
             allContainer.innerHTML = '<div class="loading">🔄 Loading videos...</div>';
 
             try {
-                let query = supabase.from('movies').select('*');
+                let query = supabase.from('movies').select('*').order('created_at', { ascending: false });
 
                 if (currentCategory !== 'all') {
                     query = query.eq('category', currentCategory);
@@ -1007,6 +1164,7 @@
                 if (error) throw error;
 
                 if (!movies || movies.length === 0) {
+                    top5Container.innerHTML = '';
                     popularContainer.innerHTML = '';
                     recentContainer.innerHTML = '';
                     allContainer.innerHTML = `
@@ -1021,11 +1179,12 @@
                 // Store all movies for search functionality
                 allMovies = movies;
                 
-                // Display popular movies (first 8)
-                const popularMovies = movies.slice(0, 8);
-                popularContainer.innerHTML = popularMovies.map(movie => `
+                // Display Top 5 Recently Added (with badges)
+                const top5Movies = movies.slice(0, 5);
+                top5Container.innerHTML = top5Movies.map((movie, index) => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
-                        <img src="https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                        <div class="top5-badge">#${index + 1}</div>
+                        <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
                              alt="${movie.title}" class="movie-poster">
                         <div class="movie-info">
                             <div class="movie-title">${movie.title}</div>
@@ -1034,11 +1193,24 @@
                     </div>
                 `).join('');
                 
-                // Display recent movies (last 8, reversed to show newest first)
-                const recentMovies = [...movies].reverse().slice(0, 8);
+                // Display popular movies (first 8)
+                const popularMovies = movies.slice(0, 8);
+                popularContainer.innerHTML = popularMovies.map(movie => `
+                    <div class="movie-card" onclick="openMovieModal(${movie.id})">
+                        <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
+                             alt="${movie.title}" class="movie-poster">
+                        <div class="movie-info">
+                            <div class="movie-title">${movie.title}</div>
+                            <div class="movie-category">${movie.category}</div>
+                        </div>
+                    </div>
+                `).join('');
+                
+                // Display recent movies (next 8 after top 5)
+                const recentMovies = movies.slice(5, 13);
                 recentContainer.innerHTML = recentMovies.map(movie => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
-                        <img src="https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                        <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
                              alt="${movie.title}" class="movie-poster">
                         <div class="movie-info">
                             <div class="movie-title">${movie.title}</div>
@@ -1053,7 +1225,7 @@
                     
                 allContainer.innerHTML = filteredMovies.map(movie => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
-                        <img src="https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" 
+                        <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
                              alt="${movie.title}" class="movie-poster">
                         <div class="movie-info">
                             <div class="movie-title">${movie.title}</div>
@@ -1083,8 +1255,8 @@
             document.getElementById('modalDescription').textContent = movie.description || 'No description available.';
             
             // Set background image for modal header
-            document.getElementById('modalHeader').style.backgroundImage = 
-                `url('https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80')`;
+            const backgroundImage = movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80';
+            document.getElementById('modalHeader').style.backgroundImage = `url('${backgroundImage}')`;
             
             // Set up modal buttons
             document.getElementById('modalPlayBtn').onclick = function() {
@@ -1182,11 +1354,16 @@
         // Close modal when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('movieModal');
+            const form = document.getElementById('form');
+            
             if (event.target === modal) {
                 closeMovieModal();
             }
+            
+            if (event.target === form) {
+                hideForm();
+            }
         };
     </script>
-    <script type='text/javascript' src='//pl27892704.effectivegatecpm.com/d0/f8/e5/d0f8e53bef81fe3a7f6847b10e20f047.js'></script>
 </body>
 </html>
