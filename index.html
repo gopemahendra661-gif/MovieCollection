@@ -631,7 +631,21 @@
             <!-- Categories will be loaded here -->
         </div>
     </div>
-
+<!-- Categories Section -->
+<div class="categories-section">
+    <h2 class="section-title">Browse by Category</h2>
+    <div class="categories-container" id="categoriesList">
+        <!-- Categories will be loaded here -->
+    </div>
+    
+    <!-- Search Box Added Below Categories -->
+    <div class="search-section">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search videos..." 
+                   oninput="searchVideos(this.value)" style="width: 100%;">
+        </div>
+    </div>
+</div>
     <!-- Movies Sections -->
     <div class="section">
         <h2 class="section-title">Popular on VideoHub</h2>
@@ -1850,6 +1864,69 @@
                 hideEditForm();
             }
         };
+       // 🔍 SEARCH FUNCTIONALITY
+function searchVideos(searchTerm) {
+    currentSearch = searchTerm.toLowerCase().trim();
+    
+    if (!currentSearch) {
+        // If search is empty, show filtered content by category
+        loadMovies();
+        return;
+    }
+    
+    // Filter movies based on search term
+    const filteredMovies = allMovies.filter(movie => 
+        movie.title.toLowerCase().includes(currentSearch) || 
+        movie.category.toLowerCase().includes(currentSearch) ||
+        (movie.description && movie.description.toLowerCase().includes(currentSearch))
+    );
+    
+    // Update UI with search results
+    updateMoviesDisplay(filteredMovies);
+}
+
+function updateMoviesDisplay(movies) {
+    const top5Container = document.getElementById('top5Movies');
+    const popularContainer = document.getElementById('popularMovies');
+    const recentContainer = document.getElementById('recentMovies');
+    const allContainer = document.getElementById('moviesGrid');
+    
+    if (currentSearch) {
+        // Show search results in all sections
+        const searchResultsHTML = movies.map(movie => `
+            <div class="movie-card" onclick="openMovieModal(${movie.id})">
+                ${currentUser && movie.user_id === currentUser.email ? 
+                    `<button class="edit-btn" onclick="event.stopPropagation(); showEditForm(${movie.id})">✏️</button>` : ''}
+                <img src="${movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
+                     alt="${movie.title}" class="movie-poster">
+                <div class="movie-info">
+                    <div class="movie-title">${movie.title}</div>
+                    <div class="movie-category">${movie.category}</div>
+                </div>
+            </div>
+        `).join('');
+        
+        if (movies.length === 0) {
+            const noResultsHTML = `
+                <div class="empty-state">
+                    🔍 No videos found for "${currentSearch}"
+                </div>
+            `;
+            top5Container.innerHTML = noResultsHTML;
+            popularContainer.innerHTML = noResultsHTML;
+            recentContainer.innerHTML = noResultsHTML;
+            allContainer.innerHTML = noResultsHTML;
+        } else {
+            top5Container.innerHTML = searchResultsHTML;
+            popularContainer.innerHTML = searchResultsHTML;
+            recentContainer.innerHTML = searchResultsHTML;
+            allContainer.innerHTML = searchResultsHTML;
+        }
+    } else {
+        // If no search term, reload normal content
+        loadMovies();
+    }
+} 
     </script>
     <script type='text/javascript' src='//pl27892704.effectivegatecpm.com/d0/f8/e5/d0f8e53bef81fe3a7f6847b10e20f047.js'></script>
 </body>
