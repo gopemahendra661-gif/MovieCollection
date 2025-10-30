@@ -187,7 +187,7 @@
 
         /* Edit Button on Movie Cards - HIDDEN */
         .edit-btn {
-            display: none; /* Hidden but CSS preserved */
+            display: none;
         }
 
         /* Top 5 Section */
@@ -277,6 +277,43 @@
             margin-bottom: 20px;
         }
 
+        /* Video Container Styling for Better Fullscreen */
+        .video-player-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .video-player-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+            background: #000;
+        }
+
+        /* Fullscreen support */
+        :-webkit-full-screen .video-player-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        :-moz-full-screen .video-player-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        :-ms-fullscreen .video-player-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
+        :fullscreen .video-player-container {
+            width: 100vw;
+            height: 100vh;
+        }
+
         /* Buttons */
         .btn { 
             background: rgba(255,255,255,0.1);
@@ -335,7 +372,7 @@
 
         /* Form Styles - HIDDEN */
         .form-container {
-            display: none !important; /* All forms hidden */
+            display: none !important;
         }
 
         /* Thumbnail Upload - HIDDEN */
@@ -456,6 +493,10 @@
             .header-actions {
                 gap: 10px;
             }
+            
+            .video-player-container {
+                height: 300px;
+            }
         }
     </style>
 </head>
@@ -471,7 +512,6 @@
             <a href="#" class="nav-link">My List</a>
         </div>
         <div class="header-actions">
-            <!-- Add Video Button REMOVED -->
             <button class="btn btn-secondary">Login</button>
         </div>
     </div>
@@ -482,7 +522,6 @@
             <h1 class="hero-title">Unlimited movies, TV shows, and more.</h1>
             <p class="hero-description">Watch anywhere. Cancel anytime.</p>
             <div class="hero-buttons">
-                <!-- Add Video Button REMOVED from Hero -->
                 <button class="btn btn-secondary btn-large" onclick="showAllMovies()">
                     <span>▶</span> Browse All
                 </button>
@@ -602,7 +641,6 @@
                     <button class="btn btn-primary" id="modalPlayBtn">▶ Play</button>
                     <button class="btn btn-secondary" id="modalDownloadBtn">📥 Download</button>
                     <button class="btn btn-secondary" id="modalShareBtn">📤 Share</button>
-                    <!-- Edit Button REMOVED -->
                 </div>
                 <p class="modal-description" id="modalDescription">Movie description will appear here.</p>
                 <div id="modalVideoContainer">
@@ -628,7 +666,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-       
+        // 🔥 SUPABASE CREDENTIALS
         const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
         const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo';
 
@@ -641,7 +679,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize Supabase
             supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            console.log('✅ VideoHub Pro - View Only Mode');
+            console.log('✅ VideoHub Pro - Full Screen Support Enabled');
             
             loadCategories();
             loadMovies();
@@ -763,7 +801,7 @@
             }
         }
 
-        // 🎭 MOVIE MODAL FUNCTIONS
+        // 🎭 MOVIE MODAL FUNCTIONS - FULL SCREEN FIXED
         function openMovieModal(movieId) {
             const movie = allMovies.find(m => m.id === movieId);
             if (!movie) return;
@@ -801,9 +839,44 @@
             document.getElementById('modalVideoContainer').innerHTML = '';
         }
 
+        // 🎥 FIXED FULL SCREEN VIDEO FUNCTION
         function playVideo(movie) {
             const videoContainer = document.getElementById('modalVideoContainer');
-            videoContainer.innerHTML = movie.iframe_code;
+            
+            // Create a wrapper for better fullscreen control
+            videoContainer.innerHTML = `
+                <div class="video-player-container">
+                    ${movie.iframe_code}
+                </div>
+            `;
+            
+            // Fix iframe for full screen support
+            const iframe = videoContainer.querySelector('iframe');
+            if (iframe) {
+                // Set essential attributes for fullscreen
+                iframe.setAttribute('allowfullscreen', 'true');
+                iframe.setAttribute('webkitallowfullscreen', 'true');
+                iframe.setAttribute('mozallowfullscreen', 'true');
+                iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
+                
+                // Set proper dimensions
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.style.borderRadius = '8px';
+                
+                // Add autoplay for better UX
+                let src = iframe.src;
+                if (src.includes('youtube.com') && !src.includes('autoplay=1')) {
+                    iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+                }
+                else if (src.includes('vimeo.com') && !src.includes('autoplay=1')) {
+                    iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+                }
+                else if (src.includes('dailymotion.com') && !src.includes('autoplay=1')) {
+                    iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
+                }
+            }
         }
 
         function downloadVideo(url, title) {
