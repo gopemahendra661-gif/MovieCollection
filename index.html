@@ -83,6 +83,108 @@
             align-items: center;
         }
 
+        /* NEW: Notification Bell Styles */
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background 0.3s;
+            font-size: 20px;
+        }
+
+        .notification-bell:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #e50914;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .notifications-panel {
+            display: none;
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 350px;
+            background: #181818;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 1000;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        .notifications-header {
+            padding: 15px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a1a1a;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .notifications-list {
+            padding: 10px;
+        }
+
+        .user-notification {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: #252525;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .user-notification:hover {
+            background: #2a2a2a;
+        }
+
+        .user-notification.unread {
+            background: #1a3a5f;
+            border-left-color: #e50914;
+        }
+
+        .user-notification.success {
+            border-left-color: #28a745;
+        }
+
+        .user-notification.warning {
+            border-left-color: #ffc107;
+        }
+
+        .user-notification.error {
+            border-left-color: #dc3545;
+        }
+
+        .notification-message {
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.3;
+            margin-bottom: 5px;
+        }
+
+        .notification-time {
+            color: #888;
+            font-size: 0.7rem;
+        }
+
         /* Hero Section */
         .hero {
             height: 70vh;
@@ -203,7 +305,7 @@
             z-index: 5;
         }
 
-        /* NEW: Professional Video Player Modal */
+        /* Professional Video Player Modal */
         .video-modal {
             display: none;
             position: fixed;
@@ -315,7 +417,7 @@
             background: #f40612;
         }
 
-        /* Movie Details Modal (Original) */
+        /* Movie Details Modal */
         .movie-modal {
             display: none;
             position: fixed;
@@ -543,94 +645,16 @@
                 height: 44px;
                 font-size: 18px;
             }
+            
+            .notifications-panel {
+                width: 300px;
+                right: 10px;
+            }
         }
-        .notification-bell {
-    position: relative;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 50%;
-    transition: background 0.3s;
-}
-
-.notification-bell:hover {
-    background: rgba(255,255,255,0.1);
-}
-
-.notification-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background: #e50914;
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.notifications-panel {
-    display: none;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    width: 350px;
-    background: #181818;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    z-index: 1000;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-.notifications-header {
-    padding: 15px;
-    border-bottom: 1px solid #333;
-    display: flex;
-    justify-content: between;
-    align-items: center;
-}
-
-.notifications-list {
-    padding: 10px;
-}
-
-.user-notification {
-    padding: 12px;
-    margin-bottom: 8px;
-    background: #252525;
-    border-radius: 6px;
-    border-left: 4px solid #007bff;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.user-notification:hover {
-    background: #2a2a2a;
-}
-
-.user-notification.unread {
-    background: #1a3a5f;
-    border-left-color: #e50914;
-}
-
-.user-notification.success {
-    border-left-color: #28a745;
-}
-
-.user-notification.warning {
-    border-left-color: #ffc107;
-}
-
-.user-notification.error {
-    border-left-color: #dc3545;
-}
     </style>
 </head>
 <body>
-    <!-- Netflix-style Header -->
+    <!-- Netflix-style Header with Notification Bell -->
     <div class="header" id="mainHeader">
         <div class="logo">VIDEOHUB</div>
         <div class="nav-links">
@@ -640,19 +664,29 @@
             <a href="#" class="nav-link">New & Popular</a>
             <a href="#" class="nav-link">My List</a>
         </div>
-      
-        <!-- Header actions ke andar -->
-<div class="header-actions">
-   <!-- Header actions ke andar -->
-<div class="header-actions">
-    <!-- Notification Bell -->
-    <div class="notification-bell" onclick="toggleNotifications()">
-        🔔
-        <span class="notification-badge" id="notificationBadge">0</span>
+        <div class="header-actions">
+            <!-- Notification Bell -->
+            <div class="notification-bell" onclick="toggleNotifications()">
+                🔔
+                <span class="notification-badge" id="notificationBadge">0</span>
+            </div>
+            <button class="btn btn-secondary">Login</button>
+        </div>
     </div>
-    <button class="btn btn-secondary">Login</button>
-</div>
-</div>
+
+    <!-- Notifications Panel -->
+    <div id="notificationsPanel" class="notifications-panel">
+        <div class="notifications-header">
+            <h3 style="margin: 0; color: white;">🔔 Notifications</h3>
+            <button class="btn-secondary" onclick="markAllAsRead()" style="padding: 5px 10px; font-size: 12px;">
+                Mark All Read
+            </button>
+        </div>
+        <div class="notifications-list" id="notificationsList">
+            <div class="loading">Loading notifications...</div>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <div class="hero">
         <div class="hero-content">
@@ -755,7 +789,7 @@
         <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
     </div>
 
-    <!-- NEW: Professional Video Player Modal -->
+    <!-- Professional Video Player Modal -->
     <div id="videoPlayerModal" class="video-modal">
         <div class="video-modal-header">
             <div class="video-title" id="videoPlayerTitle">Video Title</div>
@@ -780,7 +814,7 @@
         </div>
     </div>
 
-    <!-- Original Movie Details Modal -->
+    <!-- Movie Details Modal -->
     <div id="movieModal" class="movie-modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeMovieModal()">×</button>
@@ -833,14 +867,16 @@
         let currentSearch = '';
         let allMovies = [];
         let currentPlayingVideo = null;
+        let userNotifications = [];
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            console.log('✅ VideoHub Pro - Professional Video Player');
+            console.log('✅ VideoHub Pro - With Notification System');
             
             loadCategories();
             loadMovies();
+            loadUserNotifications(); // Notifications load karein
             
             window.addEventListener('scroll', function() {
                 const header = document.getElementById('mainHeader');
@@ -855,9 +891,167 @@
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     closeVideoPlayer();
+                    closeNotifications();
                 }
             });
+
+            // Click outside to close notifications
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.notification-bell') && !e.target.closest('.notifications-panel')) {
+                    closeNotifications();
+                }
+            });
+
+            // Auto-refresh notifications every 2 minutes
+            setInterval(loadUserNotifications, 120000);
         });
+
+        // 🔔 NOTIFICATION SYSTEM FUNCTIONS
+        async function loadUserNotifications() {
+            try {
+                // Last 1 week ki notifications load karein
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+                const { data: notifications, error } = await supabase
+                    .from('notifications')
+                    .select('*')
+                    .gte('sent_at', oneWeekAgo.toISOString())
+                    .order('sent_at', { ascending: false })
+                    .limit(50);
+
+                if (error) throw error;
+
+                userNotifications = notifications || [];
+                updateNotificationBadge();
+                
+                // Agar notifications panel open hai toh update karein
+                if (document.getElementById('notificationsPanel').style.display === 'block') {
+                    displayNotifications();
+                }
+                
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+
+        function updateNotificationBadge() {
+            const badge = document.getElementById('notificationBadge');
+            const unreadCount = userNotifications.length;
+            
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                badge.style.display = 'flex';
+                
+                // Badge animation
+                badge.style.animation = 'none';
+                setTimeout(() => {
+                    badge.style.animation = 'pulse 0.5s ease-in-out';
+                }, 100);
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function displayNotifications() {
+            const notificationsList = document.getElementById('notificationsList');
+            
+            if (!userNotifications || userNotifications.length === 0) {
+                notificationsList.innerHTML = `
+                    <div class="empty-state" style="padding: 20px; text-align: center; color: #666;">
+                        No new notifications
+                    </div>
+                `;
+                return;
+            }
+
+            notificationsList.innerHTML = userNotifications.map(notif => `
+                <div class="user-notification ${notif.type} unread" onclick="markAsRead('${notif.id}')">
+                    <div style="font-weight: 600; margin-bottom: 5px; color: white;">
+                        ${notif.important ? '🔥 ' : ''}${notif.title}
+                    </div>
+                    <div class="notification-message">
+                        ${notif.message}
+                    </div>
+                    <div class="notification-time">
+                        ${formatTime(notif.sent_at)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleNotifications() {
+            const panel = document.getElementById('notificationsPanel');
+            if (panel.style.display === 'block') {
+                closeNotifications();
+            } else {
+                openNotifications();
+            }
+        }
+
+        function openNotifications() {
+            const panel = document.getElementById('notificationsPanel');
+            panel.style.display = 'block';
+            displayNotifications();
+        }
+
+        function closeNotifications() {
+            const panel = document.getElementById('notificationsPanel');
+            panel.style.display = 'none';
+        }
+
+        function markAsRead(notificationId) {
+            // Mark notification as read (local storage mein save karein)
+            const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]');
+            if (!readNotifications.includes(notificationId)) {
+                readNotifications.push(notificationId);
+                localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
+            }
+            
+            // Notification remove karein list se
+            userNotifications = userNotifications.filter(notif => notif.id !== notificationId);
+            updateNotificationBadge();
+            displayNotifications();
+            
+            // Close panel if no notifications left
+            if (userNotifications.length === 0) {
+                closeNotifications();
+            }
+        }
+
+        function markAllAsRead() {
+            // Sabhi notifications ko read mark karein
+            const allNotificationIds = userNotifications.map(notif => notif.id);
+            const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]');
+            
+            allNotificationIds.forEach(id => {
+                if (!readNotifications.includes(id)) {
+                    readNotifications.push(id);
+                }
+            });
+            
+            localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
+            userNotifications = [];
+            updateNotificationBadge();
+            displayNotifications();
+            closeNotifications();
+        }
+
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins}m ago`;
+            if (diffHours < 24) return `${diffHours}h ago`;
+            if (diffDays < 7) return `${diffDays}d ago`;
+            
+            return date.toLocaleDateString('en-IN');
+        }
 
         // 🎬 MAIN MOVIES LOAD FUNCTION
         async function loadMovies() {
@@ -996,20 +1190,17 @@
             document.getElementById('movieModal').style.display = 'none';
         }
 
-        // 🎥 NEW PROFESSIONAL VIDEO PLAYER
+        // 🎥 VIDEO PLAYER FUNCTIONS
         function openVideoPlayer(movie) {
             currentPlayingVideo = movie;
             
             document.getElementById('videoPlayerTitle').textContent = movie.title;
             
-            // Extract video URL from iframe code
             let videoUrl = extractVideoUrl(movie.iframe_code);
             
-            // Set iframe source with autoplay
             const iframe = document.getElementById('videoPlayerIframe');
             iframe.src = videoUrl + (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
             
-            // Show video player
             document.getElementById('videoPlayerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
         }
@@ -1023,7 +1214,6 @@
         }
 
         function extractVideoUrl(iframeCode) {
-            // Extract src from iframe
             const srcMatch = iframeCode.match(/src="([^"]*)"/);
             if (srcMatch && srcMatch[1]) {
                 return srcMatch[1];
@@ -1205,96 +1395,17 @@
                 closeMovieModal();
             }
         };
-        // 🔔 USER NOTIFICATION SYSTEM
-let userNotifications = [];
-
-async function loadUserNotifications() {
-    try {
-        // Last 1 week ki notifications load karein
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-        const { data: notifications, error } = await supabase
-            .from('notifications')
-            .select('*')
-            .gte('sent_at', oneWeekAgo.toISOString())
-            .order('sent_at', { ascending: false });
-
-        if (error) throw error;
-
-        userNotifications = notifications || [];
-        updateNotificationBadge();
-        displayNotifications();
-        
-    } catch (error) {
-        console.error('Error loading notifications:', error);
-    }
-}
-
-function updateNotificationBadge() {
-    const badge = document.getElementById('notificationBadge');
-    const unreadCount = userNotifications.length;
-    
-    badge.textContent = unreadCount;
-    badge.style.display = unreadCount > 0 ? 'flex' : 'none';
-}
-
-function displayNotifications() {
-    const notificationsList = document.getElementById('notificationsList');
-    
-    if (!userNotifications || userNotifications.length === 0) {
-        notificationsList.innerHTML = `
-            <div class="empty-state" style="padding: 20px; text-align: center; color: #666;">
-                No new notifications
-            </div>
-        `;
-        return;
-    }
-
-    notificationsList.innerHTML = userNotifications.map(notif => `
-        <div class="user-notification ${notif.type} unread" onclick="markAsRead('${notif.id}')">
-            <div style="font-weight: 600; margin-bottom: 5px;">
-                ${notif.important ? '🔥 ' : ''}${notif.title}
-            </div>
-            <div style="color: #ccc; font-size: 0.9rem; line-height: 1.3;">
-                ${notif.message}
-            </div>
-            <div style="color: #888; font-size: 0.7rem; margin-top: 5px;">
-                ${formatTime(notif.sent_at)}
-            </div>
-        </div>
-    `).join('');
-}
-
-function toggleNotifications() {
-    const panel = document.getElementById('notificationsPanel');
-    panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-    
-    if (panel.style.display === 'block') {
-        loadUserNotifications();
-    }
-}
-
-function markAsRead(notificationId) {
-    // Mark notification as read (local storage mein save karein)
-    const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]');
-    if (!readNotifications.includes(notificationId)) {
-        readNotifications.push(notificationId);
-        localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
-    }
-    
-    // UI update karein
-    loadUserNotifications();
-}
-
-// Page load par notifications load karein
-document.addEventListener('DOMContentLoaded', function() {
-    loadUserNotifications();
-    
-    // Auto-refresh notifications every 2 minutes
-    setInterval(loadUserNotifications, 120000);
-});
     </script>
+
+    <style>
+        /* Notification badge animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+
     <script type='text/javascript' src='//pl27892704.effectivegatecpm.com/d0/f8/e5/d0f8e53bef81fe3a7f6847b10e20f047.js'></script>
 </body>
 </html>
