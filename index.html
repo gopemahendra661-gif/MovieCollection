@@ -185,11 +185,6 @@
             font-weight: 500;
         }
 
-        /* Edit Button on Movie Cards - HIDDEN */
-        .edit-btn {
-            display: none;
-        }
-
         /* Top 5 Section */
         .top5-section {
             position: relative;
@@ -208,7 +203,119 @@
             z-index: 5;
         }
 
-        /* Movie Details Modal */
+        /* NEW: Professional Video Player Modal */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 2000;
+            flex-direction: column;
+        }
+
+        .video-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(0,0,0,0.8);
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .video-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .video-close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background 0.3s;
+        }
+
+        .video-close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .video-player-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #000;
+        }
+
+        .video-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 30px 20px 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .video-player-container:hover .video-controls {
+            opacity: 1;
+        }
+
+        .control-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+
+        .control-btn-primary {
+            background: #e50914;
+        }
+
+        .control-btn-primary:hover {
+            background: #f40612;
+        }
+
+        /* Movie Details Modal (Original) */
         .movie-modal {
             display: none;
             position: fixed;
@@ -277,43 +384,6 @@
             margin-bottom: 20px;
         }
 
-        /* Video Container Styling for Better Fullscreen */
-        .video-player-container {
-            width: 100%;
-            height: 400px;
-            position: relative;
-            margin: 20px 0;
-        }
-
-        .video-player-container iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-            border-radius: 8px;
-            background: #000;
-        }
-
-        /* Fullscreen support */
-        :-webkit-full-screen .video-player-container {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        :-moz-full-screen .video-player-container {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        :-ms-fullscreen .video-player-container {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        :fullscreen .video-player-container {
-            width: 100vw;
-            height: 100vh;
-        }
-
         /* Buttons */
         .btn { 
             background: rgba(255,255,255,0.1);
@@ -347,43 +417,15 @@
             background: rgba(255,255,255,0.3);
         }
 
-        .btn-success {
-            background: #28a745;
-        }
-
-        .btn-success:hover {
-            background: #34ce57;
-        }
-
-        .btn-warning {
-            background: #ffc107;
-            color: #000;
-        }
-
-        .btn-warning:hover {
-            background: #ffca2c;
-        }
-
         .btn-large {
             padding: 12px 24px;
             font-size: 16px;
             font-weight: 600;
         }
 
-        /* Form Styles - HIDDEN */
-        .form-container {
-            display: none !important;
-        }
-
-        /* Thumbnail Upload - HIDDEN */
-        .thumbnail-upload {
-            display: none;
-        }
-
         /* Ad Container */
         .ad-container {
             width: 100%;
-            
             margin: 15px 0;
             padding: 10px;
             background: rgba(255, 255, 255, 0.05);
@@ -398,17 +440,15 @@
 
         .ad-container1 {
             width: 100%;
-            height: 100%
+            height: 100%;
             margin: 15px 0;
             padding: 10px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
             border: 1px solid #333;
             text-align: center;
-         
             align-items: center;
             justify-content: center;
-            
         }
 
         /* Categories */
@@ -494,8 +534,14 @@
                 gap: 10px;
             }
             
-            .video-player-container {
-                height: 300px;
+            .video-controls {
+                padding: 20px 15px 15px;
+            }
+            
+            .control-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
             }
         }
     </style>
@@ -530,9 +576,9 @@
     </div>
 
     <!-- Ad Container -->
-<div class="ad-container1">
-   <iframe src="https://www.effectivegatecpm.com/i7wsfxi43?key=8a2b47ac2914778d5220cd4d7c40d969" width="100%" height="500" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
-</div>
+    <div class="ad-container1">
+        <iframe src="https://www.effectivegatecpm.com/i7wsfxi43?key=8a2b47ac2914778d5220cd4d7c40d969" width="100%" height="500" frameborder="0" webkitallowfullscreen="true" mozallowfullscreen="true" allowfullscreen></iframe>
+    </div>
 
     <!-- Top 5 Recently Added Section -->
     <div class="section top5-section">
@@ -542,7 +588,7 @@
         </div>
     </div>
     <script async="async" data-cfasync="false" src="//pl25822711.effectivegatecpm.com/77f8b16dc49a4e5ec2c88f484b5feb15/invoke.js"></script>
-<div id="container-77f8b16dc49a4e5ec2c88f484b5feb15"></div>
+    <div id="container-77f8b16dc49a4e5ec2c88f484b5feb15"></div>
 
     <!-- Categories Section -->
     <div class="categories-section">
@@ -585,9 +631,9 @@
         </div>
     </div>
     <script async="async" data-cfasync="false" src="//pl25822711.effectivegatecpm.com/77f8b16dc49a4e5ec2c88f484b5feb15/invoke.js"></script>
-<div id="container-77f8b16dc49a4e5ec2c88f484b5feb15"></div>
+    <div id="container-77f8b16dc49a4e5ec2c88f484b5feb15"></div>
 
-<div class="ad-container">
+    <div class="ad-container">
         <script type="text/javascript">
             atOptions = {
                 'key' : '1cb4836d1181cec93eeaf530d5fae232',
@@ -618,12 +664,36 @@
         <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
     </div>
 
-    <!-- Movie Details Modal -->
+    <!-- NEW: Professional Video Player Modal -->
+    <div id="videoPlayerModal" class="video-modal">
+        <div class="video-modal-header">
+            <div class="video-title" id="videoPlayerTitle">Video Title</div>
+            <button class="video-close-btn" onclick="closeVideoPlayer()">×</button>
+        </div>
+        <div class="video-player-container">
+            <iframe id="videoPlayerIframe" class="video-iframe" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+            </iframe>
+            <div class="video-controls">
+                <button class="control-btn control-btn-primary" onclick="toggleFullscreen()">
+                    ⛶
+                </button>
+                <button class="control-btn" onclick="shareCurrentVideo()">
+                    📤
+                </button>
+                <button class="control-btn" onclick="downloadCurrentVideo()">
+                    📥
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Original Movie Details Modal -->
     <div id="movieModal" class="movie-modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeMovieModal()">×</button>
             <div class="modal-header" id="modalHeader">
-                <!-- Background image will be set here -->
                 <script type="text/javascript">
                     atOptions = {
                         'key' : '1cb4836d1181cec93eeaf530d5fae232',
@@ -638,14 +708,11 @@
             <div class="modal-body">
                 <h2 class="modal-title" id="modalTitle">Movie Title</h2>
                 <div class="modal-actions">
-                    <button class="btn btn-primary" id="modalPlayBtn">▶ Play</button>
+                    <button class="btn btn-primary" id="modalPlayBtn">▶ Play Video</button>
                     <button class="btn btn-secondary" id="modalDownloadBtn">📥 Download</button>
                     <button class="btn btn-secondary" id="modalShareBtn">📤 Share</button>
                 </div>
                 <p class="modal-description" id="modalDescription">Movie description will appear here.</p>
-                <div id="modalVideoContainer">
-                    <!-- Video will be loaded here -->
-                </div>
             </div>
         </div>
     </div>
@@ -674,23 +741,29 @@
         let currentCategory = 'all';
         let currentSearch = '';
         let allMovies = [];
+        let currentPlayingVideo = null;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize Supabase
             supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            console.log('✅ VideoHub Pro - Full Screen Support Enabled');
+            console.log('✅ VideoHub Pro - Professional Video Player');
             
             loadCategories();
             loadMovies();
             
-            // Add scroll event listener for header
             window.addEventListener('scroll', function() {
                 const header = document.getElementById('mainHeader');
                 if (window.scrollY > 100) {
                     header.classList.add('scrolled');
                 } else {
                     header.classList.remove('scrolled');
+                }
+            });
+
+            // ESC key to close video player
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    closeVideoPlayer();
                 }
             });
         });
@@ -731,10 +804,9 @@
                     return;
                 }
 
-                // Store all movies for search functionality
                 allMovies = movies;
                 
-                // Display Top 5 Recently Added (with badges)
+                // Display movies
                 const top5Movies = movies.slice(0, 5);
                 top5Container.innerHTML = top5Movies.map((movie, index) => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
@@ -748,7 +820,6 @@
                     </div>
                 `).join('');
                 
-                // Display popular movies (first 8)
                 const popularMovies = movies.slice(0, 8);
                 popularContainer.innerHTML = popularMovies.map(movie => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
@@ -761,7 +832,6 @@
                     </div>
                 `).join('');
                 
-                // Display recent movies (next 8 after top 5)
                 const recentMovies = movies.slice(5, 13);
                 recentContainer.innerHTML = recentMovies.map(movie => `
                     <div class="movie-card" onclick="openMovieModal(${movie.id})">
@@ -774,7 +844,6 @@
                     </div>
                 `).join('');
                 
-                // Display all movies in grid
                 const filteredMovies = currentCategory === 'all' ? movies : 
                     movies.filter(movie => movie.category === currentCategory);
                     
@@ -801,7 +870,7 @@
             }
         }
 
-        // 🎭 MOVIE MODAL FUNCTIONS - FULL SCREEN FIXED
+        // 🎭 MOVIE MODAL FUNCTIONS
         function openMovieModal(movieId) {
             const movie = allMovies.find(m => m.id === movieId);
             if (!movie) return;
@@ -809,13 +878,12 @@
             document.getElementById('modalTitle').textContent = movie.title;
             document.getElementById('modalDescription').textContent = movie.description || 'No description available.';
             
-            // Set background image for modal header
             const backgroundImage = movie.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80';
             document.getElementById('modalHeader').style.backgroundImage = `url('${backgroundImage}')`;
             
-            // Set up modal buttons
             document.getElementById('modalPlayBtn').onclick = function() {
-                playVideo(movie);
+                closeMovieModal();
+                openVideoPlayer(movie);
             };
             
             document.getElementById('modalDownloadBtn').onclick = function() {
@@ -830,52 +898,72 @@
                 shareVideo(movie.title, movie.id);
             };
             
-            // Show modal
             document.getElementById('movieModal').style.display = 'block';
         }
 
         function closeMovieModal() {
             document.getElementById('movieModal').style.display = 'none';
-            document.getElementById('modalVideoContainer').innerHTML = '';
         }
 
-        // 🎥 FIXED FULL SCREEN VIDEO FUNCTION
-        function playVideo(movie) {
-            const videoContainer = document.getElementById('modalVideoContainer');
+        // 🎥 NEW PROFESSIONAL VIDEO PLAYER
+        function openVideoPlayer(movie) {
+            currentPlayingVideo = movie;
             
-            // Create a wrapper for better fullscreen control
-            videoContainer.innerHTML = `
-                <div class="video-player-container">
-                    ${movie.iframe_code}
-                </div>
-            `;
+            document.getElementById('videoPlayerTitle').textContent = movie.title;
             
-            // Fix iframe for full screen support
-            const iframe = videoContainer.querySelector('iframe');
-            if (iframe) {
-                // Set essential attributes for fullscreen
-                iframe.setAttribute('allowfullscreen', 'true');
-                iframe.setAttribute('webkitallowfullscreen', 'true');
-                iframe.setAttribute('mozallowfullscreen', 'true');
-                iframe.setAttribute('allow', 'autoplay; fullscreen; encrypted-media; picture-in-picture');
-                
-                // Set proper dimensions
-                iframe.style.width = '100%';
-                iframe.style.height = '100%';
-                iframe.style.border = 'none';
-                iframe.style.borderRadius = '8px';
-                
-                // Add autoplay for better UX
-                let src = iframe.src;
-                if (src.includes('youtube.com') && !src.includes('autoplay=1')) {
-                    iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
-                }
-                else if (src.includes('vimeo.com') && !src.includes('autoplay=1')) {
-                    iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
-                }
-                else if (src.includes('dailymotion.com') && !src.includes('autoplay=1')) {
-                    iframe.src = src + (src.includes('?') ? '&' : '?') + 'autoplay=1';
-                }
+            // Extract video URL from iframe code
+            let videoUrl = extractVideoUrl(movie.iframe_code);
+            
+            // Set iframe source with autoplay
+            const iframe = document.getElementById('videoPlayerIframe');
+            iframe.src = videoUrl + (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+            
+            // Show video player
+            document.getElementById('videoPlayerModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideoPlayer() {
+            const iframe = document.getElementById('videoPlayerIframe');
+            iframe.src = '';
+            document.getElementById('videoPlayerModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            currentPlayingVideo = null;
+        }
+
+        function extractVideoUrl(iframeCode) {
+            // Extract src from iframe
+            const srcMatch = iframeCode.match(/src="([^"]*)"/);
+            if (srcMatch && srcMatch[1]) {
+                return srcMatch[1];
+            }
+            return '';
+        }
+
+        function toggleFullscreen() {
+            const iframe = document.getElementById('videoPlayerIframe');
+            if (iframe.requestFullscreen) {
+                iframe.requestFullscreen();
+            } else if (iframe.webkitRequestFullscreen) {
+                iframe.webkitRequestFullscreen();
+            } else if (iframe.mozRequestFullScreen) {
+                iframe.mozRequestFullScreen();
+            } else if (iframe.msRequestFullscreen) {
+                iframe.msRequestFullscreen();
+            }
+        }
+
+        function shareCurrentVideo() {
+            if (currentPlayingVideo) {
+                shareVideo(currentPlayingVideo.title, currentPlayingVideo.id);
+            }
+        }
+
+        function downloadCurrentVideo() {
+            if (currentPlayingVideo && currentPlayingVideo.download_url) {
+                downloadVideo(currentPlayingVideo.download_url, currentPlayingVideo.title);
+            } else {
+                alert('Download link not available for this video');
             }
         }
 
@@ -914,7 +1002,6 @@
                 const categoriesContainer = document.getElementById('categoriesList');
                 let categoriesHTML = '';
 
-                // Add "All" category
                 categoriesHTML += `
                     <button class="category-btn ${currentCategory === 'all' ? 'active' : ''}" 
                             onclick="filterByCategory('all')">
@@ -922,7 +1009,6 @@
                     </button>
                 `;
 
-                // Add fixed categories
                 const fixedCategories = [
                     'Action', 'Comedy', 'Drama', 'Sci-fi', 'Horror', 
                     'Romance', 'Thriller', 'Animation', 'Documentary', 'Music'
@@ -1021,7 +1107,7 @@
             }
         }
 
-        // Close modal when clicking outside
+        // Close modals when clicking outside
         window.onclick = function(event) {
             const modal = document.getElementById('movieModal');
             if (event.target === modal) {
