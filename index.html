@@ -577,6 +577,68 @@
         .notification-type-update { border-left: 3px solid #c084fc; }
         .notification-type-promotional { border-left: 3px solid #f472b6; }
 
+        /* New Ad Styles */
+        .sidebar-ad {
+            position: fixed;
+            right: 10px;
+            top: 70px;
+            width: 300px;
+            height: 250px;
+            z-index: 98;
+        }
+
+        .bottom-banner-ad {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #000;
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .midroll-ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 4000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .midroll-ad-content {
+            width: 90%;
+            height: 80%;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .midroll-ad-timer {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .midroll-ad-close {
+            margin-top: 20px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
         @media (min-width: 768px) {
             .videos-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -608,26 +670,73 @@
                 width: 300px;
                 right: -50px;
             }
+
+            .sidebar-ad {
+                display: none;
+            }
+
+            .bottom-banner-ad {
+                height: 50px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Full Screen Ad Popup -->
-    <div id="adPopup" class="ad-popup">
+    <!-- Pre-roll Ad Popup -->
+    <div id="prerollAdPopup" class="ad-popup">
         <div class="ad-popup-content">
-            <div class="ad-popup-timer" id="adTimer">Ad closes in 5s</div>
-            <button class="ad-popup-close" onclick="closeAdPopup()" id="adCloseBtn" style="display: none;">×</button>
-            <div class="ad-container" style="width: 100%; height: 100%; border: none;">
-               <iframe 
-    width="100%" 
-    height="100%" 
-    src="https://www.effectivegatecpm.com/i7wsfxi43?key=8a2b47ac2914778d5220cd4d7c40d969 " 
-    frameborder="0" 
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-    allowfullscreen>
-</iframe>
-            </div>
+            <div class="ad-popup-timer" id="prerollAdTimer">Ad closes in 5s</div>
+            <button class="ad-popup-close" onclick="closePrerollAd()" id="prerollAdCloseBtn" style="display: none;">×</button>
+            <iframe 
+                width="100%" 
+                height="100%" 
+                src="https://www.effectivegatecpm.com/i7wsfxi43?key=8a2b47ac2914778d5220cd4d7c40d969" 
+                frameborder="0" 
+                allow="autoplay">
+            </iframe>
         </div>
+    </div>
+
+    <!-- Mid-roll Ad Overlay -->
+    <div id="midrollAdOverlay" class="midroll-ad-overlay">
+        <div class="midroll-ad-timer" id="midrollAdTimer">Mid-roll Ad - Closing in 10s</div>
+        <div class="midroll-ad-content">
+            <iframe 
+                src="https://www.effectivegatecpm.com/i7wsfxi43?key=8a2b47ac2914778d5220cd4d7c40d969" 
+                width="100%" 
+                height="100%" 
+                allow="autoplay">
+            </iframe>
+        </div>
+        <button class="midroll-ad-close" onclick="closeMidrollAd()" id="midrollAdCloseBtn" style="display: none;">Skip Ad</button>
+    </div>
+
+    <!-- Sidebar Ad -->
+    <div class="sidebar-ad">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '1cb4836d1181cec93eeaf530d5fae232',
+                'format' : 'iframe',
+                'height' : 250,
+                'width' : 300,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/1cb4836d1181cec93eeaf530d5fae232/invoke.js"></script>
+    </div>
+
+    <!-- Bottom Banner Ad -->
+    <div class="bottom-banner-ad">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
     </div>
 
     <!-- YouTube-style Header -->
@@ -677,8 +786,7 @@
         </div>
 
         <!-- Ad Container - Horizontal -->
-        <div class="ad-container horizontal" id="horizontalAd">
-            <!-- Adsterra Horizontal Ad -->
+        <div class="ad-container horizontal">
             <script type="text/javascript">
                 atOptions = {
                     'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
@@ -697,8 +805,7 @@
         </div>
 
         <!-- Ad Container - Vertical -->
-        <div class="ad-container vertical" id="verticalAd">
-            <!-- Adsterra Vertical Ad -->
+        <div class="ad-container vertical">
             <script type="text/javascript">
                 atOptions = {
                     'key' : '1cb4836d1181cec93eeaf530d5fae232',
@@ -718,7 +825,6 @@
 
         <!-- Bottom Ad Container -->
         <div class="ad-container horizontal">
-            <!-- Adsterra Bottom Ad -->
             <script type="text/javascript">
                 atOptions = {
                     'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
@@ -765,14 +871,14 @@
         let allVideos = [];
         let currentPlayingVideo = null;
         let adTimerInterval = null;
+        let midrollTimerInterval = null;
+        let videoStartTime = null;
+        let midrollAdShown = false;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             console.log('📱 Page loaded, initializing app...');
             initializeApp();
-            
-            // Show ad popup when page loads
-            setTimeout(showAdPopup, 1000);
         });
 
         async function initializeApp() {
@@ -800,7 +906,6 @@
         // Load Supabase from CDN
         function loadSupabase() {
             return new Promise((resolve, reject) => {
-                // Check if already loaded
                 if (window.supabase) {
                     console.log('✅ Supabase already loaded');
                     resolve();
@@ -834,7 +939,7 @@
                 
                 console.log('✅ Database connection successful');
                 await loadVideos();
-                loadUserNotifications();
+                await loadUserNotifications();
                 
             } catch (error) {
                 console.warn('⚠️ Database connection failed, using demo mode:', error.message);
@@ -870,7 +975,7 @@
                 
             } catch (error) {
                 console.error('❌ Error loading videos:', error);
-                throw error; // Re-throw to be handled by caller
+                throw error;
             }
         }
 
@@ -894,38 +999,6 @@
                     thumbnail_url: "https://picsum.photos/500/300?random=2",
                     iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>',
                     download_url: "https://example.com/video2.mp4"
-                },
-                {
-                    id: 3,
-                    title: "Mobile App Development Tutorial",
-                    category: "Technology",
-                    thumbnail_url: "https://picsum.photos/500/300?random=3",
-                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>',
-                    download_url: "https://example.com/video3.mp4"
-                },
-                {
-                    id: 4,
-                    title: "JavaScript Programming Tips & Tricks",
-                    category: "Programming",
-                    thumbnail_url: "https://picsum.photos/500/300?random=4",
-                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_4" frameborder="0" allowfullscreen></iframe>',
-                    download_url: "https://example.com/video4.mp4"
-                },
-                {
-                    id: 5,
-                    title: "UI/UX Design Principles for Developers",
-                    category: "Design",
-                    thumbnail_url: "https://picsum.photos/500/300?random=5",
-                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_5" frameborder="0" allowfullscreen></iframe>',
-                    download_url: "https://example.com/video5.mp4"
-                },
-                {
-                    id: 6,
-                    title: "Cloud Computing Explained Simply",
-                    category: "Technology",
-                    thumbnail_url: "https://picsum.photos/500/300?random=6",
-                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_6" frameborder="0" allowfullscreen></iframe>',
-                    download_url: "https://example.com/video6.mp4"
                 }
             ];
             
@@ -933,7 +1006,6 @@
             displayVideos(demoVideos);
             loadCategories();
             
-            // Show demo mode message
             const videosGrid = document.getElementById('videosGrid');
             const demoMessage = document.createElement('div');
             demoMessage.style.gridColumn = '1/-1';
@@ -956,11 +1028,9 @@
                 return;
             }
 
-            // Main videos (first 8)
             const mainVideos = videos.slice(0, 8);
             videosGrid.innerHTML = mainVideos.map(video => createVideoCard(video)).join('');
             
-            // More videos (rest)
             const moreVideos = videos.slice(8);
             if (moreVideos.length > 0) {
                 moreVideosGrid.innerHTML = moreVideos.map(video => createVideoCard(video)).join('');
@@ -1102,8 +1172,13 @@
             displayVideos(filteredVideos);
         }
 
-        // Video player functions
+        // Video player functions with ads
         function openVideoPlayer(videoId) {
+            // Show pre-roll ad first
+            showPrerollAd(videoId);
+        }
+
+        function playVideoAfterAd(videoId) {
             const video = allVideos.find(v => v.id === videoId);
             if (!video) return;
             
@@ -1116,6 +1191,11 @@
             
             document.getElementById('videoPlayerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            
+            // Start video timer for mid-roll ads
+            videoStartTime = Date.now();
+            midrollAdShown = false;
+            startMidrollAdTimer();
         }
 
         function closeVideoPlayer() {
@@ -1124,6 +1204,92 @@
             document.getElementById('videoPlayerModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             currentPlayingVideo = null;
+            
+            // Clear mid-roll ad timer
+            if (midrollTimerInterval) {
+                clearInterval(midrollTimerInterval);
+            }
+        }
+
+        function startMidrollAdTimer() {
+            midrollTimerInterval = setInterval(() => {
+                if (!midrollAdShown) {
+                    showMidrollAd();
+                    midrollAdShown = true;
+                }
+            }, 20 * 60 * 1000); // 20 minutes
+        }
+
+        // Ad Functions
+        function showPrerollAd(videoId) {
+            const adPopup = document.getElementById('prerollAdPopup');
+            const adTimer = document.getElementById('prerollAdTimer');
+            const adCloseBtn = document.getElementById('prerollAdCloseBtn');
+            
+            adPopup.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            let secondsLeft = 5;
+            
+            adTimerInterval = setInterval(() => {
+                secondsLeft--;
+                adTimer.textContent = `Ad closes in ${secondsLeft}s`;
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(adTimerInterval);
+                    adTimer.style.display = 'none';
+                    adCloseBtn.style.display = 'flex';
+                    
+                    // Store video ID to play after ad
+                    adPopup.setAttribute('data-video-id', videoId);
+                }
+            }, 1000);
+        }
+
+        function closePrerollAd() {
+            const adPopup = document.getElementById('prerollAdPopup');
+            const videoId = adPopup.getAttribute('data-video-id');
+            
+            adPopup.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            if (adTimerInterval) {
+                clearInterval(adTimerInterval);
+            }
+            
+            // Play video after ad
+            if (videoId) {
+                playVideoAfterAd(parseInt(videoId));
+            }
+        }
+
+        function showMidrollAd() {
+            const midrollOverlay = document.getElementById('midrollAdOverlay');
+            const midrollTimer = document.getElementById('midrollAdTimer');
+            const midrollCloseBtn = document.getElementById('midrollAdCloseBtn');
+            
+            midrollOverlay.style.display = 'flex';
+            
+            let secondsLeft = 10;
+            
+            const midrollInterval = setInterval(() => {
+                secondsLeft--;
+                midrollTimer.textContent = `Mid-roll Ad - Closing in ${secondsLeft}s`;
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(midrollInterval);
+                    closeMidrollAd();
+                }
+                
+                if (secondsLeft <= 5) {
+                    midrollCloseBtn.style.display = 'block';
+                }
+            }, 1000);
+        }
+
+        function closeMidrollAd() {
+            const midrollOverlay = document.getElementById('midrollAdOverlay');
+            midrollOverlay.style.display = 'none';
         }
 
         function downloadCurrentVideo() {
@@ -1155,52 +1321,68 @@
             alert('Sidebar would open here with navigation menu');
         }
 
-        // Ad Popup Functions
-        function showAdPopup() {
-            const adPopup = document.getElementById('adPopup');
-            const adTimer = document.getElementById('adTimer');
-            const adCloseBtn = document.getElementById('adCloseBtn');
-            
-            adPopup.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-            
-            let secondsLeft = 5;
-            
-            adTimerInterval = setInterval(() => {
-                secondsLeft--;
-                adTimer.textContent = `Ad closes in ${secondsLeft}s`;
-                
-                if (secondsLeft <= 0) {
-                    clearInterval(adTimerInterval);
-                    adTimer.style.display = 'none';
-                    adCloseBtn.style.display = 'flex';
-                }
-            }, 1000);
-        }
-
-        function closeAdPopup() {
-            const adPopup = document.getElementById('adPopup');
-            adPopup.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            
-            if (adTimerInterval) {
-                clearInterval(adTimerInterval);
-            }
-        }
-
-        // NOTIFICATION FUNCTIONS
+        // NOTIFICATION FUNCTIONS - IMPROVED
         async function loadUserNotifications() {
             try {
-                const broadcastNotifications = JSON.parse(localStorage.getItem('broadcastNotifications') || '[]');
+                // Try to get notifications from Supabase first
+                let notifications = [];
                 
-                const notifications = broadcastNotifications.map(notification => ({
-                    id: notification.id,
-                    title: notification.title,
-                    message: notification.message,
-                    type: notification.type,
-                    created_at: notification.created_at,
-                    is_read: false
-                }));
+                try {
+                    const { data: supabaseNotifications, error } = await supabase
+                        .from('notifications')
+                        .select('*')
+                        .order('created_at', { ascending: false })
+                        .limit(20);
+
+                    if (!error && supabaseNotifications) {
+                        notifications = supabaseNotifications.map(notification => ({
+                            id: notification.id,
+                            title: notification.title,
+                            message: notification.message,
+                            type: notification.type || 'info',
+                            created_at: notification.created_at,
+                            is_read: localStorage.getItem(`notification_${notification.id}_read`) === 'true'
+                        }));
+                    }
+                } catch (supabaseError) {
+                    console.log('Using local notifications fallback');
+                }
+
+                // Fallback to local notifications if Supabase fails
+                if (notifications.length === 0) {
+                    const localNotifications = JSON.parse(localStorage.getItem('broadcastNotifications') || '[]');
+                    notifications = localNotifications.map(notification => ({
+                        id: notification.id,
+                        title: notification.title,
+                        message: notification.message,
+                        type: notification.type || 'info',
+                        created_at: notification.created_at,
+                        is_read: localStorage.getItem(`notification_${notification.id}_read`) === 'true'
+                    }));
+                }
+
+                // Add default notifications if none exist
+                if (notifications.length === 0) {
+                    notifications = [
+                        {
+                            id: 1,
+                            title: "Welcome to VideoHub!",
+                            message: "Enjoy unlimited videos and premium content",
+                            type: "success",
+                            created_at: new Date().toISOString(),
+                            is_read: false
+                        },
+                        {
+                            id: 2,
+                            title: "New Features Added",
+                            message: "Check out our new video player with ads support",
+                            type: "update",
+                            created_at: new Date(Date.now() - 86400000).toISOString(),
+                            is_read: false
+                        }
+                    ];
+                    localStorage.setItem('broadcastNotifications', JSON.stringify(notifications));
+                }
 
                 displayNotifications(notifications);
                 updateNotificationBadge(notifications);
@@ -1254,6 +1436,7 @@
         }
 
         function markAsRead(notificationId) {
+            localStorage.setItem(`notification_${notificationId}_read`, 'true');
             const notificationItem = document.querySelector(`[onclick="markAsRead('${notificationId}')"]`);
             if (notificationItem) {
                 notificationItem.classList.remove('unread');
@@ -1262,6 +1445,12 @@
         }
 
         function markAllAsRead() {
+            // Mark all notifications as read in localStorage
+            const notifications = JSON.parse(localStorage.getItem('broadcastNotifications') || '[]');
+            notifications.forEach(notification => {
+                localStorage.setItem(`notification_${notification.id}_read`, 'true');
+            });
+            
             document.querySelectorAll('.notification-item.unread').forEach(item => {
                 item.classList.remove('unread');
             });
@@ -1302,13 +1491,14 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeSearch();
+                closeVideoPlayer();
             }
         });
 
-        // Auto refresh notifications
+        // Auto refresh notifications every 30 seconds
         setInterval(loadUserNotifications, 30000);
 
         console.log('🎉 VideoHub App initialized successfully!');
     </script>
 </body>
-</html>
+                            </html>
