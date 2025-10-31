@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoHub Pro - YouTube Style</title>
     <style>
         * {
@@ -28,11 +28,6 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
-        }
-
-        .container { 
-            max-width: 100%;
-            margin: 0 auto;
         }
 
         /* YouTube-style Header */
@@ -87,43 +82,92 @@
             cursor: pointer;
         }
 
-        /* Bottom Navigation Bar */
-        .bottom-nav {
+        /* Search Bar */
+        .search-bar {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: #0f0f0f;
+            border-bottom: 1px solid #272727;
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
-            background: #0f0f0f;
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            border-top: 1px solid #272727;
-            z-index: 100;
+            z-index: 101;
+            height: 56px;
         }
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: #aaa;
-            font-size: 10px;
-            cursor: pointer;
+        .search-input-container {
             flex: 1;
+            display: flex;
+            align-items: center;
+            background: #272727;
+            border-radius: 20px;
+            padding: 0 12px;
+            height: 36px;
         }
 
-        .nav-item.active {
+        .search-input {
+            background: transparent;
+            border: none;
             color: white;
+            font-size: 14px;
+            width: 100%;
+            outline: none;
         }
 
-        .nav-icon {
+        .search-input::placeholder {
+            color: #aaa;
+        }
+
+        .search-icon {
+            color: #aaa;
             font-size: 18px;
         }
 
         /* Content Area */
         .content {
-            padding: 56px 0 60px;
+            padding: 56px 0 0px;
             background: #0f0f0f;
+        }
+
+        /* Categories Section */
+        .categories-section {
+            padding: 12px;
+            border-bottom: 1px solid #272727;
+            position: sticky;
+            top: 56px;
+            background: #0f0f0f;
+            z-index: 99;
+        }
+
+        .categories-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 8px;
+            padding-bottom: 4px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .categories-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-chip {
+            background: #272727;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .category-chip.active {
+            background: white;
+            color: #0f0f0f;
         }
 
         /* Video Thumbnails Grid */
@@ -216,94 +260,29 @@
             font-size: 8px;
         }
 
-        /* Shorts Section */
-        .shorts-section {
-            padding: 16px 12px;
-            border-bottom: 1px solid #272727;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .shorts-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .short-card {
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .short-thumbnail {
+        /* Ad Containers */
+        .ad-container {
             width: 100%;
-            aspect-ratio: 9/16;
-            object-fit: cover;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            background: #272727;
-        }
-
-        .short-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin: 8px 0 4px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .short-views {
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        /* Categories Section */
-        .categories-section {
-            padding: 12px;
-            border-bottom: 1px solid #272727;
-        }
-
-        .categories-scroll {
+            border: 1px solid #333;
+            text-align: center;
             display: flex;
-            overflow-x: auto;
-            gap: 8px;
-            padding-bottom: 4px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
+            align-items: center;
+            justify-content: center;
+            min-height: 100px;
         }
 
-        .categories-scroll::-webkit-scrollbar {
-            display: none;
+        .ad-container.horizontal {
+            min-height: 90px;
+            margin: 10px 12px;
         }
 
-        .category-chip {
-            background: #272727;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-
-        .category-chip.active {
-            background: white;
-            color: #0f0f0f;
+        .ad-container.vertical {
+            min-height: 250px;
+            margin: 20px 12px;
         }
 
         /* Video Player Modal */
@@ -372,195 +351,139 @@
             border: none;
         }
 
-        /* Notification Panel */
-        .notification-bell {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #ff0000;
-            color: white;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            font-size: 10px;
+        /* Full Screen Ad Popup */
+        .ad-popup {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 3000;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
         }
 
-        .notifications-panel {
-            display: none;
-            position: absolute;
-            top: 56px;
-            right: 12px;
-            width: 320px;
-            background: #272727;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            z-index: 1000;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #404040;
-        }
-
-        .notifications-header {
-            padding: 12px 16px;
-            border-bottom: 1px solid #404040;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #272727;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .notifications-list {
-            padding: 8px;
-        }
-
-        .user-notification {
-            padding: 12px;
-            margin-bottom: 8px;
-            background: #1a1a1a;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .user-notification:hover {
-            background: #2a2a2a;
-        }
-
-        .notification-message {
-            color: #ccc;
-            font-size: 0.9rem;
-            line-height: 1.3;
-            margin-bottom: 5px;
-        }
-
-        .notification-time {
-            color: #888;
-            font-size: 0.7rem;
-        }
-
-        /* Search Bar */
-        .search-bar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 12px;
-            background: #0f0f0f;
-            border-bottom: 1px solid #272727;
-        }
-
-        .search-input-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            background: #272727;
-            border-radius: 20px;
-            padding: 0 12px;
-            height: 36px;
-        }
-
-        .search-input {
-            background: transparent;
-            border: none;
-            color: white;
-            font-size: 14px;
+        .ad-popup-content {
             width: 100%;
-            outline: none;
+            height: 100%;
+            position: relative;
         }
 
-        .search-input::placeholder {
-            color: #aaa;
-        }
-
-        .search-icon {
-            color: #aaa;
+        .ad-popup-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
             font-size: 18px;
+            z-index: 10;
         }
 
-        /* Loading and Empty States */
+        .ad-popup-timer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 10;
+        }
+
+        .ad-popup-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Loading and Error States */
         .loading {
             text-align: center;
             padding: 40px;
             color: #888;
+            grid-column: 1/-1;
         }
 
-        .empty-state {
+        .error-message {
             text-align: center;
-            padding: 40px 20px;
-            color: #666;
+            padding: 20px;
+            color: #ff4444;
+            background: #2a1a1a;
+            border-radius: 8px;
+            margin: 10px 0;
+            grid-column: 1/-1;
         }
 
-        /* Responsive Adjustments */
+        /* Responsive */
         @media (min-width: 768px) {
             .videos-grid {
                 grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .shorts-grid {
-                grid-template-columns: repeat(4, 1fr);
             }
         }
 
         @media (min-width: 1024px) {
             .videos-grid {
                 grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
+                gap: 16px;
                 padding: 16px;
-            }
-            
-            .shorts-grid {
-                grid-template-columns: repeat(6, 1fr);
             }
         }
     </style>
 </head>
 <body>
+    <!-- Full Screen Ad Popup -->
+    <div id="adPopup" class="ad-popup">
+        <div class="ad-popup-content">
+            <div class="ad-popup-timer" id="adTimer">Ad closes in 5s</div>
+            <button class="ad-popup-close" onclick="closeAdPopup()" id="adCloseBtn" style="display: none;">×</button>
+            
+            <!-- Adsterra Full Screen Ad -->
+            <div class="ad-container" style="width: 100%; height: 100%; border: none;">
+                <script type="text/javascript">
+                    atOptions = {
+                        'key' : '1cb4836d1181cec93eeaf530d5fae232',
+                        'format' : 'iframe',
+                        'height' : 100,
+                        'width' : 100,
+                        'params' : {}
+                    };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/1cb4836d1181cec93eeaf530d5fae232/invoke.js"></script>
+            </div>
+        </div>
+    </div>
+
     <!-- YouTube-style Header -->
     <div class="header">
         <div class="logo-container">
-            <div class="menu-icon">≡</div>
+            <div class="menu-icon" onclick="toggleSidebar()">≡</div>
             <div class="logo">
                 <span class="logo-red">▶</span> VideoHub
             </div>
         </div>
         <div class="header-actions">
-            <div class="notification-bell" onclick="toggleNotifications()">
-                <div class="header-icon">🔔</div>
-                <span class="notification-badge" id="notificationBadge">0</span>
-            </div>
             <div class="header-icon" onclick="openSearch()">🔍</div>
-            <div class="header-icon" onclick="openUserMenu()">👤</div>
         </div>
     </div>
 
     <!-- Search Bar -->
-    <div id="searchBar" class="search-bar" style="display: none;">
+    <div id="searchBar" class="search-bar">
         <div class="header-icon" onclick="closeSearch()">←</div>
         <div class="search-input-container">
             <input type="text" id="searchInput" class="search-input" placeholder="Search videos...">
             <div class="search-icon">🔍</div>
-        </div>
-    </div>
-
-    <!-- Notifications Panel -->
-    <div id="notificationsPanel" class="notifications-panel">
-        <div class="notifications-header">
-            <h3 style="margin: 0; color: white; font-size: 16px;">Notifications</h3>
-            <button onclick="markAllAsRead()" style="background: transparent; border: none; color: #3ea6ff; font-size: 14px; cursor: pointer;">
-                Mark all as read
-            </button>
-        </div>
-        <div class="notifications-list" id="notificationsList">
-            <div class="loading">Loading notifications...</div>
         </div>
     </div>
 
@@ -569,55 +492,63 @@
         <!-- Categories Section -->
         <div class="categories-section">
             <div class="categories-scroll" id="categoriesList">
-                <!-- Categories will be loaded here -->
+                <div class="loading">Loading categories...</div>
             </div>
+        </div>
+
+        <!-- Ad Container - Horizontal -->
+        <div class="ad-container horizontal" id="horizontalAd">
+            <!-- Adsterra Horizontal Ad -->
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
         </div>
 
         <!-- Videos Grid -->
         <div class="videos-grid" id="videosGrid">
-            <!-- Videos will be loaded here -->
+            <div class="loading">🔄 Loading videos...</div>
         </div>
 
-        <!-- Shorts Section -->
-        <div class="shorts-section">
-            <div class="section-header">
-                <div class="section-title">
-                    <span style="color: #ff0000;">▶</span> Shorts
-                </div>
-                <div style="color: #3ea6ff; font-size: 14px; cursor: pointer;">See all</div>
-            </div>
-            <div class="shorts-grid" id="shortsGrid">
-                <!-- Shorts will be loaded here -->
-            </div>
+        <!-- Ad Container - Vertical -->
+        <div class="ad-container vertical" id="verticalAd">
+            <!-- Adsterra Vertical Ad -->
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '1cb4836d1181cec93eeaf530d5fae232',
+                    'format' : 'iframe',
+                    'height' : 250,
+                    'width' : 300,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/1cb4836d1181cec93eeaf530d5fae232/invoke.js"></script>
         </div>
 
         <!-- More Videos -->
         <div class="videos-grid" id="moreVideosGrid">
             <!-- More videos will be loaded here -->
         </div>
-    </div>
 
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <div class="nav-item active">
-            <div class="nav-icon">🏠</div>
-            <div>Home</div>
-        </div>
-        <div class="nav-item">
-            <div class="nav-icon">▶️</div>
-            <div>Shorts</div>
-        </div>
-        <div class="nav-item">
-            <div class="nav-icon">➕</div>
-            <div>Add</div>
-        </div>
-        <div class="nav-item">
-            <div class="nav-icon">📺</div>
-            <div>Subscriptions</div>
-        </div>
-        <div class="nav-item">
-            <div class="nav-icon">📚</div>
-            <div>Library</div>
+        <!-- Bottom Ad Container -->
+        <div class="ad-container horizontal">
+            <!-- Adsterra Bottom Ad -->
+            <script type="text/javascript">
+                atOptions = {
+                    'key' : '730ffc4cd0cbe4501c1e43303ba673f7',
+                    'format' : 'iframe',
+                    'height' : 90,
+                    'width' : 728,
+                    'params' : {}
+                };
+            </script>
+            <script type="text/javascript" src="//www.highperformanceformat.com/730ffc4cd0cbe4501c1e43303ba673f7/invoke.js"></script>
         </div>
     </div>
 
@@ -626,7 +557,7 @@
         <div class="video-modal-header">
             <button class="video-close-btn" onclick="closeVideoPlayer()">←</button>
             <div class="video-title" id="videoPlayerTitle">Video Title</div>
-            <div style="width: 36px;"></div> <!-- Spacer for alignment -->
+            <div style="width: 36px;"></div>
         </div>
         <div class="video-player-container">
             <iframe id="videoPlayerIframe" class="video-iframe" 
@@ -647,247 +578,146 @@
         let currentSearch = '';
         let allVideos = [];
         let currentPlayingVideo = null;
-        let userNotifications = [];
+        let adTimerInterval = null;
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-            console.log('✅ VideoHub Pro - YouTube Style UI');
+            initializeApp();
             
-            loadCategories();
-            loadVideos();
-            loadUserNotifications();
-            
-            // ESC key to close video player
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    closeVideoPlayer();
-                    closeNotifications();
-                }
-            });
-
-            // Click outside to close notifications
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.notification-bell') && !e.target.closest('.notifications-panel')) {
-                    closeNotifications();
-                }
-            });
-
-            // Auto-refresh notifications every 2 minutes
-            setInterval(loadUserNotifications, 120000);
+            // Show ad popup when page loads
+            setTimeout(showAdPopup, 1000);
         });
 
-        // NOTIFICATION SYSTEM FUNCTIONS
-        async function loadUserNotifications() {
+        async function initializeApp() {
             try {
-                // Last 1 week ki notifications load karein
-                const oneWeekAgo = new Date();
-                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-                const { data: notifications, error } = await supabase
-                    .from('notifications')
-                    .select('*')
-                    .gte('sent_at', oneWeekAgo.toISOString())
-                    .order('sent_at', { ascending: false })
-                    .limit(50);
-
-                if (error) throw error;
-
-                userNotifications = notifications || [];
-                updateNotificationBadge();
-                
-                // Agar notifications panel open hai toh update karein
-                if (document.getElementById('notificationsPanel').style.display === 'block') {
-                    displayNotifications();
+                // Load Supabase
+                if (typeof window.supabase === 'undefined') {
+                    await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
                 }
+                
+                supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+                console.log('✅ VideoHub Pro - YouTube Style UI Initialized');
+                
+                await loadVideos();
                 
             } catch (error) {
-                console.error('Error loading notifications:', error);
+                console.error('❌ Error initializing app:', error);
+                showError('Failed to initialize app. Please refresh the page.');
             }
         }
 
-        function updateNotificationBadge() {
-            const badge = document.getElementById('notificationBadge');
-            const unreadCount = userNotifications.length;
-            
-            if (unreadCount > 0) {
-                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
-                badge.style.display = 'flex';
-                
-                // Badge animation
-                badge.style.animation = 'none';
-                setTimeout(() => {
-                    badge.style.animation = 'pulse 0.5s ease-in-out';
-                }, 100);
-            } else {
-                badge.style.display = 'none';
-            }
-        }
-
-        function displayNotifications() {
-            const notificationsList = document.getElementById('notificationsList');
-            
-            if (!userNotifications || userNotifications.length === 0) {
-                notificationsList.innerHTML = `
-                    <div class="empty-state" style="padding: 20px; text-align: center; color: #666;">
-                        No new notifications
-                    </div>
-                `;
-                return;
-            }
-
-            notificationsList.innerHTML = userNotifications.map(notif => `
-                <div class="user-notification" onclick="markAsRead('${notif.id}')">
-                    <div style="font-weight: 600; margin-bottom: 5px; color: white;">
-                        ${notif.important ? '🔥 ' : ''}${notif.title}
-                    </div>
-                    <div class="notification-message">
-                        ${notif.message}
-                    </div>
-                    <div class="notification-time">
-                        ${formatTime(notif.sent_at)}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function toggleNotifications() {
-            const panel = document.getElementById('notificationsPanel');
-            if (panel.style.display === 'block') {
-                closeNotifications();
-            } else {
-                openNotifications();
-            }
-        }
-
-        function openNotifications() {
-            const panel = document.getElementById('notificationsPanel');
-            panel.style.display = 'block';
-            displayNotifications();
-        }
-
-        function closeNotifications() {
-            const panel = document.getElementById('notificationsPanel');
-            panel.style.display = 'none';
-        }
-
-        function markAsRead(notificationId) {
-            // Mark notification as read (local storage mein save karein)
-            const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]');
-            if (!readNotifications.includes(notificationId)) {
-                readNotifications.push(notificationId);
-                localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
-            }
-            
-            // Notification remove karein list se
-            userNotifications = userNotifications.filter(notif => notif.id !== notificationId);
-            updateNotificationBadge();
-            displayNotifications();
-            
-            // Close panel if no notifications left
-            if (userNotifications.length === 0) {
-                closeNotifications();
-            }
-        }
-
-        function markAllAsRead() {
-            // Sabhi notifications ko read mark karein
-            const allNotificationIds = userNotifications.map(notif => notif.id);
-            const readNotifications = JSON.parse(localStorage.getItem('readNotifications') || '[]');
-            
-            allNotificationIds.forEach(id => {
-                if (!readNotifications.includes(id)) {
-                    readNotifications.push(id);
-                }
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
             });
-            
-            localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
-            userNotifications = [];
-            updateNotificationBadge();
-            displayNotifications();
-            closeNotifications();
         }
 
-        function formatTime(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diffMs = now - date;
-            const diffMins = Math.floor(diffMs / 60000);
-            const diffHours = Math.floor(diffMs / 3600000);
-            const diffDays = Math.floor(diffMs / 86400000);
-
-            if (diffMins < 1) return 'Just now';
-            if (diffMins < 60) return `${diffMins}m ago`;
-            if (diffHours < 24) return `${diffHours}h ago`;
-            if (diffDays < 7) return `${diffDays}d ago`;
-            
-            return date.toLocaleDateString('en-IN');
-        }
-
-        // VIDEOS LOAD FUNCTION
-        async function loadVideos() {
+        function showError(message) {
             const videosGrid = document.getElementById('videosGrid');
-            const shortsGrid = document.getElementById('shortsGrid');
-            const moreVideosGrid = document.getElementById('moreVideosGrid');
-            
-            videosGrid.innerHTML = '<div class="loading" style="grid-column: 1/-1;">🔄 Loading videos...</div>';
-            shortsGrid.innerHTML = '<div class="loading">🔄 Loading shorts...</div>';
-            moreVideosGrid.innerHTML = '<div class="loading" style="grid-column: 1/-1;">🔄 Loading more videos...</div>';
+            videosGrid.innerHTML = `
+                <div class="error-message">
+                    ${message}
+                    <br><br>
+                    <button onclick="initializeApp()" style="background: #ff0000; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">
+                        🔄 Retry
+                    </button>
+                </div>
+            `;
+        }
 
+        // Load videos with proper error handling
+        async function loadVideos() {
             try {
-                let query = supabase.from('movies').select('*').order('created_at', { ascending: false });
+                console.log('🔄 Loading videos from database...');
+                
+                const { data: videos, error } = await supabase
+                    .from('movies')
+                    .select('*')
+                    .order('created_at', { ascending: false });
 
-                if (currentCategory !== 'all') {
-                    query = query.eq('category', currentCategory);
+                if (error) {
+                    throw new Error(`Database error: ${error.message}`);
                 }
 
-                const { data: videos, error } = await query;
-
-                if (error) throw error;
-
+                console.log('✅ Videos loaded:', videos);
+                
                 if (!videos || videos.length === 0) {
-                    videosGrid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">📺 No videos found</div>';
-                    shortsGrid.innerHTML = '<div class="empty-state">📺 No shorts found</div>';
-                    moreVideosGrid.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">📺 No more videos found</div>';
+                    showNoVideos();
                     return;
                 }
 
                 allVideos = videos;
-                
-                // Display videos
-                const mainVideos = videos.slice(0, 6);
-                videosGrid.innerHTML = mainVideos.map(video => createVideoCard(video)).join('');
-                
-                // Display shorts (first 4 videos as shorts)
-                const shorts = videos.slice(0, 4);
-                shortsGrid.innerHTML = shorts.map(video => createShortCard(video)).join('');
-                
-                // Display more videos
-                const moreVideos = videos.slice(6, 14);
-                moreVideosGrid.innerHTML = moreVideos.map(video => createVideoCard(video)).join('');
+                displayVideos(videos);
+                loadCategories();
                 
             } catch (error) {
-                console.error('Error loading videos:', error);
-                videosGrid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
-                        ❌ Error loading videos: ${error.message}
-                        <br><br>
-                        <button class="btn" onclick="loadVideos()" style="background: #3ea6ff; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;">🔄 Try Again</button>
-                    </div>
-                `;
+                console.error('❌ Error loading videos:', error);
+                showError('Error loading videos: ' + error.message);
             }
         }
 
-        function createVideoCard(video) {
-            const duration = Math.floor(Math.random() * 30) + 1; // Random duration for demo
-            const views = Math.floor(Math.random() * 1000000) + 1000; // Random views for demo
-            const uploadTime = Math.floor(Math.random() * 30) + 1; // Random upload time for demo
+        function displayVideos(videos) {
+            const videosGrid = document.getElementById('videosGrid');
+            const moreVideosGrid = document.getElementById('moreVideosGrid');
             
+            if (videos.length === 0) {
+                showNoVideos();
+                return;
+            }
+
+            // Main videos (first 8)
+            const mainVideos = videos.slice(0, 8);
+            videosGrid.innerHTML = mainVideos.map(video => createVideoCard(video)).join('');
+            
+            // More videos (rest)
+            const moreVideos = videos.slice(8);
+            if (moreVideos.length > 0) {
+                moreVideosGrid.innerHTML = moreVideos.map(video => createVideoCard(video)).join('');
+            } else {
+                moreVideosGrid.innerHTML = '';
+            }
+        }
+
+        function showNoVideos() {
+            const videosGrid = document.getElementById('videosGrid');
+            videosGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">
+                    📺 No videos available
+                    <br>
+                    <small>Add videos from the admin panel</small>
+                </div>
+            `;
+        }
+
+        // Create video card with proper thumbnail handling
+        function createVideoCard(video) {
+            const duration = Math.floor(Math.random() * 30) + 1;
+            const views = Math.floor(Math.random() * 1000000) + 1000;
+            const uploadTime = Math.floor(Math.random() * 30) + 1;
+            
+            // Thumbnail URL handling
+            let thumbnailUrl = video.thumbnail_url;
+            
+            if (!thumbnailUrl || 
+                thumbnailUrl === 'null' || 
+                thumbnailUrl === 'undefined' ||
+                thumbnailUrl === '' ||
+                !thumbnailUrl.startsWith('http')) {
+                
+                thumbnailUrl = 'https://picsum.photos/500/300';
+            }
+
             return `
                 <div class="video-card" onclick="openVideoPlayer(${video.id})">
                     <div class="thumbnail-container">
-                        <img src="${video.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
-                             alt="${video.title}" class="video-thumbnail">
+                        <img src="${thumbnailUrl}" 
+                             alt="${video.title}" 
+                             class="video-thumbnail"
+                             onerror="this.src='https://picsum.photos/500/300'">
                         <div class="video-duration">${duration}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}</div>
                     </div>
                     <div class="video-info">
@@ -906,19 +736,6 @@
             `;
         }
 
-        function createShortCard(video) {
-            const views = Math.floor(Math.random() * 10000000) + 100000; // Random views for demo
-            
-            return `
-                <div class="short-card" onclick="openVideoPlayer(${video.id})">
-                    <img src="${video.thumbnail_url || 'https://images.unsplash.com/photo-1489599804158-8b5c0b29bc8b?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'}" 
-                         alt="${video.title}" class="short-thumbnail">
-                    <div class="short-title">${video.title}</div>
-                    <div class="short-views">${formatViews(views)} views</div>
-                </div>
-            `;
-        }
-
         function formatViews(views) {
             if (views >= 1000000) {
                 return (views / 1000000).toFixed(1) + 'M';
@@ -928,7 +745,82 @@
             return views.toString();
         }
 
-        // VIDEO PLAYER FUNCTIONS
+        // Load categories from database
+        async function loadCategories() {
+            try {
+                // Get unique categories from videos
+                const categories = [...new Set(allVideos.map(video => video.category))];
+                
+                const categoriesContainer = document.getElementById('categoriesList');
+                let categoriesHTML = '';
+
+                categoriesHTML += `
+                    <div class="category-chip ${currentCategory === 'all' ? 'active' : ''}" 
+                         onclick="filterByCategory('all')">
+                        All
+                    </div>
+                `;
+
+                categories.forEach(category => {
+                    const categoryCount = allVideos.filter(video => video.category === category).length;
+                    categoriesHTML += `
+                        <div class="category-chip ${currentCategory === category ? 'active' : ''}" 
+                             onclick="filterByCategory('${category}')">
+                            ${category} (${categoryCount})
+                        </div>
+                    `;
+                });
+
+                categoriesContainer.innerHTML = categoriesHTML;
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        function filterByCategory(category) {
+            currentCategory = category;
+            document.querySelectorAll('.category-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            const filteredVideos = category === 'all' ? allVideos : 
+                allVideos.filter(video => video.category === category);
+            
+            displayVideos(filteredVideos);
+        }
+
+        // Search functions - FIXED
+        function openSearch() {
+            document.getElementById('searchBar').style.display = 'flex';
+            document.getElementById('searchInput').focus();
+        }
+
+        function closeSearch() {
+            document.getElementById('searchBar').style.display = 'none';
+            currentSearch = '';
+            document.getElementById('searchInput').value = '';
+            displayVideos(allVideos);
+        }
+
+        function searchVideos(searchTerm) {
+            currentSearch = searchTerm.toLowerCase().trim();
+            
+            if (!currentSearch) {
+                displayVideos(allVideos);
+                return;
+            }
+            
+            const filteredVideos = allVideos.filter(video => 
+                video.title.toLowerCase().includes(currentSearch) || 
+                (video.category && video.category.toLowerCase().includes(currentSearch)) ||
+                (video.description && video.description.toLowerCase().includes(currentSearch))
+            );
+            
+            displayVideos(filteredVideos);
+        }
+
+        // Video player functions
         function openVideoPlayer(videoId) {
             const video = allVideos.find(v => v.id === videoId);
             if (!video) return;
@@ -962,130 +854,88 @@
             return '';
         }
 
-        // CATEGORY FUNCTIONS
-        async function loadCategories() {
-            try {
-                const { data: videos, error } = await supabase
-                    .from('movies')
-                    .select('category');
+        // Sidebar function (placeholder)
+        function toggleSidebar() {
+            alert('Sidebar would open here with navigation menu');
+        }
 
-                if (error) throw error;
-
-                const categoriesContainer = document.getElementById('categoriesList');
-                let categoriesHTML = '';
-
-                categoriesHTML += `
-                    <div class="category-chip ${currentCategory === 'all' ? 'active' : ''}" 
-                         onclick="filterByCategory('all')">
-                        All
-                    </div>
-                `;
-
-                const fixedCategories = [
-                    'Music', 'Gaming', 'News', 'Sports', 'Learning', 
-                    'Comedy', 'Beauty', 'Cooking', 'Travel', 'Technology'
-                ];
+        // Ad Popup Functions
+        function showAdPopup() {
+            const adPopup = document.getElementById('adPopup');
+            const adTimer = document.getElementById('adTimer');
+            const adCloseBtn = document.getElementById('adCloseBtn');
+            
+            adPopup.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            let secondsLeft = 5;
+            
+            adTimerInterval = setInterval(() => {
+                secondsLeft--;
+                adTimer.textContent = `Ad closes in ${secondsLeft}s`;
                 
-                fixedCategories.forEach(category => {
-                    const categoryCount = videos ? videos.filter(v => v.category === category).length : 0;
-                    if (categoryCount > 0) {
-                        categoriesHTML += `
-                            <div class="category-chip ${currentCategory === category ? 'active' : ''}" 
-                                 onclick="filterByCategory('${category}')">
-                                ${category}
-                            </div>
-                        `;
-                    }
-                });
-
-                categoriesContainer.innerHTML = categoriesHTML;
-            } catch (error) {
-                console.error('Error loading categories:', error);
-            }
-        }
-
-        function filterByCategory(category) {
-            currentCategory = category;
-            document.querySelectorAll('.category-chip').forEach(chip => {
-                chip.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            loadVideos();
-        }
-
-        // SEARCH FUNCTIONS
-        function openSearch() {
-            document.getElementById('searchBar').style.display = 'flex';
-        }
-
-        function closeSearch() {
-            document.getElementById('searchBar').style.display = 'none';
-            currentSearch = '';
-            document.getElementById('searchInput').value = '';
-            loadVideos();
-        }
-
-        function searchVideos(searchTerm) {
-            currentSearch = searchTerm.toLowerCase().trim();
-            
-            if (!currentSearch) {
-                loadVideos();
-                return;
-            }
-            
-            const filteredVideos = allVideos.filter(video => 
-                video.title.toLowerCase().includes(currentSearch) || 
-                video.category.toLowerCase().includes(currentSearch) ||
-                (video.description && video.description.toLowerCase().includes(currentSearch))
-            );
-            
-            updateVideosDisplay(filteredVideos);
-        }
-
-        function updateVideosDisplay(videos) {
-            const videosGrid = document.getElementById('videosGrid');
-            const shortsGrid = document.getElementById('shortsGrid');
-            const moreVideosGrid = document.getElementById('moreVideosGrid');
-            
-            if (currentSearch) {
-                const searchResultsHTML = videos.map(video => createVideoCard(video)).join('');
-                
-                if (videos.length === 0) {
-                    const noResultsHTML = `
-                        <div class="empty-state" style="grid-column: 1/-1;">
-                            🔍 No videos found for "${currentSearch}"
-                        </div>
-                    `;
-                    videosGrid.innerHTML = noResultsHTML;
-                    shortsGrid.innerHTML = '';
-                    moreVideosGrid.innerHTML = '';
-                } else {
-                    videosGrid.innerHTML = searchResultsHTML;
-                    shortsGrid.innerHTML = '';
-                    moreVideosGrid.innerHTML = '';
+                if (secondsLeft <= 0) {
+                    clearInterval(adTimerInterval);
+                    adTimer.style.display = 'none';
+                    adCloseBtn.style.display = 'flex';
                 }
-            } else {
-                loadVideos();
-            }
+            }, 1000);
         }
 
-        // USER MENU FUNCTION
-        function openUserMenu() {
-            alert('User menu would open here');
+        function closeAdPopup() {
+            const adPopup = document.getElementById('adPopup');
+            adPopup.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            
+            if (adTimerInterval) {
+                clearInterval(adTimerInterval);
+            }
         }
 
         // Search input event listener
-        document.getElementById('searchInput').addEventListener('input', function(e) {
+        document.getElementById('searchInput')?.addEventListener('input', function(e) {
             searchVideos(e.target.value);
         });
 
-        // Notification badge animation
+        // Close search when pressing escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeSearch();
+            }
+        });
+
+        // Add some basic styles for error messages
         const style = document.createElement('style');
         style.textContent = `
-            @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.1); }
-                100% { transform: scale(1); }
+            .error-message {
+                background: #2a1a1a;
+                border: 1px solid #ff4444;
+                border-radius: 8px;
+                padding: 20px;
+                margin: 10px 0;
+                text-align: center;
+            }
+            
+            .loading {
+                text-align: center;
+                padding: 40px;
+                color: #888;
+            }
+            
+            .video-thumbnail {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                background: #272727;
+            }
+            
+            .ad-popup {
+                animation: fadeIn 0.3s ease-in;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
             }
         `;
         document.head.appendChild(style);
