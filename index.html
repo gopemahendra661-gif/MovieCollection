@@ -311,10 +311,22 @@
             z-index: 10;
         }
 
+        .video-header-left {
+            display: flex;
+            align-items: center;
+            flex: 1;
+        }
+
+        .video-header-right {
+            display: flex;
+            align-items: center;
+        }
+
         .video-title {
             font-size: 16px;
             font-weight: 500;
             color: white;
+            margin-left: 12px;
         }
 
         .video-close-btn {
@@ -349,6 +361,35 @@
             width: 100%;
             height: 100%;
             border: none;
+        }
+
+        /* Download Button Styles */
+        .video-download-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+            margin-left: 12px;
+        }
+
+        .video-download-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .video-download-btn:active {
+            transform: scale(0.95);
+        }
+
+        .video-download-btn i {
+            font-size: 16px;
         }
 
         /* Full Screen Ad Popup */
@@ -438,6 +479,20 @@
                 grid-template-columns: repeat(4, 1fr);
                 gap: 16px;
                 padding: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .video-download-btn span {
+                display: none;
+            }
+            
+            .video-download-btn {
+                padding: 8px;
+                border-radius: 50%;
+                width: 36px;
+                height: 36px;
+                justify-content: center;
             }
         }
     </style>
@@ -553,9 +608,16 @@
     <!-- Video Player Modal -->
     <div id="videoPlayerModal" class="video-modal">
         <div class="video-modal-header">
-            <button class="video-close-btn" onclick="closeVideoPlayer()">←</button>
-            <div class="video-title" id="videoPlayerTitle">Video Title</div>
-            <div style="width: 36px;"></div>
+            <div class="video-header-left">
+                <button class="video-close-btn" onclick="closeVideoPlayer()">←</button>
+                <div class="video-title" id="videoPlayerTitle">Video Title</div>
+            </div>
+            <div class="video-header-right">
+                <button class="video-download-btn" id="downloadVideoBtn" onclick="downloadCurrentVideo()">
+                    <i>⬇️</i>
+                    <span>Download</span>
+                </button>
+            </div>
         </div>
         <div class="video-player-container">
             <iframe id="videoPlayerIframe" class="video-iframe" 
@@ -834,6 +896,16 @@
             
             document.getElementById('videoPlayerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
+            
+            // Download button को enable/disable करना
+            const downloadBtn = document.getElementById('downloadVideoBtn');
+            if (video.download_url) {
+                downloadBtn.style.display = 'flex';
+                downloadBtn.disabled = false;
+            } else {
+                downloadBtn.style.display = 'flex'; // Always show download button
+                downloadBtn.disabled = false;
+            }
         }
 
         function closeVideoPlayer() {
@@ -844,7 +916,29 @@
             currentPlayingVideo = null;
         }
 
+        // Download video function
+        function downloadCurrentVideo() {
+            if (!currentPlayingVideo) return;
+            
+            // Video download URL check करना
+            let downloadUrl = currentPlayingVideo.download_url;
+            
+            // Agar download URL नहीं है, तो video URL का use करना
+            if (!downloadUrl) {
+                downloadUrl = extractVideoUrl(currentPlayingVideo.iframe_code);
+            }
+            
+            if (downloadUrl) {
+                // नया tab खोलना download के लिए
+                window.open(downloadUrl, '_blank');
+            } else {
+                alert('Download link not available for this video.');
+            }
+        }
+
         function extractVideoUrl(iframeCode) {
+            if (!iframeCode) return '';
+            
             const srcMatch = iframeCode.match(/src="([^"]*)"/);
             if (srcMatch && srcMatch[1]) {
                 return srcMatch[1];
