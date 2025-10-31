@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoHub Pro - YouTube Style</title>
     <style>
+        /* Your existing CSS styles remain the same */
         * {
             margin: 0;
             padding: 0;
@@ -30,7 +31,6 @@
             user-select: none;
         }
 
-        /* YouTube-style Header */
         .header {
             background: #0f0f0f;
             padding: 8px 12px;
@@ -82,7 +82,6 @@
             cursor: pointer;
         }
 
-        /* Search Bar */
         .search-bar {
             display: none;
             align-items: center;
@@ -126,13 +125,11 @@
             font-size: 18px;
         }
 
-        /* Content Area */
         .content {
             padding: 56px 0 0px;
             background: #0f0f0f;
         }
 
-        /* Categories Section */
         .categories-section {
             padding: 12px;
             border-bottom: 1px solid #272727;
@@ -170,7 +167,6 @@
             color: #0f0f0f;
         }
 
-        /* Video Thumbnails Grid */
         .videos-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -260,7 +256,6 @@
             font-size: 8px;
         }
 
-        /* Ad Containers */
         .ad-container {
             width: 100%;
             margin: 15px 0;
@@ -285,7 +280,6 @@
             margin: 20px 12px;
         }
 
-        /* Video Player Modal */
         .video-modal {
             display: none;
             position: fixed;
@@ -363,7 +357,6 @@
             border: none;
         }
 
-        /* Download Button Styles */
         .video-download-btn {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.3);
@@ -392,7 +385,6 @@
             font-size: 16px;
         }
 
-        /* Full Screen Ad Popup */
         .ad-popup {
             display: none;
             position: fixed;
@@ -449,7 +441,6 @@
             border: none;
         }
 
-        /* Loading and Error States */
         .loading {
             text-align: center;
             padding: 40px;
@@ -467,7 +458,125 @@
             grid-column: 1/-1;
         }
 
-        /* Responsive */
+        .notification-container {
+            position: relative;
+            margin-right: 15px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .notification-icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #ff0000;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 350px;
+            background: #272727;
+            border: 1px solid #404040;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #404040;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .notification-header button {
+            background: transparent;
+            border: none;
+            color: #ff0000;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .notification-list {
+            padding: 8px 0;
+        }
+
+        .notification-item {
+            padding: 12px 16px;
+            border-bottom: 1px solid #404040;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .notification-item:hover {
+            background: #1a1a1a;
+        }
+
+        .notification-item.unread {
+            background: rgba(255, 0, 0, 0.1);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-title {
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .notification-message {
+            font-size: 12px;
+            color: #aaa;
+            margin-bottom: 4px;
+        }
+
+        .notification-time {
+            font-size: 10px;
+            color: #666;
+        }
+
+        .notification-type-info { border-left: 3px solid #60a5fa; }
+        .notification-type-warning { border-left: 3px solid #fbbf24; }
+        .notification-type-success { border-left: 3px solid #4ade80; }
+        .notification-type-update { border-left: 3px solid #c084fc; }
+        .notification-type-promotional { border-left: 3px solid #f472b6; }
+
         @media (min-width: 768px) {
             .videos-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -494,8 +603,12 @@
                 height: 36px;
                 justify-content: center;
             }
+            
+            .notification-dropdown {
+                width: 300px;
+                right: -50px;
+            }
         }
-     
     </style>
 </head>
 <body>
@@ -504,8 +617,6 @@
         <div class="ad-popup-content">
             <div class="ad-popup-timer" id="adTimer">Ad closes in 5s</div>
             <button class="ad-popup-close" onclick="closeAdPopup()" id="adCloseBtn" style="display: none;">×</button>
-            
-            <!-- Adsterra Full Screen Ad -->
             <div class="ad-container" style="width: 100%; height: 100%; border: none;">
                <iframe 
     width="100%" 
@@ -528,6 +639,21 @@
             </div>
         </div>
         <div class="header-actions">
+            <div class="notification-container">
+                <div class="notification-icon" onclick="toggleNotifications()">
+                    🔔
+                    <span class="notification-badge" id="notificationBadge">0</span>
+                </div>
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <h3>Notifications</h3>
+                        <button onclick="markAllAsRead()">Mark all as read</button>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <div class="loading">Loading notifications...</div>
+                    </div>
+                </div>
+            </div>
             <div class="header-icon" onclick="openSearch()">🔍</div>
         </div>
     </div>
@@ -628,7 +754,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // SUPABASE CREDENTIALS
         const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
@@ -643,6 +768,7 @@
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('📱 Page loaded, initializing app...');
             initializeApp();
             
             // Show ad popup when page loads
@@ -651,46 +777,73 @@
 
         async function initializeApp() {
             try {
-                // Load Supabase
-                if (typeof window.supabase === 'undefined') {
-                    await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
-                }
+                console.log('🚀 Initializing VideoHub App...');
                 
+                // Load Supabase from CDN
+                await loadSupabase();
+                
+                // Initialize Supabase
                 supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-                console.log('✅ VideoHub Pro - YouTube Style UI Initialized');
+                console.log('✅ Supabase initialized');
                 
-                await loadVideos();
+                // Test database connection
+                await testDatabaseConnection();
                 
             } catch (error) {
-                console.error('❌ Error initializing app:', error);
-                showError('Failed to initialize app. Please refresh the page.');
+                console.error('❌ Error in initializeApp:', error);
+                // Fallback to demo videos
+                showDemoVideos();
+                loadUserNotifications();
             }
         }
 
-        function loadScript(src) {
+        // Load Supabase from CDN
+        function loadSupabase() {
             return new Promise((resolve, reject) => {
+                // Check if already loaded
+                if (window.supabase) {
+                    console.log('✅ Supabase already loaded');
+                    resolve();
+                    return;
+                }
+
+                console.log('📥 Loading Supabase from CDN...');
                 const script = document.createElement('script');
-                script.src = src;
-                script.onload = resolve;
-                script.onerror = reject;
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+                script.onload = () => {
+                    console.log('✅ Supabase CDN loaded successfully');
+                    resolve();
+                };
+                script.onerror = () => {
+                    console.error('❌ Failed to load Supabase from CDN');
+                    reject(new Error('Failed to load Supabase'));
+                };
                 document.head.appendChild(script);
             });
         }
 
-        function showError(message) {
-            const videosGrid = document.getElementById('videosGrid');
-            videosGrid.innerHTML = `
-                <div class="error-message">
-                    ${message}
-                    <br><br>
-                    <button onclick="initializeApp()" style="background: #ff0000; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">
-                        🔄 Retry
-                    </button>
-                </div>
-            `;
+        // Test database connection
+        async function testDatabaseConnection() {
+            try {
+                console.log('🔗 Testing database connection...');
+                const { data, error } = await supabase.from('movies').select('count').limit(1);
+                
+                if (error) {
+                    throw new Error(`Database error: ${error.message}`);
+                }
+                
+                console.log('✅ Database connection successful');
+                await loadVideos();
+                loadUserNotifications();
+                
+            } catch (error) {
+                console.warn('⚠️ Database connection failed, using demo mode:', error.message);
+                showDemoVideos();
+                loadUserNotifications();
+            }
         }
 
-        // Load videos with proper error handling
+        // Load videos from database
         async function loadVideos() {
             try {
                 console.log('🔄 Loading videos from database...');
@@ -704,7 +857,7 @@
                     throw new Error(`Database error: ${error.message}`);
                 }
 
-                console.log('✅ Videos loaded:', videos);
+                console.log(`✅ ${videos ? videos.length : 0} videos loaded from database`);
                 
                 if (!videos || videos.length === 0) {
                     showNoVideos();
@@ -717,8 +870,81 @@
                 
             } catch (error) {
                 console.error('❌ Error loading videos:', error);
-                showError('Error loading videos: ' + error.message);
+                throw error; // Re-throw to be handled by caller
             }
+        }
+
+        // Demo videos as fallback
+        function showDemoVideos() {
+            console.log('🎮 Loading demo videos...');
+            
+            const demoVideos = [
+                {
+                    id: 1,
+                    title: "Welcome to VideoHub - Best Video Platform",
+                    category: "Welcome",
+                    thumbnail_url: "https://picsum.photos/500/300?random=1",
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>',
+                    download_url: "https://example.com/video1.mp4"
+                },
+                {
+                    id: 2,
+                    title: "Web Development Masterclass 2024",
+                    category: "Education",
+                    thumbnail_url: "https://picsum.photos/500/300?random=2",
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>',
+                    download_url: "https://example.com/video2.mp4"
+                },
+                {
+                    id: 3,
+                    title: "Mobile App Development Tutorial",
+                    category: "Technology",
+                    thumbnail_url: "https://picsum.photos/500/300?random=3",
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>',
+                    download_url: "https://example.com/video3.mp4"
+                },
+                {
+                    id: 4,
+                    title: "JavaScript Programming Tips & Tricks",
+                    category: "Programming",
+                    thumbnail_url: "https://picsum.photos/500/300?random=4",
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_4" frameborder="0" allowfullscreen></iframe>',
+                    download_url: "https://example.com/video4.mp4"
+                },
+                {
+                    id: 5,
+                    title: "UI/UX Design Principles for Developers",
+                    category: "Design",
+                    thumbnail_url: "https://picsum.photos/500/300?random=5",
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_5" frameborder="0" allowfullscreen></iframe>',
+                    download_url: "https://example.com/video5.mp4"
+                },
+                {
+                    id: 6,
+                    title: "Cloud Computing Explained Simply",
+                    category: "Technology",
+                    thumbnail_url: "https://picsum.photos/500/300?random=6",
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_6" frameborder="0" allowfullscreen></iframe>',
+                    download_url: "https://example.com/video6.mp4"
+                }
+            ];
+            
+            allVideos = demoVideos;
+            displayVideos(demoVideos);
+            loadCategories();
+            
+            // Show demo mode message
+            const videosGrid = document.getElementById('videosGrid');
+            const demoMessage = document.createElement('div');
+            demoMessage.style.gridColumn = '1/-1';
+            demoMessage.style.textAlign = 'center';
+            demoMessage.style.padding = '10px';
+            demoMessage.style.background = '#1a1a1a';
+            demoMessage.style.borderRadius = '8px';
+            demoMessage.style.margin = '10px 0';
+            demoMessage.style.color = '#ffa500';
+            demoMessage.innerHTML = '🔧 Demo Mode - Using sample videos. Real videos will load when database is connected.';
+            videosGrid.parentNode.insertBefore(demoMessage, videosGrid);
         }
 
         function displayVideos(videos) {
@@ -750,26 +976,24 @@
                     📺 No videos available
                     <br>
                     <small>Add videos from the admin panel</small>
+                    <br><br>
+                    <button onclick="showDemoVideos()" style="background: #ff0000; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">
+                        Show Demo Videos
+                    </button>
                 </div>
             `;
         }
 
-        // Create video card with proper thumbnail handling
+        // Create video card
         function createVideoCard(video) {
             const duration = Math.floor(Math.random() * 30) + 1;
             const views = Math.floor(Math.random() * 1000000) + 1000;
             const uploadTime = Math.floor(Math.random() * 30) + 1;
             
-            // Thumbnail URL handling
             let thumbnailUrl = video.thumbnail_url;
             
-            if (!thumbnailUrl || 
-                thumbnailUrl === 'null' || 
-                thumbnailUrl === 'undefined' ||
-                thumbnailUrl === '' ||
-                !thumbnailUrl.startsWith('http')) {
-                
-                thumbnailUrl = 'https://picsum.photos/500/300';
+            if (!thumbnailUrl || !thumbnailUrl.startsWith('http')) {
+                thumbnailUrl = `https://picsum.photos/500/300?random=${video.id}`;
             }
 
             return `
@@ -778,7 +1002,7 @@
                         <img src="${thumbnailUrl}" 
                              alt="${video.title}" 
                              class="video-thumbnail"
-                             onerror="this.src='https://picsum.photos/500/300'">
+                             onerror="this.src='https://picsum.photos/500/300?random=${video.id}'">
                         <div class="video-duration">${duration}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}</div>
                     </div>
                     <div class="video-info">
@@ -806,12 +1030,10 @@
             return views.toString();
         }
 
-        // Load categories from database
-        async function loadCategories() {
+        // Load categories
+        function loadCategories() {
             try {
-                // Get unique categories from videos
                 const categories = [...new Set(allVideos.map(video => video.category))];
-                
                 const categoriesContainer = document.getElementById('categoriesList');
                 let categoriesHTML = '';
 
@@ -851,7 +1073,7 @@
             displayVideos(filteredVideos);
         }
 
-        // Search functions - FIXED
+        // Search functions
         function openSearch() {
             document.getElementById('searchBar').style.display = 'flex';
             document.getElementById('searchInput').focus();
@@ -874,8 +1096,7 @@
             
             const filteredVideos = allVideos.filter(video => 
                 video.title.toLowerCase().includes(currentSearch) || 
-                (video.category && video.category.toLowerCase().includes(currentSearch)) ||
-                (video.description && video.description.toLowerCase().includes(currentSearch))
+                (video.category && video.category.toLowerCase().includes(currentSearch))
             );
             
             displayVideos(filteredVideos);
@@ -887,26 +1108,14 @@
             if (!video) return;
             
             currentPlayingVideo = video;
-            
             document.getElementById('videoPlayerTitle').textContent = video.title;
             
             let videoUrl = extractVideoUrl(video.iframe_code);
-            
             const iframe = document.getElementById('videoPlayerIframe');
             iframe.src = videoUrl + (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
             
             document.getElementById('videoPlayerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            
-            // Download button को enable/disable करना
-            const downloadBtn = document.getElementById('downloadVideoBtn');
-            if (video.download_url) {
-                downloadBtn.style.display = 'flex';
-                downloadBtn.disabled = false;
-            } else {
-                downloadBtn.style.display = 'flex'; // Always show download button
-                downloadBtn.disabled = false;
-            }
         }
 
         function closeVideoPlayer() {
@@ -917,20 +1126,15 @@
             currentPlayingVideo = null;
         }
 
-        // Download video function
         function downloadCurrentVideo() {
             if (!currentPlayingVideo) return;
             
-            // Video download URL check करना
             let downloadUrl = currentPlayingVideo.download_url;
-            
-            // Agar download URL नहीं है, तो video URL का use करना
             if (!downloadUrl) {
                 downloadUrl = extractVideoUrl(currentPlayingVideo.iframe_code);
             }
             
             if (downloadUrl) {
-                // नया tab खोलना download के लिए
                 window.open(downloadUrl, '_blank');
             } else {
                 alert('Download link not available for this video.');
@@ -938,16 +1142,15 @@
         }
 
         function extractVideoUrl(iframeCode) {
-            if (!iframeCode) return '';
+            if (!iframeCode) return 'https://www.youtube.com/embed/dQw4w9WgXcQ';
             
             const srcMatch = iframeCode.match(/src="([^"]*)"/);
             if (srcMatch && srcMatch[1]) {
                 return srcMatch[1];
             }
-            return '';
+            return 'https://www.youtube.com/embed/dQw4w9WgXcQ';
         }
 
-        // Sidebar function (placeholder)
         function toggleSidebar() {
             alert('Sidebar would open here with navigation menu');
         }
@@ -985,121 +1188,127 @@
             }
         }
 
-        // Search input event listener
+        // NOTIFICATION FUNCTIONS
+        async function loadUserNotifications() {
+            try {
+                const broadcastNotifications = JSON.parse(localStorage.getItem('broadcastNotifications') || '[]');
+                
+                const notifications = broadcastNotifications.map(notification => ({
+                    id: notification.id,
+                    title: notification.title,
+                    message: notification.message,
+                    type: notification.type,
+                    created_at: notification.created_at,
+                    is_read: false
+                }));
+
+                displayNotifications(notifications);
+                updateNotificationBadge(notifications);
+
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+
+        function displayNotifications(notifications) {
+            const notificationList = document.getElementById('notificationList');
+            
+            if (!notifications || notifications.length === 0) {
+                notificationList.innerHTML = `
+                    <div class="notification-item" style="text-align: center; color: #666;">
+                        No notifications
+                    </div>
+                `;
+                return;
+            }
+
+            notificationList.innerHTML = notifications.map(notification => `
+                <div class="notification-item ${!notification.is_read ? 'unread' : ''} notification-type-${notification.type}" 
+                     onclick="markAsRead('${notification.id}')">
+                    <div class="notification-title">${notification.title}</div>
+                    <div class="notification-message">${notification.message}</div>
+                    <div class="notification-time">${formatTime(notification.created_at)}</div>
+                </div>
+            `).join('');
+        }
+
+        function updateNotificationBadge(notifications) {
+            const badge = document.getElementById('notificationBadge');
+            const unreadCount = notifications.filter(n => !n.is_read).length;
+            
+            if (unreadCount > 0) {
+                badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('show');
+            
+            if (dropdown.classList.contains('show')) {
+                loadUserNotifications();
+            }
+        }
+
+        function markAsRead(notificationId) {
+            const notificationItem = document.querySelector(`[onclick="markAsRead('${notificationId}')"]`);
+            if (notificationItem) {
+                notificationItem.classList.remove('unread');
+            }
+            loadUserNotifications();
+        }
+
+        function markAllAsRead() {
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+            });
+            document.getElementById('notificationBadge').style.display = 'none';
+        }
+
+        function formatTime(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            if (days < 7) return `${days}d ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        // Event listeners
+        document.addEventListener('click', function(event) {
+            const notificationContainer = document.querySelector('.notification-container');
+            const dropdown = document.getElementById('notificationDropdown');
+            
+            if (!notificationContainer.contains(event.target) && dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
+            }
+        });
+
         document.getElementById('searchInput')?.addEventListener('input', function(e) {
             searchVideos(e.target.value);
         });
 
-        // Close search when pressing escape
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeSearch();
             }
         });
 
-        // Add some basic styles for error messages
-        const style = document.createElement('style');
-        style.textContent = `
-            .error-message {
-                background: #2a1a1a;
-                border: 1px solid #ff4444;
-                border-radius: 8px;
-                padding: 20px;
-                margin: 10px 0;
-                text-align: center;
-            }
-            
-            .loading {
-                text-align: center;
-                padding: 40px;
-                color: #888;
-            }
-            
-            .video-thumbnail {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                background: #272727;
-            }
-            
-            .ad-popup {
-                animation: fadeIn 0.3s ease-in;
-            }
-            
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-        `;
-        document.head.appendChild(style);
-        // Main page के script में ये functions जोड़ें
+        // Auto refresh notifications
+        setInterval(loadUserNotifications, 30000);
 
-// Supabase credentials (same as admin panel)
-const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
-const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo';
-let supabase;
-
-// Initialize Supabase
-async function initializeSupabase() {
-    if (typeof window.supabase === 'undefined') {
-        await loadScript('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2');
-    }
-    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-}
-
-// Load user notifications
-async function loadUserNotifications() {
-    try {
-        if (!supabase) {
-            await initializeSupabase();
-        }
-
-        // Get current user ID (demo के लिए fixed user ID use कर रहे हैं)
-        const userId = getCurrentUserId(); // आपका user management function
-        
-        // Real app में आप Supabase से notifications fetch करेंगे
-        // const { data: notifications, error } = await supabase
-        //     .from('notifications')
-        //     .select('*')
-        //     .eq('user_id', userId)
-        //     .order('created_at', { ascending: false })
-        //     .limit(20);
-
-        // Demo के लिए localStorage से notifications ले रहे हैं
-        const broadcastNotifications = JSON.parse(localStorage.getItem('broadcastNotifications') || '[]');
-        
-        const notifications = broadcastNotifications.map(notification => ({
-            id: notification.id,
-            title: notification.title,
-            message: notification.message,
-            type: notification.type,
-            created_at: notification.created_at,
-            is_read: false // Demo के लिए
-        }));
-
-        displayNotifications(notifications);
-        updateNotificationBadge(notifications);
-
-    } catch (error) {
-        console.error('Error loading notifications:', error);
-    }
-}
-
-// Display notifications in dropdown
-function displayNotifications(notifications) {
-    const notificationList = document.getElementById('notificationList');
-    
-    if (!notifications || notifications.length === 0) {
-        notificationList.innerHTML = `
-            <div class="notification-item" style="text-align: center; color: #666;">
-                No notifications
-            </div>
-        `;
-        return;
-    }
-
-  
+        console.log('🎉 VideoHub App initialized successfully!');
     </script>
-    <script type='text/javascript' src='//pl27892704.effectivegatecpm.com/d0/f8/e5/d0f8e53bef81fe3a7f6847b10e20f047.js'></script>
 </body>
 </html>
