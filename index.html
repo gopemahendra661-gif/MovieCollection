@@ -754,7 +754,7 @@
     <script>
         // SUPABASE CREDENTIALS
         const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
-        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo';
+        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo'; // यह आपका public key है, यह सही है
 
         let supabase;
         let currentCategory = 'all';
@@ -768,14 +768,56 @@
         let videoToPlay = null; // Stores the video ID to play after pre-roll ad
         let midRollTimer = null; // Timer for 20-min mid-roll ad
         let currentAdIsMidRoll = false; // Flag to check if ad is mid-roll
+        
+        // --- NEW: Analytics Functions ---
+
+        /**
+         * 1. Total App Visits को लॉग करता है
+         * इसे `page_views` टेबल की आवश्यकता है
+         */
+        async function logPageView() {
+            if (!supabase) return; // Supabase के शुरू होने की प्रतीक्षा करें
+            try {
+                const { error } = await supabase
+                    .from('page_views')
+                    .insert({ page_path: window.location.pathname });
+                
+                if (error) throw error;
+                console.log('📊 Page View Logged');
+            } catch (error) {
+                // यह विफल होना ठीक है, उपयोगकर्ता का अनुभव नहीं रुकना चाहिए
+                console.warn('Analytics Error (logPageView):', error.message);
+            }
+        }
+
+        /**
+         * 2. Video Play या Download को लॉग करता है
+         * इसे `content_views` टेबल की आवश्यकता है
+         */
+        async function logContentAction(movieId, action) {
+            if (!supabase || !movieId) return;
+            try {
+                const { error } = await supabase
+                    .from('content_views')
+                    .insert({ 
+                        movie_id: movieId, 
+                        action_type: action // 'play' or 'download'
+                    });
+                
+                if (error) throw error;
+                console.log(`📊 Content Action Logged: ${action} for movie ${movieId}`);
+            } catch (error) {
+                // यह विफल होना ठीक है
+                console.warn('Analytics Error (logContentAction):', error.message);
+            }
+        }
+
+        // --- End of Analytics Functions ---
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
             console.log('📱 Page loaded, initializing app...');
             initializeApp();
-            
-            // REMOVED: setTimeout(showAdPopup, 1000); 
-            // Ad will now show on video click (pre-roll)
         });
 
         async function initializeApp() {
@@ -788,6 +830,9 @@
                 // Initialize Supabase
                 supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
                 console.log('✅ Supabase initialized');
+
+                // *** NEW: Log page view on app start ***
+                await logPageView(); 
                 
                 // Test database connection
                 await testDatabaseConnection();
@@ -885,12 +930,9 @@
             console.log('🎮 Loading demo videos...');
             
             const demoVideos = [
-                { id: 1, title: "Welcome to VideoHub - Best Video Platform", category: "Welcome", thumbnail_url: "https://picsum.photos/500/300?random=1", iframe_code: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video1.mp4" },
-                { id: 2, title: "Web Development Masterclass 2024", category: "Education", thumbnail_url: "https://picsum.photos/500/300?random=2", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video2.mp4" },
-                { id: 3, title: "Mobile App Development Tutorial", category: "Technology", thumbnail_url: "https://picsum.photos/500/300?random=3", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video3.mp4" },
-                { id: 4, title: "JavaScript Programming Tips & Tricks", category: "Programming", thumbnail_url: "https://picsum.photos/500/300?random=4", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_4" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video4.mp4" },
-                { id: 5, title: "UI/UX Design Principles for Developers", category: "Design", thumbnail_url: "https://picsum.photos/500/300?random=5", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_5" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video5.mp4" },
-                { id: 6, title: "Cloud Computing Explained Simply", category: "Technology", thumbnail_url: "https://picsum.photos/500/300?random=6", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_6" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video6.mp4" }
+                { id: 1, title: "Welcome to VideoHub - Best Video Platform", category: "Welcome", thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=VideoHub", iframe_code: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video1.mp4" },
+                { id: 2, title: "Web Development Masterclass 2024", category: "Education", thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=Demo+2", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video2.mp4" },
+                { id: 3, title: "Mobile App Development Tutorial", category: "Technology", thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=Demo+3", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video3.mp4" },
             ];
             
             allVideos = demoVideos;
@@ -953,7 +995,7 @@
             let thumbnailUrl = video.thumbnail_url;
             
             if (!thumbnailUrl || !thumbnailUrl.startsWith('http')) {
-                thumbnailUrl = `https://picsum.photos/500/300?random=${video.id}`;
+                thumbnailUrl = `https://placehold.co/500x300/1a1a1a/ffffff?text=${video.category || 'Video'}`;
             }
 
             // MODIFIED: onclick now calls openVideoPlayer
@@ -963,7 +1005,7 @@
                         <img src="${thumbnailUrl}" 
                              alt="${video.title}" 
                              class="video-thumbnail"
-                             onerror="this.src='https://picsum.photos/500/300?random=${video.id}'">
+                             onerror="this.src='https://placehold.co/500x300/1a1a1a/ffffff?text=No+Image'">
                         <div class="video-duration">${duration}:${Math.floor(Math.random() * 60).toString().padStart(2, '0')}</div>
                     </div>
                     <div class="video-info">
@@ -1082,6 +1124,9 @@
         function launchVideoPlayer(videoId) {
             const video = allVideos.find(v => v.id === videoId);
             if (!video) return;
+
+            // *** NEW: Log the 'play' action ***
+            logContentAction(video.id, 'play');
             
             console.log('Launching video player for:', video.title);
             currentPlayingVideo = video;
@@ -1135,6 +1180,9 @@
         function downloadCurrentVideo() {
             if (!currentPlayingVideo) return;
             
+            // *** NEW: Log the 'download' action ***
+            logContentAction(currentPlayingVideo.id, 'download');
+
             let downloadUrl = currentPlayingVideo.download_url;
             if (!downloadUrl) {
                 downloadUrl = extractVideoUrl(currentPlayingVideo.iframe_code);
