@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoHub Pro - YouTube Style</title>
     <style>
-        /* Aapke saare CSS styles waise hi rahenge */
+        /* Your existing CSS styles remain the same */
         * {
             margin: 0;
             padding: 0;
@@ -31,7 +31,6 @@
             user-select: none;
         }
 
-        /* ... baaki saare CSS styles ... */
         .header {
             background: #0f0f0f;
             padding: 8px 12px;
@@ -354,7 +353,6 @@
             background: #000;
         }
 
-        /* YEH STYLE ZAROORI HAI - yeh dynamic iframe par apply hoga */
         .video-iframe {
             width: 100%;
             height: 100%;
@@ -729,7 +727,6 @@
         </div>
     </div>
 
-    <!-- ===== BADLAAV YAHAN KIYA GAYA HAI ===== -->
     <div id="videoPlayerModal" class="video-modal">
         <div class="video-modal-header">
             <div class="video-header-left">
@@ -744,12 +741,12 @@
             </div>
         </div>
         <div class="video-player-container">
-            <!-- YEH CONTAINER AB KHALI HAI -->
-            <!-- JavaScript ismein poora iframe code daalega -->
+            <iframe id="videoPlayerIframe" class="video-iframe" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+            </iframe>
         </div>
     </div>
-    <!-- ===== BADLAAV KHATAM ===== -->
-
 
     <script async="async" data-cfasync="false" src="//pl27963072.effectivegatecpm.com/1779bf8f2ef9b0af97c71882e05dced0/invoke.js"></script>
     <div id="container-1779bf8f2ef9b0af97c71882e05dced0"></div>
@@ -757,7 +754,7 @@
     <script>
         // SUPABASE CREDENTIALS
         const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
-        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo'; // yeh aapka public key hai, yeh sahi hai
+        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo'; // यह आपका public key है, यह सही है
 
         let supabase;
         let currentCategory = 'all';
@@ -775,11 +772,11 @@
         // --- NEW: Analytics Functions ---
 
         /**
-         * 1. Total App Visits ko log karta hai
-         * Ise `page_views` table ki zaroorat hai
+         * 1. Total App Visits को लॉग करता है
+         * इसे `page_views` टेबल की आवश्यकता है
          */
         async function logPageView() {
-            if (!supabase) return; // Supabase ke shuru hone ka intezaar karein
+            if (!supabase) return; // Supabase के शुरू होने की प्रतीक्षा करें
             try {
                 const { error } = await supabase
                     .from('page_views')
@@ -788,14 +785,14 @@
                 if (error) throw error;
                 console.log('📊 Page View Logged');
             } catch (error) {
-                // Yeh fail hona theek hai, user ka experience nahi rukna chahiye
+                // यह विफल होना ठीक है, उपयोगकर्ता का अनुभव नहीं रुकना चाहिए
                 console.warn('Analytics Error (logPageView):', error.message);
             }
         }
 
         /**
-         * 2. Video Play ya Download ko log karta hai
-         * Ise `content_views` table ki zaroorat hai
+         * 2. Video Play या Download को लॉग करता है
+         * इसे `content_views` टेबल की आवश्यकता है
          */
         async function logContentAction(movieId, action) {
             if (!supabase || !movieId) return;
@@ -810,7 +807,7 @@
                 if (error) throw error;
                 console.log(`📊 Content Action Logged: ${action} for movie ${movieId}`);
             } catch (error) {
-                // Yeh fail hona theek hai
+                // यह विफल होना ठीक है
                 console.warn('Analytics Error (logContentAction):', error.message);
             }
         }
@@ -834,7 +831,7 @@
                 supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
                 console.log('✅ Supabase initialized');
 
-                // *** NEW: Page view ko app start hote hi log karein ***
+                // *** NEW: Log page view on app start ***
                 await logPageView(); 
                 
                 // Test database connection
@@ -933,9 +930,30 @@
             console.log('🎮 Loading demo videos...');
             
             const demoVideos = [
-                { id: 1, title: "Welcome to VideoHub - Best Video Platform", category: "Welcome", thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=VideoHub", iframe_code: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video1.mp4" },
-                { id: 2, title: "Web Development Masterclass 2024", category: "Education", thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=Demo+2", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video2.mp4" },
-                { id: 3, title: "Mobile App Development Tutorial", category: "Technology", thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=Demo+3", iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>', download_url: "https://example.com/video3.mp4" },
+                { 
+                    id: 1, 
+                    title: "Welcome to VideoHub - Best Video Platform", 
+                    category: "Welcome", 
+                    thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=VideoHub", 
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>', 
+                    download_url: "https://example.com/video1.mp4" 
+                },
+                { 
+                    id: 2, 
+                    title: "Web Development Masterclass 2024", 
+                    category: "Education", 
+                    thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=Demo+2", 
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>', 
+                    download_url: "https://example.com/video2.mp4" 
+                },
+                { 
+                    id: 3, 
+                    title: "Mobile App Development Tutorial", 
+                    category: "Technology", 
+                    thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=Demo+3", 
+                    iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>', 
+                    download_url: "https://example.com/video3.mp4" 
+                },
             ];
             
             allVideos = demoVideos;
@@ -1001,7 +1019,7 @@
                 thumbnailUrl = `https://placehold.co/500x300/1a1a1a/ffffff?text=${video.category || 'Video'}`;
             }
 
-            // MODIFIED: onclick ab openVideoPlayer ko call karta hai
+            // MODIFIED: onclick now calls openVideoPlayer
             return `
                 <div class="video-card" onclick="openVideoPlayer(${video.id})">
                     <div class="thumbnail-container">
@@ -1111,95 +1129,136 @@
         // --- AD & VIDEO PLAYER LOGIC ---
 
         /**
-         * Pre-roll ad ko trigger karta hai aur video ko queue mein rakhta hai.
+         * NEW: Triggers pre-roll ad and stores video to play.
          */
         function openVideoPlayer(videoId) {
             console.log('Triggering pre-roll ad for video:', videoId);
             videoToPlay = videoId;
-            currentAdIsMidRoll = false; // Yeh ek pre-roll hai
+            currentAdIsMidRoll = false; // This is a pre-roll
             showAdPopup();
         }
 
         /**
-         * [ ===== YEH FUNCTION FIX KIYA GAYA HAI ===== ]
-         * Yeh function ab poora iframe code database se leta hai aur use seedha
-         * player container mein daalta hai, sirf src nikaalne ke bajaay.
+         * FIXED: Enhanced video player launch function
          */
         function launchVideoPlayer(videoId) {
             const video = allVideos.find(v => v.id === videoId);
             if (!video) return;
 
-            // Analytics ke liye 'play' action ko log karein
+            // *** NEW: Log the 'play' action ***
             logContentAction(video.id, 'play');
             
             console.log('Launching video player for:', video.title);
             currentPlayingVideo = video;
             document.getElementById('videoPlayerTitle').textContent = video.title;
             
-            // --- START: MODIFIED LOGIC ---
-            const playerContainer = document.querySelector('.video-player-container');
+            let videoUrl = extractVideoUrl(video.iframe_code);
+            const iframe = document.getElementById('videoPlayerIframe');
             
-            // 1. Database se raw iframe code lein
-            let iframeHTML = video.iframe_code;
-
-            // 2. HTML Entities ko decode karein (agar code &lt;iframe...&gt; jaisa save hua hai)
-            if (iframeHTML && iframeHTML.includes('&')) {
-                console.log('Decoding HTML entities just in case...');
-                try {
-                    const e = document.createElement('textarea');
-                    e.innerHTML = iframeHTML;
-                    iframeHTML = e.value; // e.value ab unescaped string hoga
-                } catch (e) {
-                    console.error('Error during HTML decoding:', e);
-                    // Agar error aaye toh code ko waise hi chhod dein
-                }
-            }
-
-            // 3. Autoplay=1 add karein (agar pehle se nahi hai)
-            if (iframeHTML && iframeHTML.includes('src=') && !iframeHTML.includes('autoplay=1')) {
-                iframeHTML = iframeHTML.replace(/src="([^"]*)"/, (match, src) => {
-                    const separator = src.includes('?') ? '&' : '?';
-                    return `src="${src}${separator}autoplay=1"`;
-                });
-            }
+            // FIX: Better URL handling for different platforms
+            iframe.src = videoUrl;
             
-            // 4. Control ke liye zaroori ID aur Class add karein
-            if (iframeHTML && iframeHTML.includes('<iframe')) {
-                 iframeHTML = iframeHTML.replace(/<iframe/i, `<iframe id="videoPlayerIframe" class="video-iframe"`);
-            }
-            
-            // 5. Poora (modified) iframe code container mein daalein
-            playerContainer.innerHTML = (iframeHTML && iframeHTML.includes('<iframe')) 
-                ? iframeHTML 
-                : '<div class="error-message">Error: Invalid video code.</div>';
-            // --- END: MODIFIED LOGIC ---
-
             document.getElementById('videoPlayerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
-            // Mid-roll timer (20 minutes) shuru karein
+            // Start mid-roll timer (20 minutes)
             if (midRollTimer) clearInterval(midRollTimer);
             console.log('Starting 20-minute mid-roll timer...');
             midRollTimer = setInterval(showMidRollAd, 20 * 60 * 1000); 
         }
 
         /**
-         * [ ===== YEH FUNCTION FIX KIYA GAYA HAI ===== ]
-         * Yeh function ab player container ko poori tarah khali kar deta hai,
-         * taaki video (aur audio) poori tarah band ho jaaye.
+         * FIXED: Enhanced video URL extraction function
+         * Supports: YouTube, Dailymotion, Vimeo, and direct embed codes
          */
-        function closeVideoPlayer() {
-            // --- START: MODIFIED LOGIC ---
-            const playerContainer = document.querySelector('.video-player-container');
-            // Dynamically inject kiye gaye iframe ko hatane ke liye container ko khali karein
-            playerContainer.innerHTML = ''; 
-            // --- END: MODIFIED LOGIC ---
+        function extractVideoUrl(iframeCode) {
+            if (!iframeCode) return 'about:blank';
+            
+            console.log('Original iframe code:', iframeCode);
+            
+            // Case 1: Already a direct URL (not embed code)
+            if (iframeCode.startsWith('http')) {
+                console.log('Direct URL detected:', iframeCode);
+                // Add autoplay parameter if not present
+                if (iframeCode.includes('?')) {
+                    return iframeCode + '&autoplay=1';
+                } else {
+                    return iframeCode + '?autoplay=1';
+                }
+            }
+            
+            // Case 2: Standard iframe with src attribute
+            const srcMatch = iframeCode.match(/src="([^"]*)"/);
+            if (srcMatch && srcMatch[1]) {
+                let url = srcMatch[1];
+                console.log('Extracted src URL:', url);
+                
+                // Add autoplay parameter
+                if (url.includes('?')) {
+                    url += '&autoplay=1';
+                } else {
+                    url += '?autoplay=1';
+                }
+                return url;
+            }
+            
+            // Case 3: Dailymotion specific pattern
+            const dmMatch = iframeCode.match(/dailymotion\.com\/embed\/video\/([a-zA-Z0-9]+)/);
+            if (dmMatch) {
+                const dmUrl = `https://www.dailymotion.com/embed/video/${dmMatch[1]}?autoplay=1`;
+                console.log('Dailymotion URL constructed:', dmUrl);
+                return dmUrl;
+            }
+            
+            // Case 4: YouTube specific pattern
+            const ytMatch = iframeCode.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
+            if (ytMatch) {
+                const ytUrl = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`;
+                console.log('YouTube URL constructed:', ytUrl);
+                return ytUrl;
+            }
+            
+            // Case 5: YouTube watch URL pattern
+            const ytWatchMatch = iframeCode.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
+            if (ytWatchMatch) {
+                const ytUrl = `https://www.youtube.com/embed/${ytWatchMatch[1]}?autoplay=1`;
+                console.log('YouTube Watch URL converted:', ytUrl);
+                return ytUrl;
+            }
+            
+            // Case 6: youtu.be short URL pattern
+            const ytShortMatch = iframeCode.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+            if (ytShortMatch) {
+                const ytUrl = `https://www.youtube.com/embed/${ytShortMatch[1]}?autoplay=1`;
+                console.log('YouTube Short URL converted:', ytUrl);
+                return ytUrl;
+            }
+            
+            // Case 7: Try to find any URL in the code
+            const urlMatch = iframeCode.match(/(https?:\/\/[^\s"']+)/);
+            if (urlMatch) {
+                console.log('Found URL in code:', urlMatch[1]);
+                let url = urlMatch[1];
+                if (url.includes('?')) {
+                    url += '&autoplay=1';
+                } else {
+                    url += '?autoplay=1';
+                }
+                return url;
+            }
+            
+            console.warn('Could not extract video URL from:', iframeCode);
+            return 'about:blank';
+        }
 
+        function closeVideoPlayer() {
+            const iframe = document.getElementById('videoPlayerIframe');
+            iframe.src = '';
             document.getElementById('videoPlayerModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             currentPlayingVideo = null;
 
-            // Mid-roll timer ko rokein
+            // Stop mid-roll timer
             if (midRollTimer) {
                 console.log('Stopping mid-roll timer.');
                 clearInterval(midRollTimer);
@@ -1208,18 +1267,18 @@
         }
 
         /**
-         * Mid-roll ad dikhane ke liye function
+         * NEW: Function to show mid-roll ad
          */
         function showMidRollAd() {
             const videoModal = document.getElementById('videoPlayerModal');
-            // Mid-roll sirf tabhi dikhayein jab video player khula ho
+            // Only show mid-roll if the video player is actually open
             if (videoModal.style.display === 'flex') {
                 console.log('Triggering mid-roll ad...');
                 currentAdIsMidRoll = true;
                 showAdPopup();
-                // Hum video ko pause nahi kar rahe, sirf ad ko oopar dikha rahe hain.
+                // We don't pause the video iframe, we just show the ad on top.
             } else {
-                // Video player band ho gaya tha, isliye timer ko band kar dein
+                // Video player was closed, so kill the timer
                 if (midRollTimer) clearInterval(midRollTimer);
             }
         }
@@ -1227,25 +1286,20 @@
         function downloadCurrentVideo() {
             if (!currentPlayingVideo) return;
             
-            // Analytics ke liye 'download' action ko log karein
+            // *** NEW: Log the 'download' action ***
             logContentAction(currentPlayingVideo.id, 'download');
 
             let downloadUrl = currentPlayingVideo.download_url;
+            if (!downloadUrl) {
+                downloadUrl = extractVideoUrl(currentPlayingVideo.iframe_code);
+            }
             
-            // Ab humein download_url par hi nirbhar rehna hoga
-            
-            if (downloadUrl) {
+            if (downloadUrl && downloadUrl !== 'about:blank') {
                 window.open(downloadUrl, '_blank');
             } else {
-                // Alert ko main app mein istemaal na karein.
-                // Hum yahan ek custom message dikha sakte hain, par abhi ke liye alert hi rehne dete hain.
-                // Behtar tareeka hoga ek custom modal dikhana.
                 alert('Download link not available for this video.');
             }
         }
-
-        // YEH FUNCTION AB ISTEMAAL MEIN NAHI HAI (extractVideoUrl)
-        // function extractVideoUrl(iframeCode) { ... }
 
         function toggleSidebar() {
             alert('Sidebar would open here with navigation menu');
@@ -1259,7 +1313,7 @@
             const adCloseBtn = document.getElementById('adCloseBtn');
             const adIframe = document.getElementById('adPopupIframe');
 
-            // Naya ad dikhane ke liye iframe ko reload karein
+            // Reload ad iframe to show a fresh ad (optional, but good for revenue)
             adIframe.src = adIframe.src;
             
             adPopup.style.display = 'flex';
@@ -1291,11 +1345,11 @@
                 clearInterval(adTimerInterval);
             }
 
-            // MODIFIED: Logic yeh check karne ke liye ki yeh pre-roll tha ya mid-roll
+            // MODIFIED: Logic to handle pre-roll vs mid-roll
             if (currentAdIsMidRoll) {
                 console.log('Mid-roll ad closed. Resuming video.');
                 currentAdIsMidRoll = false;
-                // Video player ko band na karein, sirf body overflow ko restore karein
+                // Don't close video player, just restore body overflow
                 if (document.getElementById('videoPlayerModal').style.display === 'flex') {
                     document.body.style.overflow = 'hidden';
                 } else {
@@ -1304,9 +1358,9 @@
             } else if (videoToPlay) {
                 console.log('Pre-roll ad closed. Launching video.');
                 launchVideoPlayer(videoToPlay);
-                videoToPlay = null; // Queue ko clear karein
+                videoToPlay = null; // Clear the queue
             } else {
-                // Fallback (jaise ad page load par dikhaya gaya ho)
+                // Fallback (e.g., ad was shown on page load, which we stopped)
                 document.body.style.overflow = 'auto';
             }
         }
@@ -1314,7 +1368,7 @@
         // --- NOTIFICATION FUNCTIONS (MODIFIED) ---
 
         /**
-         * Supabase se notifications load karta hai
+         * NEW: Loads notifications from Supabase
          */
         async function loadUserNotifications() {
             if (!supabase) {
@@ -1351,7 +1405,7 @@
         }
 
         /**
-         * Realtime notifications ke liye subscribe karta hai
+         * NEW: Subscribes to Realtime notifications
          */
         function subscribeToNotifications() {
             if (!supabase) return;
@@ -1365,7 +1419,7 @@
                 table: 'notifications' 
             }, (payload) => {
                 console.log('New notification received!', payload.new);
-                // Nayi notification ko list mein sabse oopar jod dein
+                // Add new notification to the top and refresh
                 allNotifications.unshift({ ...payload.new, is_read: false });
                 displayNotifications(allNotifications);
                 updateNotificationBadge(allNotifications);
@@ -1373,7 +1427,7 @@
         }
 
         /**
-         * Notifications ko list mein dikhata hai
+         * NEW: Displays notifications from the allNotifications array
          */
         function displayNotifications(notifications) {
             const notificationList = document.getElementById('notificationList');
@@ -1398,7 +1452,7 @@
         }
 
         /**
-         * Unread count ke hisaab se badge ko update karta hai
+         * NEW: Updates badge based on the allNotifications array
          */
         function updateNotificationBadge(notifications) {
             const badge = document.getElementById('notificationBadge');
@@ -1417,13 +1471,13 @@
             dropdown.classList.toggle('show');
             
             if (dropdown.classList.contains('show')) {
-                // Kholne par list ko refresh karein
+                // Refresh list when opening
                 loadUserNotifications();
             }
         }
 
         /**
-         * Ek notification ko 'read' mark karta hai
+         * NEW: Marks a single notification as read in localStorage
          */
         function markAsRead(notificationId) {
             const seenIds = JSON.parse(localStorage.getItem('seenNotificationIds') || '[]');
@@ -1432,12 +1486,12 @@
                 localStorage.setItem('seenNotificationIds', JSON.stringify(seenIds));
             }
             
-            // Badlaav dikhane ke liye list ko re-render karein
+            // Re-render the list to reflect the change
             loadUserNotifications();
         }
 
         /**
-         * Sabhi notifications ko 'read' mark karta hai
+         * NEW: Marks all currently loaded notifications as read
          */
         function markAllAsRead() {
             const seenIds = JSON.parse(localStorage.getItem('seenNotificationIds') || '[]');
@@ -1448,7 +1502,7 @@
             });
             localStorage.setItem('seenNotificationIds', JSON.stringify(seenIds));
             
-            // List ko re-render karein
+            // Re-render the list
             loadUserNotifications();
         }
 
