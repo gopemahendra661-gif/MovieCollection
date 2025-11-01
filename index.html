@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoHub Pro - YouTube Style</title>
     <style>
-        /* Your existing CSS styles remain the same */
+        /* Aapke saare CSS styles waise hi rahenge */
         * {
             margin: 0;
             padding: 0;
@@ -31,6 +31,7 @@
             user-select: none;
         }
 
+        /* ... baaki saare CSS styles ... */
         .header {
             background: #0f0f0f;
             padding: 8px 12px;
@@ -353,6 +354,7 @@
             background: #000;
         }
 
+        /* YEH STYLE ZAROORI HAI - yeh dynamic iframe par apply hoga */
         .video-iframe {
             width: 100%;
             height: 100%;
@@ -727,6 +729,7 @@
         </div>
     </div>
 
+    <!-- ===== BADLAAV YAHAN KIYA GAYA HAI ===== -->
     <div id="videoPlayerModal" class="video-modal">
         <div class="video-modal-header">
             <div class="video-header-left">
@@ -741,12 +744,12 @@
             </div>
         </div>
         <div class="video-player-container">
-            <iframe id="videoPlayerIframe" class="video-iframe" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-            </iframe>
+            <!-- YEH CONTAINER AB KHALI HAI -->
+            <!-- JavaScript ismein poora iframe code daalega -->
         </div>
     </div>
+    <!-- ===== BADLAAV KHATAM ===== -->
+
 
     <script async="async" data-cfasync="false" src="//pl27963072.effectivegatecpm.com/1779bf8f2ef9b0af97c71882e05dced0/invoke.js"></script>
     <div id="container-1779bf8f2ef9b0af97c71882e05dced0"></div>
@@ -754,7 +757,7 @@
     <script>
         // SUPABASE CREDENTIALS
         const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
-        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo'; // यह आपका public key है, यह सही है
+        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo'; // yeh aapka public key hai, yeh sahi hai
 
         let supabase;
         let currentCategory = 'all';
@@ -772,11 +775,11 @@
         // --- NEW: Analytics Functions ---
 
         /**
-         * 1. Total App Visits को लॉग करता है
-         * इसे `page_views` टेबल की आवश्यकता है
+         * 1. Total App Visits ko log karta hai
+         * Ise `page_views` table ki zaroorat hai
          */
         async function logPageView() {
-            if (!supabase) return; // Supabase के शुरू होने की प्रतीक्षा करें
+            if (!supabase) return; // Supabase ke shuru hone ka intezaar karein
             try {
                 const { error } = await supabase
                     .from('page_views')
@@ -785,14 +788,14 @@
                 if (error) throw error;
                 console.log('📊 Page View Logged');
             } catch (error) {
-                // यह विफल होना ठीक है, उपयोगकर्ता का अनुभव नहीं रुकना चाहिए
+                // Yeh fail hona theek hai, user ka experience nahi rukna chahiye
                 console.warn('Analytics Error (logPageView):', error.message);
             }
         }
 
         /**
-         * 2. Video Play या Download को लॉग करता है
-         * इसे `content_views` टेबल की आवश्यकता है
+         * 2. Video Play ya Download ko log karta hai
+         * Ise `content_views` table ki zaroorat hai
          */
         async function logContentAction(movieId, action) {
             if (!supabase || !movieId) return;
@@ -807,7 +810,7 @@
                 if (error) throw error;
                 console.log(`📊 Content Action Logged: ${action} for movie ${movieId}`);
             } catch (error) {
-                // यह विफल होना ठीक है
+                // Yeh fail hona theek hai
                 console.warn('Analytics Error (logContentAction):', error.message);
             }
         }
@@ -831,7 +834,7 @@
                 supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
                 console.log('✅ Supabase initialized');
 
-                // *** NEW: Log page view on app start ***
+                // *** NEW: Page view ko app start hote hi log karein ***
                 await logPageView(); 
                 
                 // Test database connection
@@ -998,7 +1001,7 @@
                 thumbnailUrl = `https://placehold.co/500x300/1a1a1a/ffffff?text=${video.category || 'Video'}`;
             }
 
-            // MODIFIED: onclick now calls openVideoPlayer
+            // MODIFIED: onclick ab openVideoPlayer ko call karta hai
             return `
                 <div class="video-card" onclick="openVideoPlayer(${video.id})">
                     <div class="thumbnail-container">
@@ -1108,51 +1111,95 @@
         // --- AD & VIDEO PLAYER LOGIC ---
 
         /**
-         * NEW: Triggers pre-roll ad and stores video to play.
+         * Pre-roll ad ko trigger karta hai aur video ko queue mein rakhta hai.
          */
         function openVideoPlayer(videoId) {
             console.log('Triggering pre-roll ad for video:', videoId);
             videoToPlay = videoId;
-            currentAdIsMidRoll = false; // This is a pre-roll
+            currentAdIsMidRoll = false; // Yeh ek pre-roll hai
             showAdPopup();
         }
 
         /**
-         * NEW: This function now contains the original logic to play the video.
-         * It's called by closeAdPopup() after the pre-roll ad finishes.
+         * [ ===== YEH FUNCTION FIX KIYA GAYA HAI ===== ]
+         * Yeh function ab poora iframe code database se leta hai aur use seedha
+         * player container mein daalta hai, sirf src nikaalne ke bajaay.
          */
         function launchVideoPlayer(videoId) {
             const video = allVideos.find(v => v.id === videoId);
             if (!video) return;
 
-            // *** NEW: Log the 'play' action ***
+            // Analytics ke liye 'play' action ko log karein
             logContentAction(video.id, 'play');
             
             console.log('Launching video player for:', video.title);
             currentPlayingVideo = video;
             document.getElementById('videoPlayerTitle').textContent = video.title;
             
-            let videoUrl = extractVideoUrl(video.iframe_code);
-            const iframe = document.getElementById('videoPlayerIframe');
-            iframe.src = videoUrl + (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
+            // --- START: MODIFIED LOGIC ---
+            const playerContainer = document.querySelector('.video-player-container');
             
+            // 1. Database se raw iframe code lein
+            let iframeHTML = video.iframe_code;
+
+            // 2. HTML Entities ko decode karein (agar code &lt;iframe...&gt; jaisa save hua hai)
+            if (iframeHTML && iframeHTML.includes('&')) {
+                console.log('Decoding HTML entities just in case...');
+                try {
+                    const e = document.createElement('textarea');
+                    e.innerHTML = iframeHTML;
+                    iframeHTML = e.value; // e.value ab unescaped string hoga
+                } catch (e) {
+                    console.error('Error during HTML decoding:', e);
+                    // Agar error aaye toh code ko waise hi chhod dein
+                }
+            }
+
+            // 3. Autoplay=1 add karein (agar pehle se nahi hai)
+            if (iframeHTML && iframeHTML.includes('src=') && !iframeHTML.includes('autoplay=1')) {
+                iframeHTML = iframeHTML.replace(/src="([^"]*)"/, (match, src) => {
+                    const separator = src.includes('?') ? '&' : '?';
+                    return `src="${src}${separator}autoplay=1"`;
+                });
+            }
+            
+            // 4. Control ke liye zaroori ID aur Class add karein
+            if (iframeHTML && iframeHTML.includes('<iframe')) {
+                 iframeHTML = iframeHTML.replace(/<iframe/i, `<iframe id="videoPlayerIframe" class="video-iframe"`);
+            }
+            
+            // 5. Poora (modified) iframe code container mein daalein
+            playerContainer.innerHTML = (iframeHTML && iframeHTML.includes('<iframe')) 
+                ? iframeHTML 
+                : '<div class="error-message">Error: Invalid video code.</div>';
+            // --- END: MODIFIED LOGIC ---
+
             document.getElementById('videoPlayerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
-            // Start mid-roll timer (20 minutes)
+            // Mid-roll timer (20 minutes) shuru karein
             if (midRollTimer) clearInterval(midRollTimer);
             console.log('Starting 20-minute mid-roll timer...');
             midRollTimer = setInterval(showMidRollAd, 20 * 60 * 1000); 
         }
 
+        /**
+         * [ ===== YEH FUNCTION FIX KIYA GAYA HAI ===== ]
+         * Yeh function ab player container ko poori tarah khali kar deta hai,
+         * taaki video (aur audio) poori tarah band ho jaaye.
+         */
         function closeVideoPlayer() {
-            const iframe = document.getElementById('videoPlayerIframe');
-            iframe.src = '';
+            // --- START: MODIFIED LOGIC ---
+            const playerContainer = document.querySelector('.video-player-container');
+            // Dynamically inject kiye gaye iframe ko hatane ke liye container ko khali karein
+            playerContainer.innerHTML = ''; 
+            // --- END: MODIFIED LOGIC ---
+
             document.getElementById('videoPlayerModal').style.display = 'none';
             document.body.style.overflow = 'auto';
             currentPlayingVideo = null;
 
-            // Stop mid-roll timer
+            // Mid-roll timer ko rokein
             if (midRollTimer) {
                 console.log('Stopping mid-roll timer.');
                 clearInterval(midRollTimer);
@@ -1161,18 +1208,18 @@
         }
 
         /**
-         * NEW: Function to show mid-roll ad
+         * Mid-roll ad dikhane ke liye function
          */
         function showMidRollAd() {
             const videoModal = document.getElementById('videoPlayerModal');
-            // Only show mid-roll if the video player is actually open
+            // Mid-roll sirf tabhi dikhayein jab video player khula ho
             if (videoModal.style.display === 'flex') {
                 console.log('Triggering mid-roll ad...');
                 currentAdIsMidRoll = true;
                 showAdPopup();
-                // We don't pause the video iframe, we just show the ad on top.
+                // Hum video ko pause nahi kar rahe, sirf ad ko oopar dikha rahe hain.
             } else {
-                // Video player was closed, so kill the timer
+                // Video player band ho gaya tha, isliye timer ko band kar dein
                 if (midRollTimer) clearInterval(midRollTimer);
             }
         }
@@ -1180,30 +1227,25 @@
         function downloadCurrentVideo() {
             if (!currentPlayingVideo) return;
             
-            // *** NEW: Log the 'download' action ***
+            // Analytics ke liye 'download' action ko log karein
             logContentAction(currentPlayingVideo.id, 'download');
 
             let downloadUrl = currentPlayingVideo.download_url;
-            if (!downloadUrl) {
-                downloadUrl = extractVideoUrl(currentPlayingVideo.iframe_code);
-            }
+            
+            // Ab humein download_url par hi nirbhar rehna hoga
             
             if (downloadUrl) {
                 window.open(downloadUrl, '_blank');
             } else {
+                // Alert ko main app mein istemaal na karein.
+                // Hum yahan ek custom message dikha sakte hain, par abhi ke liye alert hi rehne dete hain.
+                // Behtar tareeka hoga ek custom modal dikhana.
                 alert('Download link not available for this video.');
             }
         }
 
-        function extractVideoUrl(iframeCode) {
-            if (!iframeCode) return 'about:blank'; // Use about:blank for safety
-            
-            const srcMatch = iframeCode.match(/src="([^"]*)"/);
-            if (srcMatch && srcMatch[1]) {
-                return srcMatch[1];
-            }
-            return 'about:blank';
-        }
+        // YEH FUNCTION AB ISTEMAAL MEIN NAHI HAI (extractVideoUrl)
+        // function extractVideoUrl(iframeCode) { ... }
 
         function toggleSidebar() {
             alert('Sidebar would open here with navigation menu');
@@ -1217,7 +1259,7 @@
             const adCloseBtn = document.getElementById('adCloseBtn');
             const adIframe = document.getElementById('adPopupIframe');
 
-            // Reload ad iframe to show a fresh ad (optional, but good for revenue)
+            // Naya ad dikhane ke liye iframe ko reload karein
             adIframe.src = adIframe.src;
             
             adPopup.style.display = 'flex';
@@ -1249,11 +1291,11 @@
                 clearInterval(adTimerInterval);
             }
 
-            // MODIFIED: Logic to handle pre-roll vs mid-roll
+            // MODIFIED: Logic yeh check karne ke liye ki yeh pre-roll tha ya mid-roll
             if (currentAdIsMidRoll) {
                 console.log('Mid-roll ad closed. Resuming video.');
                 currentAdIsMidRoll = false;
-                // Don't close video player, just restore body overflow
+                // Video player ko band na karein, sirf body overflow ko restore karein
                 if (document.getElementById('videoPlayerModal').style.display === 'flex') {
                     document.body.style.overflow = 'hidden';
                 } else {
@@ -1262,9 +1304,9 @@
             } else if (videoToPlay) {
                 console.log('Pre-roll ad closed. Launching video.');
                 launchVideoPlayer(videoToPlay);
-                videoToPlay = null; // Clear the queue
+                videoToPlay = null; // Queue ko clear karein
             } else {
-                // Fallback (e.g., ad was shown on page load, which we stopped)
+                // Fallback (jaise ad page load par dikhaya gaya ho)
                 document.body.style.overflow = 'auto';
             }
         }
@@ -1272,7 +1314,7 @@
         // --- NOTIFICATION FUNCTIONS (MODIFIED) ---
 
         /**
-         * NEW: Loads notifications from Supabase
+         * Supabase se notifications load karta hai
          */
         async function loadUserNotifications() {
             if (!supabase) {
@@ -1309,7 +1351,7 @@
         }
 
         /**
-         * NEW: Subscribes to Realtime notifications
+         * Realtime notifications ke liye subscribe karta hai
          */
         function subscribeToNotifications() {
             if (!supabase) return;
@@ -1323,7 +1365,7 @@
                 table: 'notifications' 
             }, (payload) => {
                 console.log('New notification received!', payload.new);
-                // Add new notification to the top and refresh
+                // Nayi notification ko list mein sabse oopar jod dein
                 allNotifications.unshift({ ...payload.new, is_read: false });
                 displayNotifications(allNotifications);
                 updateNotificationBadge(allNotifications);
@@ -1331,7 +1373,7 @@
         }
 
         /**
-         * NEW: Displays notifications from the allNotifications array
+         * Notifications ko list mein dikhata hai
          */
         function displayNotifications(notifications) {
             const notificationList = document.getElementById('notificationList');
@@ -1356,7 +1398,7 @@
         }
 
         /**
-         * NEW: Updates badge based on the allNotifications array
+         * Unread count ke hisaab se badge ko update karta hai
          */
         function updateNotificationBadge(notifications) {
             const badge = document.getElementById('notificationBadge');
@@ -1375,13 +1417,13 @@
             dropdown.classList.toggle('show');
             
             if (dropdown.classList.contains('show')) {
-                // Refresh list when opening
+                // Kholne par list ko refresh karein
                 loadUserNotifications();
             }
         }
 
         /**
-         * NEW: Marks a single notification as read in localStorage
+         * Ek notification ko 'read' mark karta hai
          */
         function markAsRead(notificationId) {
             const seenIds = JSON.parse(localStorage.getItem('seenNotificationIds') || '[]');
@@ -1390,12 +1432,12 @@
                 localStorage.setItem('seenNotificationIds', JSON.stringify(seenIds));
             }
             
-            // Re-render the list to reflect the change
+            // Badlaav dikhane ke liye list ko re-render karein
             loadUserNotifications();
         }
 
         /**
-         * NEW: Marks all currently loaded notifications as read
+         * Sabhi notifications ko 'read' mark karta hai
          */
         function markAllAsRead() {
             const seenIds = JSON.parse(localStorage.getItem('seenNotificationIds') || '[]');
@@ -1406,7 +1448,7 @@
             });
             localStorage.setItem('seenNotificationIds', JSON.stringify(seenIds));
             
-            // Re-render the list
+            // List ko re-render karein
             loadUserNotifications();
         }
 
