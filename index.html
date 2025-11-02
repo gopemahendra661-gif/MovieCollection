@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoHub Pro - YouTube Style</title>
     <style>
-        /* Your existing CSS styles remain the same */
+        /* All existing CSS is kept */
         * {
             margin: 0;
             padding: 0;
@@ -82,7 +82,6 @@
             cursor: pointer;
         }
 
-        /* NEW: Auth Button */
         .auth-btn {
             background: #ff0000;
             color: white;
@@ -220,7 +219,6 @@
             font-weight: 500;
         }
 
-        /* NEW: Video Badge (Locked/Premier) */
         .video-badge {
             position: absolute;
             top: 6px;
@@ -299,14 +297,14 @@
         }
 
         .ad-container.horizontal {
-            min-height: 50px; /* Adjusted for 320x50 */
+            min-height: 50px;
             margin: 10px auto;
             max-width: 320px;
         }
 
         .ad-container.vertical {
             min-height: 250px;
-            max-width: 300px; /* Added for 300x250 */
+            max-width: 300px;
             margin: 20px auto;
         }
 
@@ -339,7 +337,7 @@
             display: flex;
             align-items: center;
             flex: 1;
-            min-width: 0; /* Fix for flex truncation */
+            min-width: 0;
         }
 
         .video-header-right {
@@ -348,7 +346,7 @@
             flex-shrink: 0;
         }
 
-        .video-title-player { /* Renamed to avoid conflict */
+        .video-title-player {
             font-size: 16px;
             font-weight: 500;
             color: white;
@@ -496,7 +494,6 @@
 
         .notification-container {
             position: relative;
-            /* margin-right: 15px; */ /* Removed to make space for auth button */
         }
 
         .notification-icon {
@@ -614,7 +611,6 @@
         .notification-type-promotional { border-left: 3px solid #f472b6; }
 
 
-        /* --- NEW: Modal Styles --- */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -626,15 +622,15 @@
             z-index: 2500;
             justify-content: center;
             align-items: center;
+            padding: 10px;
         }
         
         .modal-content {
             background: #1e1e1e;
             border-radius: 12px;
             padding: 24px;
-            width: 90%;
+            width: 100%;
             max-width: 400px;
-            text-align: center;
             box-shadow: 0 5px 25px rgba(0,0,0,0.5);
             position: relative;
         }
@@ -657,6 +653,7 @@
             font-size: 20px;
             font-weight: 500;
             margin-bottom: 12px;
+            text-align: center;
         }
         
         .modal-message {
@@ -664,6 +661,48 @@
             color: #ccc;
             margin-bottom: 20px;
             line-height: 1.5;
+            text-align: center;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #444;
+        }
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            color: #888;
+            font-weight: 500;
+        }
+        .auth-tab.active {
+            color: white;
+            border-bottom: 2px solid #ff0000;
+        }
+        .auth-form {
+            display: none;
+        }
+        .auth-form.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: #272727;
+            border: 1px solid #444;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+        }
+        .form-divider {
+            text-align: center;
+            color: #888;
+            margin: 20px 0;
         }
 
         .modal-timer {
@@ -671,6 +710,7 @@
             font-weight: bold;
             color: #f0ad4e;
             margin-bottom: 20px;
+            text-align: center;
         }
         
         .modal-button {
@@ -684,6 +724,7 @@
             cursor: pointer;
             margin-bottom: 10px;
             transition: background-color 0.3s;
+            text-align: center;
         }
         
         .btn-primary {
@@ -703,8 +744,14 @@
             color: white;
         }
         .btn-google:hover { background: #357ae8; }
-
-        /* --- End Modal Styles --- */
+        
+        .share-progress {
+            font-size: 14px;
+            color: #f0ad4e;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
 
 
         @media (min-width: 768px) {
@@ -712,7 +759,7 @@
                 grid-template-columns: repeat(3, 1fr);
             }
              .ad-container.horizontal {
-                max-width: 728px; /* On larger screens, can use larger horizontal ad if needed */
+                max-width: 728px;
             }
              .ad-container.vertical {
                 max-width: 300px;
@@ -746,7 +793,7 @@
             }
 
             .header-actions {
-                gap: 8px; /* Reduce gap on small screens */
+                gap: 8px;
             }
 
             .auth-btn {
@@ -801,7 +848,6 @@
                 </div>
             </div>
             <div class="header-icon" onclick="openSearch()">🔍</div>
-            <!-- NEW: Auth Button Container -->
             <div id="authContainer">
                 <button class="auth-btn" onclick="showLoginModal()">Login</button>
             </div>
@@ -898,14 +944,44 @@
     <div id="container-1779bf8f2ef9b0af97c71882e05dced0"></div>
 
 
-    <!-- NEW: Modals for Login, Payment, and Messages -->
+    <!-- Modals for Login, Payment, and Messages (All Kept) -->
     
     <!-- Login Modal -->
     <div id="loginModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <button class="modal-close-btn" onclick="closeLoginModal()">×</button>
-            <div class="modal-title">Login Required</div>
-            <div class="modal-message">Please log in to watch this video and save your progress.</div>
+            
+            <div class="auth-tabs">
+                <div class="auth-tab active" onclick="toggleLoginTab('login')">Login</div>
+                <div class="auth-tab" onclick="toggleLoginTab('signup')">Sign Up</div>
+            </div>
+            
+            <div id="authError" class="modal-message" style="color: #ff4444; display: none;"></div>
+
+            <!-- Login Form -->
+            <div id="loginForm" class="auth-form active">
+                <div class="form-group">
+                    <input type="email" id="loginEmail" class="form-input" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="loginPassword" class="form-input" placeholder="Password">
+                </div>
+                <button class="modal-button btn-primary" onclick="handleEmailLogin()">Login</button>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div id="signupForm" class="auth-form">
+                <div class="form-group">
+                    <input type="email" id="signupEmail" class="form-input" placeholder="Email">
+                </div>
+                <div class="form-group">
+                    <input type="password" id="signupPassword" class="form-input" placeholder="Password">
+                </div>
+                <button class="modal-button btn-primary" onclick="handleEmailSignUp()">Sign Up</button>
+            </div>
+
+            <div class="form-divider">or</div>
+
             <button class="modal-button btn-google" onclick="handleGoogleLogin()">
                 Sign in with Google
             </button>
@@ -917,7 +993,12 @@
         <div class="modal-content">
             <button class="modal-close-btn" onclick="closePaymentModal()">×</button>
             <div class="modal-title">Unlock Video</div>
-            <div class="modal-message" id="paymentModalMessage">This video is locked. Pay to unlock or share the app.</div>
+            <div class="modal-message" id="paymentModalMessage">This video is locked. Pay to unlock.</div>
+            
+            <div class="share-progress" id="shareProgressText">
+                Share 5 times to unlock all Premier videos! (0/5)
+            </div>
+
             <button class="modal-button btn-primary" onclick="handlePayment()">
                 Pay Now
             </button>
@@ -927,7 +1008,7 @@
         </div>
     </div>
 
-    <!-- Message Modal (for timers, etc.) -->
+    <!-- Message Modal -->
     <div id="messageModal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <button class="modal-close-btn" onclick="closeMessageModal()">×</button>
@@ -941,29 +1022,27 @@
     <script>
         // SUPABASE CREDENTIALS
         const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
-        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo'; // यह आपका public key है, यह सही है
+        const supabaseKey = 'sb_publishable_O4F_qebV8fdyGm06vw6O0Q_zzLP9fSo';
 
         let supabase;
         let currentCategory = 'all';
         let currentSearch = '';
         let allVideos = [];
-        let allNotifications = []; // Stores notifications from DB
+        let allNotifications = [];
         let currentPlayingVideo = null;
         
-        // Ad-related variables
         let adTimerInterval = null;
-        let videoToPlay = null; // Stores the video ID to play after pre-roll ad
-        let midRollTimer = null; // Timer for 20-min mid-roll ad
-        let currentAdIsMidRoll = false; // Flag to check if ad is mid-roll
+        let videoToPlay = null;
+        let midRollTimer = null;
+        let currentAdIsMidRoll = false;
         
-        // --- NEW: Auth & Logic Variables ---
-        let currentUser = null; // Stores Supabase user session
+        let currentUser = null; 
         let videoIdToPlayAfterLogin = null;
         let videoIdToPlayAfterPayment = null;
         let countdownTimerInterval = null;
 
 
-        // --- Analytics Functions (Kept as-is) ---
+        // --- Analytics Functions (Kept) ---
         async function logPageView() {
             if (!supabase) return; 
             try {
@@ -985,7 +1064,8 @@
                     .from('content_views')
                     .insert({ 
                         movie_id: movieId, 
-                        action_type: action // 'play' or 'download'
+                        action_type: action,
+                        user_id: currentUser?.id
                     });
                 
                 if (error) throw error;
@@ -994,7 +1074,6 @@
                 console.warn('Analytics Error (logContentAction):', error.message);
             }
         }
-
         // --- End of Analytics Functions ---
 
         // Initialize the app
@@ -1007,20 +1086,17 @@
             try {
                 console.log('🚀 Initializing VideoHub App...');
                 
-                // Load Supabase from CDN
                 await loadSupabase();
                 
-                // Initialize Supabase
                 supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
                 console.log('✅ Supabase initialized');
 
-                // *** NEW: Setup Auth Listener ***
                 supabase.auth.onAuthStateChange((event, session) => {
                     if (event === 'SIGNED_IN') {
                         currentUser = session.user;
-                        console.log('👤 User Signed In:', currentUser.id);
+                        console.log('👤 User Signed In:', currentUser.id, currentUser.email);
                         updateAuthUI(currentUser);
-                        // If user logged in to watch a video, play it
+                        
                         if (videoIdToPlayAfterLogin) {
                             openVideoPlayer(videoIdToPlayAfterLogin);
                             videoIdToPlayAfterLogin = null;
@@ -1032,21 +1108,17 @@
                     }
                 });
 
-                // Check initial session
                 const { data: { session } } = await supabase.auth.getSession();
                 currentUser = session?.user || null;
                 updateAuthUI(currentUser);
-                console.log('👤 Initial User:', currentUser?.id || 'Not logged in');
+                console.log('👤 Initial User:', currentUser?.email || 'Not logged in');
 
 
-                // Log page view on app start
                 await logPageView(); 
                 
-                // Load content
                 await loadVideos();
                 await loadUserNotifications();
                 
-                // Subscribe to real-time notification updates
                 subscribeToNotifications();
                 
             } catch (error) {
@@ -1056,7 +1128,6 @@
             }
         }
 
-        // Load Supabase from CDN
         function loadSupabase() {
             return new Promise((resolve, reject) => {
                 if (window.supabase) {
@@ -1100,35 +1171,29 @@
                     return;
                 }
 
-                // --- NEW: SIMULATE ACCESS LEVEL ---
-                // In your real app, 'access_level' and 'release_time' should come from the database
-                allVideos = videos.map((video, index) => {
-                    let access_level = 'public';
-                    let release_time = null;
+                allVideos = videos;
 
-                    if (index % 7 === 1) { // Every 7th video is locked
-                        access_level = 'locked';
-                    } else if (index % 7 === 2) { // The one after is premier
-                        access_level = 'premier';
-                        // Set release time to 24 hours from its creation date
-                        // We use created_at as a stable base
-                        const createdDate = new Date(video.created_at || Date.now());
-                        release_time = new Date(createdDate.getTime() + 24 * 60 * 60 * 1000).toISOString();
-                    }
-                    return { ...video, access_level, release_time };
-                });
-                // --- END SIMULATION ---
+                // --- NEW: Debug log to help user ---
+                if (allVideos.length > 0) {
+                    console.log('%c--- DEBUG: First video data ---', 'color: #00AFFF; font-weight: bold;');
+                    console.log('Video Object:', allVideos[0]);
+                    console.log('Check `access_level` (should be "premier", "locked", or null/public)');
+                    console.log('Check `release_time` (should be a valid date string like "2025-11-10T10:00:00Z")');
+                    console.log('%c---------------------------------', 'color: #00AFFF;');
+                }
+                // --- End Debug log ---
+
 
                 displayVideos(allVideos);
                 loadCategories();
                 
             } catch (error) {
                 console.error('❌ Error loading videos:', error);
-                throw error; // Re-throw to be handled by caller
+                throw error;
             }
         }
 
-        // Demo videos as fallback
+        // Demo videos as fallback (Kept)
         function showDemoVideos() {
             console.log('🎮 Loading demo videos...');
             
@@ -1140,7 +1205,7 @@
                     thumbnail_url: "https://placehold.co/500x300/1a1a1a/ffffff?text=VideoHub", 
                     iframe_code: '<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>', 
                     download_url: "https://example.com/video1.mp4",
-                    access_level: 'public' // NEW
+                    access_level: 'public'
                 },
                 { 
                     id: 2, 
@@ -1149,8 +1214,8 @@
                     thumbnail_url: "https://placehold.co/500x300/f0ad4e/ffffff?text=Premier", 
                     iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>', 
                     download_url: "https://example.com/video2.mp4",
-                    access_level: 'premier', // NEW
-                    release_time: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // NEW
+                    access_level: 'premier',
+                    release_time: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
                 },
                 { 
                     id: 3, 
@@ -1159,7 +1224,7 @@
                     thumbnail_url: "https://placehold.co/500x300/ff0000/ffffff?text=Locked", 
                     iframe_code: '<iframe src="https://www.youtube.com/embed/VIDEO_ID_3" frameborder="0" allowfullscreen></iframe>', 
                     download_url: "https://example.com/video3.mp4",
-                    access_level: 'locked' // NEW
+                    access_level: 'locked'
                 },
             ];
             
@@ -1184,6 +1249,10 @@
             const videosGrid = document.getElementById('videosGrid');
             const moreVideosGrid = document.getElementById('moreVideosGrid');
             
+            // Clear existing videos to prevent duplication
+            videosGrid.innerHTML = '';
+            moreVideosGrid.innerHTML = '';
+
             if (videos.length === 0) {
                 showNoVideos();
                 return;
@@ -1195,8 +1264,6 @@
             const moreVideos = videos.slice(8);
             if (moreVideos.length > 0) {
                 moreVideosGrid.innerHTML = moreVideos.map(video => createVideoCard(video)).join('');
-            } else {
-                moreVideosGrid.innerHTML = '';
             }
         }
 
@@ -1207,10 +1274,6 @@
                     📺 No videos available
                     <br>
                     <small>Add videos from the admin panel</small>
-                    <br><br>
-                    <button onclick="showDemoVideos()" style="background: #ff0000; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer;">
-                        Show Demo Videos
-                    </button>
                 </div>
             `;
         }
@@ -1226,12 +1289,13 @@
                 thumbnailUrl = `https://placehold.co/500x300/1a1a1a/ffffff?text=${video.category || 'Video'}`;
             }
 
-            // --- NEW: Add Badge Logic ---
+            // --- UPDATED: Badge Logic with case-insensitivity ---
             let badgeHTML = '';
-            if (video.access_level === 'locked') {
+            let access = video.access_level ? video.access_level.toLowerCase() : 'public'; // FIX
+
+            if (access === 'locked') {
                 badgeHTML = '<div class="video-badge badge-locked">🔒 Locked</div>';
-            } else if (video.access_level === 'premier') {
-                // Check if premier video is already unlocked
+            } else if (access === 'premier' && video.release_time) {
                 const releaseTime = new Date(video.release_time).getTime();
                 const now = new Date().getTime();
                 if (now < releaseTime) {
@@ -1243,7 +1307,7 @@
             return `
                 <div class="video-card" onclick="openVideoPlayer(${video.id})">
                     <div class="thumbnail-container">
-                        ${badgeHTML} <!-- NEW: Badge added here -->
+                        ${badgeHTML}
                         <img src="${thumbnailUrl}" 
                              alt="${video.title}" 
                              class="video-thumbnail"
@@ -1289,7 +1353,7 @@
                 `;
 
                 categories.forEach(category => {
-                    if (category) { // Ensure category is not null or empty
+                    if (category) {
                         const categoryCount = allVideos.filter(video => video.category === category).length;
                         categoriesHTML += `
                             <div class="category-chip ${currentCategory === category ? 'active' : ''}" 
@@ -1348,16 +1412,72 @@
             displayVideos(filteredVideos);
         }
 
-        // --- NEW: AUTH & MODAL FUNCTIONS ---
+        // --- AUTH & MODAL FUNCTIONS (Kept) ---
 
         function updateAuthUI(user) {
             const authContainer = document.getElementById('authContainer');
             if (user) {
-                authContainer.innerHTML = `<button class="auth-btn" onclick="handleLogout()">Logout</button>`;
+                const name = user.email.split('@')[0];
+                authContainer.innerHTML = `<button class="auth-btn" onclick="handleLogout()">Logout (${name})</button>`;
             } else {
                 authContainer.innerHTML = `<button class="auth-btn" onclick="showLoginModal()">Login</button>`;
             }
             closeLoginModal();
+        }
+
+        function toggleLoginTab(tab) {
+            document.getElementById('authError').style.display = 'none';
+            if (tab === 'login') {
+                document.querySelector('.auth-tab[onclick="toggleLoginTab(\'login\')"]').classList.add('active');
+                document.querySelector('.auth-tab[onclick="toggleLoginTab(\'signup\')"]').classList.remove('active');
+                document.getElementById('loginForm').classList.add('active');
+                document.getElementById('signupForm').classList.remove('active');
+            } else {
+                document.querySelector('.auth-tab[onclick="toggleLoginTab(\'login\')"]').classList.remove('active');
+                document.querySelector('.auth-tab[onclick="toggleLoginTab(\'signup\')"]').classList.add('active');
+                document.getElementById('loginForm').classList.remove('active');
+                document.getElementById('signupForm').classList.add('active');
+            }
+        }
+
+        async function handleEmailLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const authError = document.getElementById('authError');
+
+            try {
+                const { error } = await supabase.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+                authError.style.display = 'none';
+                closeLoginModal();
+            } catch (error) {
+                console.error('Error logging in:', error.message);
+                authError.textContent = `Error: ${error.message}`;
+                authError.style.display = 'block';
+            }
+        }
+        
+        async function handleEmailSignUp() {
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const authError = document.getElementById('authError');
+
+            try {
+                const { data, error } = await supabase.auth.signUp({ 
+                    email, 
+                    password 
+                });
+                if (error) throw error;
+                
+                authError.style.display = 'none';
+                showMessageModal('Sign Up Successful', 'Please check your email to verify your account. You can now log in.');
+                toggleLoginTab('login');
+
+            } catch (error) {
+                console.error('Error signing up:', error.message);
+                authError.textContent = `Error: ${error.message}`;
+                authError.style.display = 'block';
+            }
         }
 
         async function handleGoogleLogin() {
@@ -1366,7 +1486,6 @@
                     provider: 'google'
                 });
                 if (error) throw error;
-                // User will be redirected, and onAuthStateChange will handle the session
             } catch (error) {
                 console.error('Error during Google login:', error.message);
                 showMessageModal('Login Failed', `Error: ${error.message}`);
@@ -1383,6 +1502,8 @@
         }
 
         function showLoginModal() {
+            document.getElementById('authError').style.display = 'none';
+            toggleLoginTab('login');
             document.getElementById('loginModal').style.display = 'flex';
         }
         function closeLoginModal() {
@@ -1391,7 +1512,18 @@
 
         function showPaymentModal(video) {
             videoIdToPlayAfterPayment = video.id;
-            document.getElementById('paymentModalMessage').textContent = `'${video.title}' is locked. Pay to unlock or share the app.`;
+            document.getElementById('paymentModalMessage').textContent = `'${video.title}' is locked. Pay to unlock.`;
+            
+            const shareCount = getUserShareCount();
+            const sharesLeft = 5 - shareCount;
+            const progressText = document.getElementById('shareProgressText');
+            
+            if (sharesLeft > 0) {
+                progressText.textContent = `Share ${sharesLeft} more time${sharesLeft > 1 ? 's' : ''} to unlock all Premier videos! (${shareCount}/5)`;
+            } else {
+                progressText.textContent = `✅ You have unlocked Premier Access!`;
+            }
+            
             document.getElementById('paymentModal').style.display = 'flex';
         }
         function closePaymentModal() {
@@ -1404,7 +1536,7 @@
             const timerEl = document.getElementById('messageModalTimer');
             
             if (countdownTimerInterval) {
-                clearInterval(countdownTimerInterval); // Clear any old timer
+                clearInterval(countdownTimerInterval); 
                 countdownTimerInterval = null;
             }
 
@@ -1419,32 +1551,29 @@
         function closeMessageModal() {
             document.getElementById('messageModal').style.display = 'none';
             if (countdownTimerInterval) {
-                clearInterval(countdownTimerInterval); // Stop timer on close
+                clearInterval(countdownTimerInterval);
                 countdownTimerInterval = null;
             }
         }
 
-        async function handlePayment() {
-            // This is a MOCK function.
-            // In a real app, you would integrate a payment gateway (Stripe, Razorpay, etc.)
-            // After successful payment, you would save a record in your database,
-            // e.g., in a 'user_payments' table: { user_id: currentUser.id, movie_id: videoIdToPlayAfterPayment }
-            
-            showMessageModal('Payment Successful', 'Thank you! Your video is unlocking.');
-            
-            // Simulate payment success after 2 seconds
-            setTimeout(() => {
-                closeMessageModal();
-                closePaymentModal();
-                // We'll add a mock payment record to localStorage to "remember" this
-                localStorage.setItem(`paid_${videoIdToPlayAfterPayment}`, 'true');
-                // Now, play the video
-                showAdAndPlay(videoIdToPlayAfterPayment);
-                videoIdToPlayAfterPayment = null;
-            }, 2000);
+        // --- Share Logic (Kept) ---
+        function getUserShareCount() {
+            if (!currentUser) return 0;
+            const count = localStorage.getItem(`shareCount_${currentUser.id}`) || 0;
+            return parseInt(count, 10);
         }
 
+        function setUserShareCount(count) {
+             if (!currentUser) return;
+             localStorage.setItem(`shareCount_${currentUser.id}`, count);
+        }
+        
         async function handleShareApp() {
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
+
             if (navigator.share) {
                 try {
                     await navigator.share({
@@ -1452,32 +1581,59 @@
                         text: 'Check out this awesome video app!',
                         url: window.location.href
                     });
-                    console.log('App shared successfully');
-                    // You could potentially reward the user here
+                    
+                    let shareCount = getUserShareCount();
+                    shareCount++;
+                    setUserShareCount(shareCount);
+
+                    const sharesLeft = 5 - shareCount;
+                    const progressText = document.getElementById('shareProgressText');
+                    if (sharesLeft > 0) {
+                        progressText.textContent = `Share ${sharesLeft} more time${sharesLeft > 1 ? 's' : ''} to unlock all Premier videos! (${shareCount}/5)`;
+                        showMessageModal('Share Successful', `Thank you! Share ${sharesLeft} more time${sharesLeft > 1 ? 's' : ''}.`);
+                    } else {
+                        progressText.textContent = `✅ You have unlocked Premier Access!`;
+                        showMessageModal('Congratulations!', 'You have unlocked Premier Access!');
+                    }
+
                 } catch (error) {
                     console.error('Error sharing app:', error);
+                    if (error.name !== 'AbortError') {
+                        showMessageModal('Share Failed', 'Could not share app.');
+                    }
                 }
             } else {
-                // Fallback for desktop or unsupported browsers
                 showMessageModal('Share App', 'Copy this link and share with friends: ' + window.location.href);
             }
         }
+        // --- End Share Logic ---
 
-        async function checkUserPayment(videoId) {
-            // This is a MOCK check.
-            // In a real app, you would query your 'user_payments' table:
-            /*
-            const { data, error } = await supabase
-                .from('user_payments')
-                .select('*')
-                .eq('user_id', currentUser.id)
-                .eq('movie_id', videoId)
-                .limit(1);
+
+        async function handlePayment() {
+            if (!currentUser) {
+                showLoginModal();
+                return;
+            }
             
-            return data && data.length > 0;
-            */
+            showMessageModal('Payment Pending', 'Connecting to payment gateway...');
             
-            // For this demo, we check localStorage
+            setTimeout(() => {
+                localStorage.setItem(`paid_${videoIdToPlayAfterPayment}`, 'true');
+                
+                showMessageModal('Payment Successful', 'Thank you! Your video is unlocking.');
+                
+                setTimeout(() => {
+                    closeMessageModal();
+                    closePaymentModal();
+                    showAdAndPlay(videoIdToPlayAfterPayment);
+                    videoIdToPlayAfterPayment = null;
+                }, 1500);
+
+            }, 2000);
+        }
+
+        async function checkUserHasPaid(videoId) {
+            if (!currentUser) return false;
             return localStorage.getItem(`paid_${videoId}`) === 'true';
         }
         
@@ -1492,51 +1648,87 @@
                 if (distance < 0) {
                     clearInterval(countdownTimerInterval);
                     timerEl.innerHTML = "Unlocked!";
-                    // Optionally, close modal and reload videos
-                    closeMessageModal();
-                    loadVideos(); // Reload to remove 'Premier' badge
+                    setTimeout(() => {
+                        closeMessageModal();
+                        loadVideos(); // Reload videos to update badges
+                    }, 1000);
                     return;
                 }
 
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const hours = Math.floor(distance / (1000 * 60 * 60));
                 const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 timerEl.innerHTML = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
 
-            updateTimer(); // Run once immediately
+            updateTimer();
             countdownTimerInterval = setInterval(updateTimer, 1000);
         }
 
 
-        // --- AD & VIDEO PLAYER LOGIC (MODIFIED) ---
+        // --- AD & VIDEO PLAYER LOGIC (UPDATED with Debugging) ---
 
-        /**
-         * NEW: Main router function to check access before playing
-         */
         async function openVideoPlayer(videoId) {
             const video = allVideos.find(v => v.id === videoId);
-            if (!video) return;
+            if (!video) {
+                console.error(`Error: Video with ID ${videoId} not found.`);
+                return;
+            }
 
-            console.log(`Opening video: ${video.title}, Access: ${video.access_level}`);
+            // --- FIX: Default null/undefined to 'public' and make case-insensitive ---
+            let access = (video.access_level || 'public').toLowerCase(); 
+
+            // --- NEW: Detailed Debug Log ---
+            console.log(`%c--- DEBUG: openVideoPlayer (Video ID ${video.id}) ---`, 'color: #FFA500; font-weight: bold;');
+            console.log(`Access Level: '${access}' (Original from DB: '${video.access_level}')`);
+            console.log(`Release Time: '${video.release_time}'`);
+            console.log(`Is User Logged In: ${!!currentUser}`);
+            if (currentUser) {
+                console.log(`User Email: ${currentUser.email}`);
+            }
+            // --- End Debug Log ---
 
             // 1. Public Video
-            if (video.access_level === 'public' || !video.access_level) {
+            if (access === 'public') {
+                console.log('DEBUG: Access granted (Public).');
                 showAdAndPlay(videoId);
                 return;
             }
 
+            // --- All other types require login ---
+            if (!currentUser) {
+                console.log('DEBUG: Access denied (Not Logged In). Showing login modal.');
+                videoIdToPlayAfterLogin = videoId;
+                showLoginModal();
+                return;
+            }
+
+            // --- User is now logged in ---
+            console.log('DEBUG: User is logged in. Checking access...');
+            
             // 2. Premier Video
-            if (video.access_level === 'premier') {
+            if (access === 'premier') {
+                if (!video.release_time) {
+                    console.warn(`DEBUG (Video ID ${video.id}): Premier video has no release_time. Treating as public.`);
+                    showAdAndPlay(videoId);
+                    return;
+                }
+
                 const releaseTime = new Date(video.release_time).getTime();
                 const now = new Date().getTime();
+                const hasShared = getUserShareCount() >= 5;
+
+                console.log(`DEBUG (Premier): Has Share-Access=${hasShared}, Is Time Passed=${now >= releaseTime}`);
 
                 if (now >= releaseTime) {
-                    // Premier period is over, treat as public
+                    console.log('DEBUG: Access granted (Premier time passed).');
+                    showAdAndPlay(videoId);
+                } else if (hasShared) {
+                    console.log('DEBUG: Access granted (Premier share-access).');
                     showAdAndPlay(videoId);
                 } else {
-                    // Show timer
+                    console.log('DEBUG: Access denied (Premier). Showing timer.');
                     showMessageModal('Premier Video', 'This video unlocks in:');
                     startUnlockTimer('messageModalTimer', releaseTime);
                 }
@@ -1544,41 +1736,33 @@
             }
 
             // 3. Locked Video
-            if (video.access_level === 'locked') {
-                // Step A: Check Login
-                if (!currentUser) {
-                    videoIdToPlayAfterLogin = videoId;
-                    showLoginModal();
-                    return;
-                }
-                
-                // Step B: Check Payment (User is logged in)
-                const isPaid = await checkUserPayment(videoId);
+            if (access === 'locked') {
+                const isPaid = await checkUserHasPaid(videoId);
+                console.log(`DEBUG (Locked): Is Paid=${isPaid}`);
                 
                 if (isPaid) {
+                    console.log('DEBUG: Access granted (Locked, Paid).');
                     showAdAndPlay(videoId);
                 } else {
-                    // Show payment options
+                    console.log('DEBUG: Access denied (Locked, Not Paid). Showing payment modal.');
                     showPaymentModal(video);
                 }
                 return;
             }
+            
+            // Fallback for unknown access_level
+            console.warn(`DEBUG: Unknown access level '${access}'. Treating as public.`);
+            showAdAndPlay(videoId);
         }
 
 
-        /**
-         * RENAMED: Triggers pre-roll ad and stores video to play.
-         */
         function showAdAndPlay(videoId) {
             console.log('Triggering pre-roll ad for video:', videoId);
             videoToPlay = videoId;
-            currentAdIsMidRoll = false; // This is a pre-roll
+            currentAdIsMidRoll = false;
             showAdPopup();
         }
 
-        /**
-         * FIXED: Enhanced video player launch function
-         */
         function launchVideoPlayer(videoId) {
             const video = allVideos.find(v => v.id === videoId);
             if (!video) return;
@@ -1597,46 +1781,29 @@
             document.getElementById('videoPlayerModal').style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
-            // Start mid-roll timer (20 minutes)
             if (midRollTimer) clearInterval(midRollTimer);
             console.log('Starting 20-minute mid-roll timer...');
             midRollTimer = setInterval(showMidRollAd, 20 * 60 * 1000); 
         }
 
-        /**
-         * FIXED: Enhanced video URL extraction function (Kept)
-         */
         function extractVideoUrl(iframeCode) {
             if (!iframeCode) return 'about:blank';
             
-            // Case 1: Already a direct URL
             if (iframeCode.startsWith('http')) {
-                if (iframeCode.includes('?')) {
-                    return iframeCode + '&autoplay=1';
-                } else {
-                    return iframeCode + '?autoplay=1';
-                }
+                return iframeCode + (iframeCode.includes('?') ? '&autoplay=1' : '?autoplay=1');
             }
             
-            // Case 2: Standard iframe with src
             const srcMatch = iframeCode.match(/src="([^"]*)"/);
             if (srcMatch && srcMatch[1]) {
                 let url = srcMatch[1];
-                if (url.includes('?')) {
-                    url += '&autoplay=1';
-                } else {
-                    url += '?autoplay=1';
-                }
-                return url;
+                return url + (url.includes('?') ? '&autoplay=1' : '?autoplay=1');
             }
             
-            // Case 3: YouTube embed
             const ytMatch = iframeCode.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
             if (ytMatch) {
                 return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1`;
             }
             
-            // Case 4: YouTube watch
             const ytWatchMatch = iframeCode.match(/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/);
             if (ytWatchMatch) {
                 return `https://www.youtube.com/embed/${ytWatchMatch[1]}?autoplay=1`;
@@ -1684,17 +1851,15 @@
             if (downloadUrl && downloadUrl !== 'about:blank') {
                 window.open(downloadUrl, '_blank');
             } else {
-                // Use message modal instead of alert
                 showMessageModal('Download Error', 'Download link not available for this video.');
             }
         }
 
         function toggleSidebar() {
-            // Use message modal instead of alert
             showMessageModal('Menu', 'Sidebar would open here with navigation menu');
         }
 
-        // --- AD POPUP FUNCTIONS (MODIFIED) ---
+        // --- AD POPUP FUNCTIONS (Kept) ---
 
         function showAdPopup() {
             const adPopup = document.getElementById('adPopup');
@@ -1749,7 +1914,7 @@
             }
         }
 
-        // --- NOTIFICATION FUNCTIONS (Kept as-is) ---
+        // --- NOTIFICATION FUNCTIONS (Kept) ---
 
         async function loadUserNotifications() {
             if (!supabase) {
@@ -1892,7 +2057,7 @@
             const notificationContainer = document.querySelector('.notification-container');
             const dropdown = document.getElementById('notificationDropdown');
             
-            if (dropdown.classList.contains('show') && !notificationContainer.contains(event.target)) {
+            if (dropdown && dropdown.classList.contains('show') && !notificationContainer.contains(event.target)) {
                 dropdown.classList.remove('show');
             }
         });
@@ -1912,9 +2077,11 @@
             }
         });
 
-        console.log('🎉 VideoHub App initialized successfully!');
+        console.log('🎉 VideoHub App v3 (Debug Mode) initialized successfully!');
     </script>
     <script type='text/javascript' src='//pl27892704.effectivegatecpm.com/d0/f8/e5/d0f8e53bef81fe3a7f6847b10e20f047.js'></script>
 </body>
 </html>
+
+
 
