@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VideoHub Pro - YouTube Style</title>
     <style>
-        /* All existing CSS is kept */
+        /* All existing CSS is kept - NO CHANGES */
         * {
             margin: 0;
             padding: 0;
@@ -804,7 +804,7 @@
     </style>
 </head>
 <body>
-    <!-- ALL ADS ARE KEPT -->
+    <!-- ADS REPLACED WITH ADSTERA ADS -->
     <div id="adPopup" class="ad-popup">
         <div class="ad-popup-content">
             <div class="ad-popup-timer" id="adTimer">Ad closes in 5s</div>
@@ -870,7 +870,7 @@
             </div>
         </div>
 
-        <!-- ALL AD CONTAINERS ARE KEPT -->
+        <!-- ADSTERA ADS REPLACED -->
         <div class="ad-container horizontal" id="horizontalAd">
             <script type="text/javascript">
                 atOptions = {
@@ -939,10 +939,9 @@
         </div>
     </div>
 
-    <!-- OTHER ADS ARE KEPT -->
+    <!-- ADSTERA ADS -->
     <script async="async" data-cfasync="false" src="//pl27963072.effectivegatecpm.com/1779bf8f2ef9b0af97c71882e05dced0/invoke.js"></script>
     <div id="container-1779bf8f2ef9b0af97c71882e05dced0"></div>
-
 
     <!-- Modals for Login, Payment, and Messages (All Kept) -->
     
@@ -1018,7 +1017,6 @@
         </div>
     </div>
 
-
     <script>
         // SUPABASE CREDENTIALS
         const supabaseUrl = 'https://vpyhzixjiwlvflmrmywr.supabase.co';
@@ -1040,7 +1038,6 @@
         let videoIdToPlayAfterLogin = null;
         let videoIdToPlayAfterPayment = null;
         let countdownTimerInterval = null;
-
 
         // --- Analytics Functions (Kept) ---
         async function logPageView() {
@@ -1074,7 +1071,6 @@
                 console.warn('Analytics Error (logContentAction):', error.message);
             }
         }
-        // --- End of Analytics Functions ---
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
@@ -1112,7 +1108,6 @@
                 currentUser = session?.user || null;
                 updateAuthUI(currentUser);
                 console.log('👤 Initial User:', currentUser?.email || 'Not logged in');
-
 
                 await logPageView(); 
                 
@@ -1173,7 +1168,7 @@
 
                 allVideos = videos;
 
-                // --- NEW: Debug log to help user ---
+                // Debug log to help user
                 if (allVideos.length > 0) {
                     console.log('%c--- DEBUG: First video data ---', 'color: #00AFFF; font-weight: bold;');
                     console.log('Video Object:', allVideos[0]);
@@ -1181,8 +1176,6 @@
                     console.log('Check `release_time` (should be a valid date string like "2025-11-10T10:00:00Z")');
                     console.log('%c---------------------------------', 'color: #00AFFF;');
                 }
-                // --- End Debug log ---
-
 
                 displayVideos(allVideos);
                 loadCategories();
@@ -1289,9 +1282,9 @@
                 thumbnailUrl = `https://placehold.co/500x300/1a1a1a/ffffff?text=${video.category || 'Video'}`;
             }
 
-            // --- UPDATED: Badge Logic with case-insensitivity ---
+            // Badge Logic with case-insensitivity
             let badgeHTML = '';
-            let access = video.access_level ? video.access_level.toLowerCase() : 'public'; // FIX
+            let access = video.access_level ? video.access_level.toLowerCase() : 'public';
 
             if (access === 'locked') {
                 badgeHTML = '<div class="video-badge badge-locked">🔒 Locked</div>';
@@ -1302,7 +1295,6 @@
                     badgeHTML = '<div class="video-badge badge-premier">🕒 Premier</div>';
                 }
             }
-            // --- End Badge Logic ---
 
             return `
                 <div class="video-card" onclick="openVideoPlayer(${video.id})">
@@ -1606,8 +1598,6 @@
                 showMessageModal('Share App', 'Copy this link and share with friends: ' + window.location.href);
             }
         }
-        // --- End Share Logic ---
-
 
         async function handlePayment() {
             if (!currentUser) {
@@ -1666,8 +1656,7 @@
             countdownTimerInterval = setInterval(updateTimer, 1000);
         }
 
-
-        // --- AD & VIDEO PLAYER LOGIC (UPDATED with Debugging) ---
+        // --- AD & VIDEO PLAYER LOGIC ---
 
         async function openVideoPlayer(videoId) {
             const video = allVideos.find(v => v.id === videoId);
@@ -1676,18 +1665,13 @@
                 return;
             }
 
-            // --- FIX: Default null/undefined to 'public' and make case-insensitive ---
-            let access = (video.access_level || 'public').toLowerCase(); 
+            let access = (video.access_level || 'public').toLowerCase();
 
-            // --- NEW: Detailed Debug Log ---
+            // Debug Log
             console.log(`%c--- DEBUG: openVideoPlayer (Video ID ${video.id}) ---`, 'color: #FFA500; font-weight: bold;');
             console.log(`Access Level: '${access}' (Original from DB: '${video.access_level}')`);
             console.log(`Release Time: '${video.release_time}'`);
             console.log(`Is User Logged In: ${!!currentUser}`);
-            if (currentUser) {
-                console.log(`User Email: ${currentUser.email}`);
-            }
-            // --- End Debug Log ---
 
             // 1. Public Video
             if (access === 'public') {
@@ -1696,7 +1680,7 @@
                 return;
             }
 
-            // --- All other types require login ---
+            // All other types require login
             if (!currentUser) {
                 console.log('DEBUG: Access denied (Not Logged In). Showing login modal.');
                 videoIdToPlayAfterLogin = videoId;
@@ -1704,7 +1688,7 @@
                 return;
             }
 
-            // --- User is now logged in ---
+            // User is now logged in
             console.log('DEBUG: User is logged in. Checking access...');
             
             // 2. Premier Video
@@ -1754,7 +1738,6 @@
             console.warn(`DEBUG: Unknown access level '${access}'. Treating as public.`);
             showAdAndPlay(videoId);
         }
-
 
         function showAdAndPlay(videoId) {
             console.log('Triggering pre-roll ad for video:', videoId);
@@ -2077,7 +2060,7 @@
             }
         });
 
-        console.log('🎉 VideoHub App v3 (Debug Mode) initialized successfully!');
+        console.log('🎉 VideoHub App v3 (Adstera Ads) initialized successfully!');
     </script>
     <script type='text/javascript' src='//pl27892704.effectivegatecpm.com/d0/f8/e5/d0f8e53bef81fe3a7f6847b10e20f047.js'></script>
 </body>
